@@ -1,4 +1,4 @@
-import React from "react";
+
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
 
@@ -22,7 +22,7 @@ const DashboardHeader = () => {
           <div className="relative group user_pic">
             <button className="flex items-center gap-2 focus:outline-none">
               <img
-                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=fff&color=000`}
+                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name ?? "")}&background=fff&color=000`}
                 alt="user picture"
                 className="w-10 h-10 rounded-full border profile-image"
                 height="40"
@@ -32,7 +32,7 @@ const DashboardHeader = () => {
               <div className="user-details flex flex-col items-center py-4">
                 <span className="image mb-2">
                   <img
-                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=fff&color=000`}
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name ?? "")}&background=fff&color=000`}
                     alt="user picture"
                     className="profile-image w-20 h-20 rounded-full border"
                     height="80"

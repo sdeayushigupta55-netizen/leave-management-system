@@ -1,19 +1,16 @@
-
-
-import React, { useState } from "react";
+import { useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
+
+import { useLeave, type Leave } from "../context/LeaveContext";
 import { statusConfig } from "../utils/statusConfig";
-import { useLeave } from "../context/LeaveContext";
-
-
 const ROWS_PER_PAGE = 10;
 
 const LeaveStatus = () => {
   const { leaves } = useLeave();
-  const canEdit = (status) => ["DRAFT", "REJECTED"].includes(status);
+  const canEdit = (status: string) => ["DRAFT", "REJECTED"].includes(status);
 
   // Pagination state
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState<number>(1);
   const totalPages = Math.ceil(leaves.length / ROWS_PER_PAGE);
   const paginatedLeaves = leaves.slice((page - 1) * ROWS_PER_PAGE, page * ROWS_PER_PAGE);
 
@@ -37,8 +34,8 @@ const LeaveStatus = () => {
             </tr>
           </thead>
           <tbody>
-            {paginatedLeaves.map((leave) => {
-              const statusMeta = statusConfig[leave.status];
+            {paginatedLeaves.map((leave: Leave) => {
+              const statusMeta = statusConfig[leave.status as keyof typeof statusConfig];
               return (
                 <tr key={leave.id} className="border-t last:border-b-0">
                   <td className="py-1 px-2 sm:py-2 sm:px-4 whitespace-nowrap">{leave.leaveType}</td>

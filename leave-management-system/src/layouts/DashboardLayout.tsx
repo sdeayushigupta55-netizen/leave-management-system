@@ -2,7 +2,7 @@ import React from "react";
 import DashboardHeader from "../components/DashboardHeader";
 import DashboardSidebar from "../components/DashboardSidebar";
 
-const DashboardLayout = ({ children }) => {
+const DashboardLayout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   return (
     <div className="flex min-h-screen bg-gray-100">
       <DashboardSidebar />

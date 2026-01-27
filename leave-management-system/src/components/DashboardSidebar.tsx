@@ -83,7 +83,19 @@ const DashboardSidebar = () => {
   );
 };
 
-const SidebarContent = ({ menu, onClose }) => (
+type MenuItem = {
+  label: string;
+  path: string;
+  icon: string;
+  roles: string[];
+};
+
+type SidebarContentProps = {
+  menu: MenuItem[];
+  onClose?: () => void;
+};
+
+const SidebarContent: React.FC<SidebarContentProps> = ({ menu, onClose }) => (
   <>
     <div className="px-4 py-4 border-b border-gray-700">
       <h2 className="text-lg font-semibold">Police Leave System</h2>

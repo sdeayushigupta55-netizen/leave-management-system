@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
- const handleLogin = (e) => {
+ const handleLogin = (e: { preventDefault: () => void; }) => {
   e.preventDefault();
 
   let user = null;

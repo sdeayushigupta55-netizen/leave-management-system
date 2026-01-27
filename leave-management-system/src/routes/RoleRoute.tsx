@@ -1,7 +1,13 @@
+import type { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-const RoleRoute = ({ children, allow }) => {
+interface RoleRouteProps {
+  children: ReactNode;
+  allow: string[];
+}
+
+const RoleRoute = ({ children, allow }: RoleRouteProps) => {
   const { user } = useAuth();
 
   if (!user) return <Navigate to="/" />;
@@ -10,7 +16,7 @@ const RoleRoute = ({ children, allow }) => {
     return <Navigate to="/" />;
   }
 
-  return children;
+  return <>{children}</>;
 };
 
 export default RoleRoute;
