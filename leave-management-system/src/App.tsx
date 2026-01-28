@@ -4,13 +4,13 @@ import { LeaveProvider } from "./context/LeaveContext";
 import RoleRoute from "./routes/RoleRoute";
 
 import Login from "./pages/Login";
-import EmployeeDashboard from "./pages/dashboard/EmployeeDashboard";
-import SeniorDashboard from "./pages/dashboard/SeniorDashboard";
-import HodDashboard from "./pages/dashboard/HodDashboard";
-import AdminDashboard from "./pages/dashboard/AdminDashboard";
+import EmployeeDashboard from "./pages/employee/EmployeeDashboard";
+import SeniorDashboard from "./pages/senior/SeniorDashboard";
+import HodDashboard from "./pages/hod/HodDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
-import ApplyLeave from "./pages/ApplyLeave";
-import LeaveStatus from "./pages/LeaveStatus";
+import ApplyLeave from "./pages/employee/ApplyLeave";
+import  LeaveStatus from "./pages/employee/LeaveStatus";
 
 import { ROLES } from "./constants/roles";
 

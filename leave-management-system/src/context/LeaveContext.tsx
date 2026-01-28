@@ -1,17 +1,8 @@
 import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
-
-export interface Leave {
-  id: number;
-  leaveType: string;
-  from: string;
-  to: string;
-  reason: string;
-  submittedOn: string;
-  status: string;
-  assignedTo: string;
-}
+import type { Leave } from "../type/leave"; // 1. Import the Leave type
+ // 1. Import the Leave type
 
 interface LeaveContextType {
   leaves: Leave[];
@@ -19,7 +10,7 @@ interface LeaveContextType {
     leave: Omit<Leave, "id" | "submittedOn" | "status" | "assignedTo">,
     status?: "DRAFT" | "PENDING"
   ) => void;
-  editLeave: (id: number, updated: Partial<Omit<Leave, "id">>) => void;
+  editLeave: (id: string, updated: Partial<Omit<Leave, "id">>) => void; // 2. id is string
 }
 
 const LeaveContext = createContext<LeaveContextType | undefined>(undefined);
@@ -41,7 +32,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
       }
       return [
         {
-          id: 1,
+          id: "1", // 3. id as string
           leaveType: "Sicksss",
           from: "Apr 25",
           to: "Apr 25",
@@ -51,7 +42,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
           assignedTo: "N/A"
         },
         {
-          id: 2,
+          id: "2",
           leaveType: "Casual",
           from: "Apr 15",
           to: "Apr 18",
@@ -61,7 +52,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
           assignedTo: "Sarah M."
         },
         {
-          id: 3,
+          id: "3",
           leaveType: "Casual",
           from: "Apr 15",
           to: "Apr 18",
@@ -71,7 +62,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
           assignedTo: "Sarah M."
         },
         {
-          id: 4,
+          id: "4",
           leaveType: "Casual",
           from: "Apr 15",
           to: "Apr 18",
@@ -94,7 +85,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
     setLeaves(prev => [
       {
         ...leave,
-        id: prev.length ? prev[prev.length - 1].id + 1 : 1,
+        id: prev.length ? (parseInt(prev[0].id, 10) + 1).toString() : "1", // 4. id as string
         submittedOn: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
         status,
         assignedTo: "N/A"
@@ -102,17 +93,18 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
       ...prev
     ]);
   };
-const editLeave = (id: number, updated: Partial<Omit<Leave, "id">>) => {
-  setLeaves(prev =>
-    prev.map(leave =>
-      leave.id === id ? { ...leave, ...updated } : leave
-    )
-  );
-};
+
+  const editLeave = (id: string, updated: Partial<Omit<Leave, "id">>) => { // 5. id is string
+    setLeaves(prev =>
+      prev.map(leave =>
+        leave.id === id ? { ...leave, ...updated } : leave
+      )
+    );
+  };
+
   return (
     <LeaveContext.Provider value={{ leaves, addLeave, editLeave }}>
       {children}
     </LeaveContext.Provider>
   );
 };
-
