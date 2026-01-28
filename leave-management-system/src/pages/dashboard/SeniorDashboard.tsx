@@ -53,21 +53,21 @@ const SeniorDashboard = () => {
   <div className="flex flex-wrap gap-1 sm:gap-2">
     <button
       className="bg-green-500 hover:bg-green-600 text-white p-1 sm:p-2 rounded"
-      onClick={() => {/* handle approve */}}
+      onClick={() => handleApprove(leave.id)}
       title="Approve"
     >
       <Check size={16} />
     </button>
     <button
       className="bg-red-500 hover:bg-red-600 text-white p-1 sm:p-2 rounded"
-      onClick={() => {/* handle reject */}}
+      onClick={() => handleReject(leave.id)}
       title="Reject"
     >
       <X size={16} />
     </button>
     <button
       className="bg-blue-500 hover:bg-blue-600 text-white p-1 sm:p-2 rounded"
-      onClick={() => {/* handle forward */}}
+      onClick={() => handleForward(leave.id)}
       title="Forward"
     >
       <ArrowRight size={16} />
