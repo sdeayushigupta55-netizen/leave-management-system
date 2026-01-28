@@ -1,9 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 
-
 interface User {
-  // Example fields; update according to your actual user data
   id?: string;
   name?: string;
   email?: string;
@@ -21,6 +19,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
+  // Load user from localStorage on app start
   useEffect(() => {
     const stored = localStorage.getItem("auth_user");
     if (stored) {
@@ -29,11 +28,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  // Save user to localStorage on login
   const login = (data: User) => {
     localStorage.setItem("auth_user", JSON.stringify(data));
     setUser(data);
   };
 
+  // Remove user from localStorage on logout
   const logout = () => {
     localStorage.removeItem("auth_user");
     setUser(null);

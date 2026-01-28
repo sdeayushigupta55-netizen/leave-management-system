@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
-
+import { useEffect } from "react";
 
 export interface Leave {
   id: number;
@@ -15,7 +15,11 @@ export interface Leave {
 
 interface LeaveContextType {
   leaves: Leave[];
-  addLeave: (leave: Omit<Leave, "id" | "submittedOn" | "status" | "assignedTo">) => void;
+  addLeave: (
+    leave: Omit<Leave, "id" | "submittedOn" | "status" | "assignedTo">,
+    status?: "DRAFT" | "PENDING"
+  ) => void;
+  editLeave: (id: number, updated: Partial<Omit<Leave, "id">>) => void;
 }
 
 const LeaveContext = createContext<LeaveContextType | undefined>(undefined);
@@ -29,45 +33,86 @@ export const useLeave = (): LeaveContextType => {
 };
 
 export const LeaveProvider = ({ children }: { children: ReactNode }) => {
-  const [leaves, setLeaves] = useState<Leave[]>([
-    {
-      id: 1,
-      leaveType: "Sick",
-      from: "Apr 25",
-      to: "Apr 25",
-      reason: "Flu recovery",
-      submittedOn: "Apr 25",
-      status: "PENDING",
-      assignedTo: "N/A"
-    },
-    {
-      id: 2,
-      leaveType: "Casual",
-      from: "Apr 15",
-      to: "Apr 18",
-      reason: "Home shifting",
-      submittedOn: "Apr 07",
-      status: "APPROVED",
-      assignedTo: "Sarah M."
+  const [leaves, setLeaves] = useState<Leave[]>(
+    () => {
+      const stored = localStorage.getItem("leaves");
+      if (stored) {
+        return JSON.parse(stored);
+      }
+      return [
+        {
+          id: 1,
+          leaveType: "Sicksss",
+          from: "Apr 25",
+          to: "Apr 25",
+          reason: "Flu recovery",
+          submittedOn: "Apr 25",
+          status: "PENDING",
+          assignedTo: "N/A"
+        },
+        {
+          id: 2,
+          leaveType: "Casual",
+          from: "Apr 15",
+          to: "Apr 18",
+          reason: "Home shifting",
+          submittedOn: "Apr 07",
+          status: "APPROVED",
+          assignedTo: "Sarah M."
+        },
+        {
+          id: 3,
+          leaveType: "Casual",
+          from: "Apr 15",
+          to: "Apr 18",
+          reason: "Home shifting",
+          submittedOn: "Apr 07",
+          status: "REJECTED",
+          assignedTo: "Sarah M."
+        },
+        {
+          id: 4,
+          leaveType: "Casual",
+          from: "Apr 15",
+          to: "Apr 18",
+          reason: "Home shifting",
+          submittedOn: "Apr 07",
+          status: "DRAFT",
+          assignedTo: "Sarah M."
+        }
+      ];
     }
-  ]);
+  );
+  useEffect(() => {
+    localStorage.setItem("leaves", JSON.stringify(leaves));
+  }, [leaves]);
 
-  const addLeave = (leave: Omit<Leave, "id" | "submittedOn" | "status" | "assignedTo">) => {
+  const addLeave = (
+    leave: Omit<Leave, "id" | "submittedOn" | "status" | "assignedTo">,
+    status: "DRAFT" | "PENDING" = "PENDING"
+  ) => {
     setLeaves(prev => [
       {
         ...leave,
         id: prev.length ? prev[prev.length - 1].id + 1 : 1,
         submittedOn: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-        status: "PENDING",
+        status,
         assignedTo: "N/A"
       },
       ...prev
     ]);
   };
-
+const editLeave = (id: number, updated: Partial<Omit<Leave, "id">>) => {
+  setLeaves(prev =>
+    prev.map(leave =>
+      leave.id === id ? { ...leave, ...updated } : leave
+    )
+  );
+};
   return (
-    <LeaveContext.Provider value={{ leaves, addLeave }}>
+    <LeaveContext.Provider value={{ leaves, addLeave, editLeave }}>
       {children}
     </LeaveContext.Provider>
   );
 };
+

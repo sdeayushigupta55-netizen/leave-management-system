@@ -1,7 +1,6 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-import EmployeeDashboard from "./pages/dashboard/EmployeeDashboard";
 
 i18n
   .use(LanguageDetector)
@@ -26,7 +25,12 @@ i18n
           policeLeaveSystem: "Police Leave System",
           govtOfUp: "Government of Uttar Pradesh",
           employeeDashboard: "Employee Dashboard",
-        },
+          welcome: "Welcome",
+          totalLeaves: "Total Leaves",
+          usedLeaves: "Used Leaves",
+          pendingRequests: "Pending Requests",
+          // ...other keys
+        }
       },
       hi: {
         translation: {
@@ -45,8 +49,13 @@ i18n
           allReports: "सभी रिपोर्ट्स",
           policeLeaveSystem: "पुलिस अवकाश प्रणाली",
           govtOfUp: "उत्तर प्रदेश सरकार",
-        },
-      },
+          employeeDashboard: "कर्मचारी डैशबोर्ड",
+          welcome: "स्वागत है",
+          totalLeaves: "कुल अवकाश",
+          usedLeaves: "प्रयुक्त अवकाश",
+          pendingRequests: "लंबित अनुरोध",
+        }
+      }
     },
     fallbackLng: "en",
     interpolation: {

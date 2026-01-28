@@ -1,7 +1,7 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, useEffect, type ChangeEvent, type FormEvent } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import { useLeave } from "../context/LeaveContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface FormState {
   type: string;
@@ -11,22 +11,48 @@ interface FormState {
 }
 
 const ApplyLeave = () => {
+  const { leaves, addLeave, editLeave } = useLeave();
+  const navigate = useNavigate();
+  const location = useLocation();
+ const editingId = location.state?.leaveId;
+
   const [form, setForm] = useState<FormState>({
     type: "",
     from: "",
     to: "",
     reason: "",
   });
-  const { addLeave } = useLeave();
-  const navigate = useNavigate();
+
+  // Prefill form if editing
+  useEffect(() => {
+    if (editingId) {
+      const leave = leaves.find(l => l.id === editingId);
+      if (leave) {
+        setForm({
+          type:
+            leave.leaveType.toLowerCase() === "sick"
+              ? "sick"
+              : leave.leaveType.toLowerCase() === "casual"
+              ? "casual"
+              : leave.leaveType.toLowerCase() === "earned"
+              ? "earned"
+              : leave.leaveType.toLowerCase(),
+          from: "", // You may want to convert leave.from to yyyy-mm-dd for input
+          to: "",
+          reason: leave.reason,
+        });
+      }
+    }
+  }, [editingId, leaves]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Submit for approval
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    addLeave({
+    const leaveData = {
       leaveType:
         form.type === "sick"
           ? "Sick"
@@ -42,15 +68,50 @@ const ApplyLeave = () => {
         ? new Date(form.to).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })
         : "",
       reason: form.reason,
-    });
+    };
+
+    if (editingId) {
+      editLeave(editingId, { ...leaveData, status: "PENDING" });
+    } else {
+      addLeave(leaveData, "PENDING");
+    }
+    setForm({ type: "", from: "", to: "", reason: "" });
+    navigate("/employee/leave-status");
+  };
+
+  // Save as draft
+  const handleSaveDraft = () => {
+    const leaveData = {
+      leaveType:
+        form.type === "sick"
+          ? "Sick"
+          : form.type === "casual"
+          ? "Casual"
+          : form.type === "earned"
+          ? "Earned"
+          : form.type,
+      from: form.from
+        ? new Date(form.from).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })
+        : "",
+      to: form.to
+        ? new Date(form.to).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })
+        : "",
+      reason: form.reason,
+    };
+
+    if (editingId) {
+      editLeave(editingId, { ...leaveData, status: "DRAFT" });
+    } else {
+      addLeave(leaveData, "DRAFT");
+    }
     setForm({ type: "", from: "", to: "", reason: "" });
     navigate("/employee/leave-status");
   };
 
   return (
     <DashboardLayout>
-      <div className="max-w-xl mx-auto p-4">
-        <h2 className="text-2xl font-bold mb-4">Apply for Leave</h2>
+      <div className="p-4">
+        <h2 className="text-2xl font-bold mb-4">{editingId ? "Edit Leave" : "Apply for Leave"}</h2>
         <form onSubmit={handleSubmit} className="bg-white rounded shadow p-4 space-y-4">
           <div>
             <label className="block mb-1 font-medium">Leave Type</label>
@@ -102,12 +163,21 @@ const ApplyLeave = () => {
               required
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-primary text-white py-2 rounded font-semibold hover:opacity-90"
-          >
-            Apply
-          </button>
+          <div className="flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={handleSaveDraft}
+              className="bg-gray-300 text-gray-800 py-2 px-4 rounded font-semibold hover:bg-gray-400"
+            >
+              Save as Draft
+            </button>
+            <button
+              type="submit"
+              className="bg-primary text-white py-2 px-4 rounded font-semibold hover:opacity-90"
+            >
+              {editingId ? "Update" : "Apply"}
+            </button>
+          </div>
         </form>
       </div>
     </DashboardLayout>
