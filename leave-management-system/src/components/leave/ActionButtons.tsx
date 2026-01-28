@@ -9,7 +9,7 @@ type ActionButtonsProps = {
 const ActionButtons = ({ status, onEdit }: ActionButtonsProps) => {
   // Only show action for DRAFT and REJECTED
   if (status !== "DRAFT" && status !== "REJECTED") {
-    return <span className="text-gray-400 text-xs">—</span>;
+    return null;
   }
 
   // Decide button properties based on status
@@ -22,7 +22,7 @@ const ActionButtons = ({ status, onEdit }: ActionButtonsProps) => {
     <div className="flex gap-2">
       <button
         type="button"
-        className={`${buttonProps.bg} text-white p-2 rounded flex items-center justify-center`}
+        className={`${buttonProps.bg} text-white px-2 py-1 rounded flex items-center justify-center`}
         title={buttonProps.title}
         onClick={onEdit} // ✅ This will trigger the parent function
       >

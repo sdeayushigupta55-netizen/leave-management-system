@@ -1,40 +1,39 @@
 import StatusBadge from "./StatusBadge";
 import ActionButtons from "./ActionButtons";
 import type { Leave } from "../../type/leave";
-
+import { useNavigate } from "react-router-dom";
 interface LeaveStatusCardProps {
   leaves: Leave[];
   onEdit: (leave: Leave) => void;
 }
 
-const LeaveStatusCard: React.FC<LeaveStatusCardProps> = ({ leaves, onEdit }) => (
+const LeaveStatusCard  = ({ leaves }: LeaveStatusCardProps) => {
+    const navigate = useNavigate();
+    return (
   <div className="flex flex-col gap-3">
     {leaves.map((leave) => (
       <div key={leave.id} className="bg-white rounded shadow border p-3 flex flex-col gap-2">
-        <div className="flex justify-between items-center">
-          <span className="font-semibold">{leave.leaveType}</span>
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <span className="font-semibold text-xl">{leave.leaveType}</span>
+           <div className="flex gap-2 flex-wrap">
           <StatusBadge status={leave.status} />
+           <ActionButtons
+              status={leave.status}
+             onEdit={() => navigate("/employee/apply-leave", { state: { leaveId: leave.id } })} 
+            />
+            </div>
         </div>
-        <div>
-          <span className="block text-gray-500 text-xs">Dates:</span>
+      <div>
+          <span className="block font-bold">Dates:</span>
           <span>{leave.from}{leave.from !== leave.to && ` - ${leave.to}`}</span>
         </div>
         <div>
-          <span className="block text-gray-500 text-xs">Reason:</span>
+          <span className="block font-bold">Reason:</span>
           <span>{leave.reason}</span>
-        </div>
-        <div className="flex gap-2 mt-2">
-          <td className="py-1 px-2 sm:py-2 sm:px-4">
-  <ActionButtons
-    status={leave.status}
-    onEdit={() => onEdit(leave)}
-  />
-</td>
-
         </div>
       </div>
     ))}
   </div>
-);
+)}
 
 export default LeaveStatusCard;
