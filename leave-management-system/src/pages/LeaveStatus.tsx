@@ -18,7 +18,12 @@ const LeaveStatus = () => {
 
   const handlePrev = () => setPage((p) => Math.max(1, p - 1));
   const handleNext = () => setPage((p) => Math.min(totalPages, p + 1));
-
+const statusColorMap: Record<string, string> = {
+  APPROVED: "bg-green-500",
+  REJECTED: "bg-red-500",
+  PENDING: "bg-yellow-500",
+  
+};
   return (
     <DashboardLayout>
      <div className="min-h-screen bg-gray-100 py-6">
@@ -47,7 +52,7 @@ const LeaveStatus = () => {
                   <td className="py-1 px-2 sm:py-2 sm:px-4 whitespace-nowrap">{leave.submittedOn}</td>
                   <td className="py-1 px-2 sm:py-2 sm:px-4 whitespace-nowrap">
                     <span
-                      className={`px-2 py-1 sm:px-3 sm:py-1 text-xs rounded-full bg-${statusMeta.color}-100 text-${statusMeta.color}-700`}
+                      className={`px-2 py-1 sm:px-3 sm:py-1 text-xs rounded-full ${statusColorMap[leave.status]}`}
                     >
                       {statusMeta.label}
                     </span>
