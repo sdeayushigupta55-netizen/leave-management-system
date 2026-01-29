@@ -8,6 +8,7 @@ interface FormState {
   from: string;
   to: string;
   reason: string;
+  employeeName: string;
 }
 
 const ApplyLeave = () => {
@@ -21,6 +22,7 @@ const ApplyLeave = () => {
     from: "",
     to: "",
     reason: "",
+    employeeName: ""
   });
 
   const [editingStatus, setEditingStatus] = useState<"DRAFT" | "REJECTED" | "PENDING" | null>(null);
@@ -39,6 +41,7 @@ const ApplyLeave = () => {
             ? new Date(leave.to).toISOString().split("T")[0]
             : "",
           reason: leave.reason,
+          employeeName: leave.employeeName,
         });
         setEditingStatus(leave.status as "DRAFT" | "REJECTED" | "PENDING");
       }
@@ -74,6 +77,7 @@ const ApplyLeave = () => {
         })
       : "",
     reason: form.reason,
+    employeeName: form.employeeName || "N/A",
   });
 
   // Main submit (Apply / Update)

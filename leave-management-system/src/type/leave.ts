@@ -14,4 +14,5 @@ export interface Leave {
   status: LeaveStatusType;
   submittedOn?: string;
   assignedTo?: string;
+  employeeName: string;
 }

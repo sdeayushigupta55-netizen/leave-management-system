@@ -131,6 +131,7 @@ const Login = () => {
             <p><b>Demo Accounts:</b></p>
             <p>employee@police.gov.in</p>
             <p>sho@police.gov.in</p>
+            <p>hod@police.gov.in"</p>
             <p>admin@police.gov.in</p>
             <p>Password: Police@123</p>
           </div>

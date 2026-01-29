@@ -1,4 +1,4 @@
-import { Check, X, ArrowRight, Pencil, RotateCcw } from "lucide-react";
+import { Check, X,Pencil, RotateCcw} from "lucide-react";
 import type { Leave } from "../../type/leave";
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
   onForward: (id: string) => void;
 }
 
-const SeniorLeaveTable = ({ leaves, onApprove, onReject, onForward }: Props) => {
+const HodLeaveTable = ({ leaves, onApprove, onReject}: Props) => {
   if (leaves.length === 0) {
     return <p className="text-center text-gray-500 hidden md:block">No pending leave requests.</p>;
   }
@@ -18,12 +18,11 @@ const SeniorLeaveTable = ({ leaves, onApprove, onReject, onForward }: Props) => 
       <table className="min-w-full bg-white rounded shadow border text-sm">
         <thead className="bg-primary text-white">
           <tr>
-            <th className="p-3 text-left">Employee Name</th>
             <th className="p-3 text-left">Leave Type</th>
             <th className="p-3 text-left">Dates</th>
             <th className="p-3 text-left">Reason</th>
             <th className="p-3 text-left">Submitted On</th>
-            
+            <th className="p-3 text-left">Assigned To</th>
             <th className="p-3 text-center">Actions</th>
           </tr>
         </thead>
@@ -31,7 +30,6 @@ const SeniorLeaveTable = ({ leaves, onApprove, onReject, onForward }: Props) => 
         <tbody>
           {leaves.map((leave) => (
             <tr key={leave.id} className="border-t">
-              <td className="p-3">{leave.employeeName}</td>
               <td className="p-3">{leave.leaveType}</td>
               <td className="p-3">
                 {leave.from}
@@ -39,11 +37,11 @@ const SeniorLeaveTable = ({ leaves, onApprove, onReject, onForward }: Props) => 
               </td>
               <td className="p-3">{leave.reason}</td>
               <td className="p-3">{leave.submittedOn}</td>
-             
+              <td className="p-3">{leave.assignedTo}</td>
               <td className="p-3">
                 <div className="flex justify-center gap-2">
                   {/* Only show approve/reject/forward for pending */}
-                  {leave.status === "PENDING" && (
+                  {leave.status === "FORWARDED" && (
                     <>
                       <button
                         onClick={() => onApprove(leave.id)}
@@ -59,13 +57,7 @@ const SeniorLeaveTable = ({ leaves, onApprove, onReject, onForward }: Props) => 
                       >
                         <X size={16} />
                       </button>
-                      <button
-                        onClick={() => onForward(leave.id)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded"
-                        title="Forward"
-                      >
-                        <ArrowRight size={16} />
-                      </button>
+                      
                     </>
                   )}
 
@@ -82,10 +74,7 @@ const SeniorLeaveTable = ({ leaves, onApprove, onReject, onForward }: Props) => 
                     </button>
                   )}
 
-                  {/* Approved / Forwarded show dash */}
-                  {(leave.status === "APPROVED" || leave.status === "FORWARDED") && (
-                    <span className="text-gray-400 text-xs">—</span>
-                  )}
+                 
                 </div>
               </td>
             </tr>
@@ -96,4 +85,4 @@ const SeniorLeaveTable = ({ leaves, onApprove, onReject, onForward }: Props) => 
   );
 };
 
-export default SeniorLeaveTable;
+export default HodLeaveTable;

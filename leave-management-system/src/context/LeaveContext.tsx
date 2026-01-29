@@ -39,7 +39,8 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
           reason: "Flu recovery",
           submittedOn: "Apr 25",
           status: "PENDING",
-          assignedTo: "N/A"
+          assignedTo: "N/A",
+          employeeName: "John D."
         },
         {
           id: "2",
@@ -49,7 +50,8 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
           reason: "Home shifting",
           submittedOn: "Apr 07",
           status: "APPROVED",
-          assignedTo: "Sarah M."
+          assignedTo: "Sarah M.",
+          employeeName: "Mike T."
         },
         {
           id: "3",
@@ -59,7 +61,8 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
           reason: "Home shifting",
           submittedOn: "Apr 07",
           status: "REJECTED",
-          assignedTo: "Sarah M."
+          assignedTo: "Sarah M.",
+          employeeName: "Linda K."
         },
         {
           id: "4",
@@ -69,7 +72,8 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
           reason: "Home shifting",
           submittedOn: "Apr 07",
           status: "DRAFT",
-          assignedTo: "Sarah M."
+          assignedTo: "Sarah M.",
+          employeeName: "David S."
         }
       ];
     }
@@ -88,7 +92,8 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
         id: prev.length ? (parseInt(prev[0].id, 10) + 1).toString() : "1", // 4. id as string
         submittedOn: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
         status,
-        assignedTo: "N/A"
+        assignedTo: "N/A",
+        employeeName: "N/A"
       },
       ...prev
     ]);

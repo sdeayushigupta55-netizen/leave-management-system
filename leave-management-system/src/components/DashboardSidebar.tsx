@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { ROLES } from "../constants/roles";
+import { PanelRightOpen } from "lucide-react";
 
 const DashboardSidebar = () => {
   const { user } = useAuth();
@@ -12,7 +13,19 @@ const DashboardSidebar = () => {
       label: "Dashboard",
       path: "/employee",
       icon: "🏠",
-      roles: [ROLES.JUNIOR, ROLES.SENIOR, ROLES.HOD, ROLES.ADMIN],
+      roles: [ROLES.JUNIOR],
+    },
+    {
+      label: "Dashboard",
+      path: "/senior",
+      icon: "🏠",
+      roles: [ROLES.SENIOR],
+    },
+    {
+      label: "Dashboard",
+      path: "/hod",
+      icon: "🏠",
+      roles: [ROLES.HOD],
     },
     {
       label: "Apply Leave",
@@ -34,7 +47,7 @@ const DashboardSidebar = () => {
     },
     {
       label: "Department Approvals",
-      path: "/hod",
+      path: "/hod/leave-approval",
       icon: "🏢",
       roles: [ROLES.HOD],
     },
@@ -57,7 +70,7 @@ const DashboardSidebar = () => {
         className="fixed top-4 left-4 z-40 md:hidden bg-primary text-white p-2 rounded shadow"
         onClick={() => setOpen(true)}
       >
-        ☰
+         <PanelRightOpen size={24}/>
       </button>
 
       {/* Desktop Sidebar */}

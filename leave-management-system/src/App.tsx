@@ -10,9 +10,10 @@ import HodDashboard from "./pages/hod/HodDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 
 import ApplyLeave from "./pages/employee/ApplyLeave";
-import  LeaveStatus from "./pages/employee/LeaveStatus";
+import LeaveStatus from "./pages/employee/LeaveStatus";
 
 import { ROLES } from "./constants/roles";
+import HodLeaveApproval from "./pages/hod/HodLeaveApproval";
 
 function App() {
   return (
@@ -68,7 +69,14 @@ function App() {
               </RoleRoute>
             }
           />
-
+          <Route
+            path="/hod/leave-approval"
+            element={
+              <RoleRoute allow={[ROLES.HOD]}>
+                <HodLeaveApproval />
+              </RoleRoute>
+            }
+          />
           {/* ADMIN */}
           <Route
             path="/admin"
