@@ -18,7 +18,6 @@ const Login = () => {
   const [contact, setContact] = useState(""); // for OTP login
   const [otpInput, setOtpInput] = useState("");
   const [showOtp, setShowOtp] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
 
 
     const isContactValid = contact.length === 9;
@@ -69,7 +68,6 @@ const Login = () => {
       return;
     }
 
-    setOtpSent(true);
     setShowOtp(true);
     alert("OTP sent: 123456 (demo only)"); // 🔴 demo OTP
   };
