@@ -1,3 +1,115 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+
+  /* ---------- INPUT ---------- */
+  .input-base {
+    @apply
+      w-full
+      rounded-md
+      border
+      px-3 py-2
+      text-sm
+      bg-white
+      transition
+      focus:outline-none
+      focus:ring-2
+      disabled:cursor-not-allowed
+      disabled:opacity-60;
+      
+    border-color: hsl(var(--border));
+  }
+
+  .input-base:focus {
+    border-color: hsl(var(--primary));
+    ring-color: hsl(var(--primary));
+  }
+
+  /* ---------- LABEL ---------- */
+  .label-base {
+    @apply block text-sm font-medium mb-1;
+    color: hsl(var(--surface-foreground));
+  }
+
+  /* ---------- BUTTON BASE ---------- */
+  .btn-base {
+    @apply
+      inline-flex
+      items-center
+      justify-center
+      gap-2
+      rounded-md
+      px-4 py-2
+      text-sm
+      font-medium
+      transition
+      disabled:cursor-not-allowed
+      disabled:opacity-60;
+  }
+
+  /* ---------- BUTTON VARIANTS ---------- */
+  .btn-primary {
+    @apply btn-base;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+
+  .btn-secondary {
+    @apply btn-base;
+    background-color: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+  }
+
+  .btn-success {
+    @apply btn-base;
+    background-color: hsl(var(--success));
+    color: hsl(var(--success-foreground));
+  }
+
+  .btn-danger {
+    @apply btn-base;
+    background-color: hsl(var(--danger));
+    color: hsl(var(--danger-foreground));
+  }
+  .btn-white {
+    @apply btn-base;
+    background-color: hsl(0, 0%, 100%);
+    color: hsl(var(--surface-foreground));
+    border: 1px solid hsl(var(--border));
+  }
+}
+
+:root {
+  --primary: 210 63% 16%;        /* #0F2A44 */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 46 33% 74%;       /* #C2B280 */
+  --secondary-foreground: 210 63% 16%;
+
+  --success: 145 62% 31%;        /* #1E7F43 */
+  --success-foreground: 0 0% 100%;
+
+  --danger: 0 64% 33%;           /* #8B1E1E */
+  --danger-foreground: 0 0% 100%;
+
+  --surface: 220 14% 96%;        /* #F3F4F6 */
+  --surface-foreground: 210 30% 15%;
+
+  --border: 210 20% 85%;
+}
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: hsl(var(--surface));
+  color: hsl(var(--surface-foreground));
+  margin: 0;
+  padding: 0;
+}

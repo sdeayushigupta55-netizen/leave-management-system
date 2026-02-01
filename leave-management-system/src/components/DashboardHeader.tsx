@@ -1,11 +1,13 @@
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const DashboardHeader = () => {
   const { i18n } = useTranslation();
   const { user } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Close dropdown when clicking outside
   const handleBlur = (e: React.FocusEvent<HTMLButtonElement>) => {
@@ -15,13 +17,16 @@ const DashboardHeader = () => {
   };
 
   return (
-    <header className="flex items-center justify-between bg-primary px-4 md:px-6 py-3">
-      <div className="flex-1" />
+    <header className="flex items-center bg-primary px-4 md:px-6 py-3">
+      <button className="flex items-center gap-2"  >
+        {/* <PanelRightOpen size={24} color="white" /> */}
+        <h1 className="text-lg font-semibold text-white px-8 mb-2">Dashboard</h1>
+      </button>
       <div className="flex-1 flex items-center justify-end gap-4">
         {user && (
           <div className="relative user_pic">
             <button
-              className="flex items-center gap-2 focus:outline-none"
+              className="flex items-center gap-2 focus:outline-none text-white"
               onClick={() => setDropdownOpen((open) => !open)}
               tabIndex={0}
               onBlur={handleBlur}
@@ -36,24 +41,14 @@ const DashboardHeader = () => {
             {dropdownOpen && (
               <div
                 id="edit_profile_menu"
-                className="absolute right-0 mt-2 w-56 bg-white rounded shadow-lg border border-gray-200 z-50"
+                className="absolute right-0 mt-2 w-40 bg-white rounded shadow-lg border border-gray-200 z-50"
               >
-                <div className="user-details flex flex-col items-center py-4">
-                  <span className="image mb-2">
-                    <img
-                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name ?? "")}&background=fff&color=000`}
-                      alt="user picture"
-                      className="profile-image w-20 h-20 rounded-full border"
-                      height="80"
-                    />
-                  </span>
-                  <span className="name font-semibold text-gray-800 text-base mb-1">{user.name}</span>
-                  <span className="upload-picture-link text-xs text-primary underline mb-2">
-                    <a href="#">Update Picture</a>
-                  </span>
-                </div>
-                <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-gray-700 border-t">Edit Profile</button>
-                <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-gray-700">Logout</button>
+
+                <button
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-gray-700 border-t"
+                  onMouseDown={() => navigate("/police/edit-profile")}
+                >Edit Profile</button>
+                <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-gray-700" onMouseDown={() => navigate("/logout")}>Logout</button>
               </div>
             )}
           </div>
@@ -67,6 +62,13 @@ const DashboardHeader = () => {
           <option value="hi">हिन्दी</option>
         </select>
       </div>
+      {/* Overlay for mobile */}
+      {/* {open && (
+        <div
+          className="fixed inset-0 z-20 bg-black"
+          onClick={() => setOpen(false)}
+        />
+      )} */}
     </header>
   );
 };

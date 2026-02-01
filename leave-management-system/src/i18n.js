@@ -29,6 +29,14 @@ i18n
           totalLeaves: "Total Leaves",
           usedLeaves: "Used Leaves",
           pendingRequests: "Pending Requests",
+          contact: "Contact",
+          enterContact: "Enter your contact number",
+          enterOtp: "Enter the OTP sent to your contact",
+          sendOtp: "Send OTP",
+          verifyOtp: "Verify OTP",
+          invalidContact: "Please enter a valid contact number.",
+          invalidOtp: "Please enter a valid OTP.",
+          otpSentMessage: "OTP has been sent to your contact.",
           // ...other keys
         }
       },
@@ -54,6 +62,14 @@ i18n
           totalLeaves: "कुल अवकाश",
           usedLeaves: "प्रयुक्त अवकाश",
           pendingRequests: "लंबित अनुरोध",
+          contact: "संपर्क",
+          enterContact: "अपना संपर्क नंबर दर्ज करें",
+          enterOtp: "अपने संपर्क पर भेजा गया ओटीपी दर्ज करें",
+          sendOtp: "ओटीपी भेजें",
+          verifyOtp: "ओटीपी सत्यापित करें",
+          invalidContact: "कृपया एक मान्य संपर्क नंबर दर्ज करें।",
+          invalidOtp: "कृपया एक मान्य ओटीपी दर्ज करें।",
+          otpSentMessage: "ओटीपी आपके संपर्क पर भेजा गया है।",
         }
       }
     },

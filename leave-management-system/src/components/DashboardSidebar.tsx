@@ -1,135 +1,145 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { ROLES } from "../constants/roles";
-import { PanelRightOpen } from "lucide-react";
+import { PanelLeftOpen, PanelRightOpen } from "lucide-react";
+import type { UserRole } from "../type/user";
 
 const DashboardSidebar = () => {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
 
-  const menuItems = [
+  // ================= MENU =====================
+  const menuItems: {
+    label: string;
+    path: string;
+    // icon: string;
+    roles: UserRole[];
+    ranks?: string[];
+  }[] = [
     {
       label: "Dashboard",
-      path: "/employee",
-      icon: "🏠",
-      roles: [ROLES.JUNIOR],
-    },
-    {
-      label: "Dashboard",
-      path: "/senior",
-      icon: "🏠",
-      roles: [ROLES.SENIOR],
-    },
-    {
-      label: "Dashboard",
-      path: "/hod",
-      icon: "🏠",
-      roles: [ROLES.HOD],
+      path: "/police",
+      // icon: "🏠",
+      roles: ["POLICE"],
     },
     {
       label: "Apply Leave",
-      path: "/employee/apply-leave",
-      icon: "📝",
-      roles: [ROLES.JUNIOR],
+      path: "/police/apply-leave",
+      // icon: "📝",
+      roles: ["POLICE"],
     },
     {
       label: "My Leave Status",
-      path: "/employee/leave-status",
-      icon: "📋",
-      roles: [ROLES.JUNIOR],
+      path: "/police/leave-status",
+      // icon: "📋",
+      roles: ["POLICE"],
     },
     {
       label: "Pending Approvals",
-      path: "/senior",
-      icon: "✅",
-      roles: [ROLES.SENIOR],
-    },
-    {
-      label: "Department Approvals",
-      path: "/hod/leave-approval",
-      icon: "🏢",
-      roles: [ROLES.HOD],
+      path: "/police/pending-leave",
+      // icon: "✅",
+      roles: ["POLICE"],
+      ranks: ["HEAD_CONSTABLE", "SI", "INSPECTOR", "SHO"], // Only for senior ranks
     },
     {
       label: "Reports",
       path: "/admin",
-      icon: "📊",
-      roles: [ROLES.ADMIN],
+      // icon: "📊",
+      roles: ["ADMIN"],
+    },
+    {
+      label: "All users",
+      path: "/admin/all-users",
+      // icon: "📊",
+      roles: ["ADMIN"],
     },
   ];
 
+  // Filter menu based on logged-in user's role and rank
   const filteredMenu = menuItems.filter(item =>
-    item.roles.includes(user?.role)
+    item.roles.includes(user?.role as UserRole) &&
+    (!item.ranks || item.ranks.includes(user?.rank ?? "CONSTABLE"))
   );
 
   return (
     <>
       {/* Mobile toggle */}
       <button
-        className="fixed top-4 left-4 z-40 md:hidden bg-primary text-white p-2 rounded shadow"
+        className="fixed top-4 left-4 md:hidden bg-primary text-white  rounded shadow"
         onClick={() => setOpen(true)}
       >
-         <PanelRightOpen size={24}/>
+        <PanelRightOpen size={24} />
       </button>
 
-      {/* Desktop Sidebar */}
-      <aside className="w-64 min-h-screen bg-gray-900 text-white hidden md:block">
-        <SidebarContent menu={filteredMenu} />
+      {/* Sidebar (slides for mobile, static for desktop) */}
+      <aside
+        className={`
+          fixed md:static top-0 left-0 h-full w-64 bg-gray-900 text-white z-30
+          transition-transform duration-300
+          ${open ? "translate-x-0" : "-translate-x-full"}
+          md:translate-x-0 md:block
+        `}
+        style={{ minHeight: "100vh" }}
+      >
+        {/* Close button for mobile */}
+        <button
+          className="absolute top-5 right-2 md:hidden text-white text-2xl"
+          onClick={() => setOpen(false)}
+          aria-label="Close sidebar"
+        >
+          <PanelLeftOpen size={24} />
+        </button>
+        <SidebarContent menu={filteredMenu} onClose={() => setOpen(false)} />
       </aside>
 
-      {/* Mobile Sidebar */}
+      {/* Overlay for mobile */}
       {open && (
         <div
-          className="fixed inset-0 z-50 bg-black bg-opacity-40 md:hidden"
+          className="fixed inset-0 z-20 bg-black bg-opacity-40 md:hidden"
           onClick={() => setOpen(false)}
-        >
-          <aside
-            className="absolute left-0 top-0 h-full w-64 bg-gray-900 text-white"
-            onClick={e => e.stopPropagation()}
-          >
-            <SidebarContent menu={filteredMenu} onClose={() => setOpen(false)} />
-          </aside>
-        </div>
+        />
       )}
     </>
   );
 };
 
-type MenuItem = {
-  label: string;
-  path: string;
-  icon: string;
-  roles: string[];
-};
-
+// ================= SIDEBAR CONTENT =================
 type SidebarContentProps = {
-  menu: MenuItem[];
+  menu: {
+    label: string;
+    path: string;
+    // icon: string;
+    roles: UserRole[];
+  }[];
   onClose?: () => void;
 };
 
 const SidebarContent: React.FC<SidebarContentProps> = ({ menu, onClose }) => (
   <>
     <div className="px-4 py-4 border-b border-gray-700">
-      <h2 className="text-lg font-semibold">Police Leave System</h2>
-      <p className="text-xs text-gray-400">Government of Uttar Pradesh</p>
+      <div className="flex-1 flex justify-center">
+      <img
+        src="https://auth.mygov.in/sites/all/themes/mygovauth/logo.png"
+        alt="MyGov Auth"
+        className="h-10 md:h-12"
+      />
+    </div>
     </div>
 
     <nav className="mt-4">
       {menu.map(item => (
-        <NavLink
-          key={item.path}
-          to={item.path}
-          onClick={onClose}
-          {...(item.path === "/employee" ? { end: true } : {})}
-          className={({ isActive }) =>
-            `flex items-center gap-3 px-4 py-3 text-sm
-            ${isActive ? "bg-primary" : "text-gray-300 hover:bg-gray-800"}`
-          }
-        >
-          <span>{item.icon}</span>
-          {item.label}
-        </NavLink>
+       <NavLink
+  key={item.path}
+  to={item.path}
+  onClick={onClose}
+  {...(item.path === "/police" ? { end: true } : {})}
+  className={({ isActive }) =>
+    `flex items-center justify-center gap-3 px-8 py-3 text-medium
+    ${isActive ? "bg-primary" : "text-gray-300 hover:bg-gray-800"}`
+  }
+>
+  <span className="flex-1 text-align-justify">{item.label}</span>
+</NavLink>
       ))}
     </nav>
   </>

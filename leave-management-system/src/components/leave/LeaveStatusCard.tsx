@@ -1,7 +1,8 @@
-import StatusBadge from "./StatusBadge";
+import StatusBadge from "../../ui/StatusBadge";
 import ActionButtons from "./ActionButtons";
 import type { Leave } from "../../type/leave";
 import { useNavigate } from "react-router-dom";
+import { statusColorMap } from "../../utils/statusConfig";
 interface LeaveStatusCardProps {
   leaves: Leave[];
   onEdit: (leave: Leave) => void;
@@ -16,10 +17,10 @@ const LeaveStatusCard  = ({ leaves }: LeaveStatusCardProps) => {
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <span className="font-semibold text-xl">{leave.leaveType}</span>
            <div className="flex gap-2 flex-wrap">
-          <StatusBadge status={leave.status} />
+          <StatusBadge status={leave.status} colorMap={statusColorMap} />
            <ActionButtons
               status={leave.status}
-             onEdit={() => navigate("/employee/apply-leave", { state: { leaveId: leave.id } })} 
+             onEdit={() => navigate("/police/apply-leave", { state: { leaveId: leave.id } })} 
             />
             </div>
         </div>
