@@ -8,6 +8,7 @@ export const POLICE_RANKS: PoliceRank[] = [
   "SI",
   "INSPECTOR",
   "SHO",
+  "SP"
 ];
 
 export const SENIOR_RANKS: PoliceRank[] = [

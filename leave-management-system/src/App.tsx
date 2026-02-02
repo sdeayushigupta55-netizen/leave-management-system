@@ -6,24 +6,26 @@ import { UserProvider, useUsers } from "./context/UserContext";
 import Login from "./pages/Login";
 import EditProfile from "./pages/EditProfile";
 
-import HeadConstableDashboard from "./pages/headconstabledashboard/HeadConstableDashboard";
-import PendingLeave from "./pages/PendingLeave";
 
 
-import HodDashboard from "./pages/hod/HodDashboard";
+
 import AdminDashboard from "./pages/admin/AdminDashboard";
-
+import HeadConstableDashboard from "./pages/headconstabledashboard/HeadConstableDashboard";
+import SI from "./pages/SI/SIDashboard"
+import PendingLeave from "./pages/PendingLeave";
 import ApplyLeave from "./pages/ApplyLeave";
 import PoliceLeaveStatus from "./pages/PoliceLeaveStatus";
 
-// import LeaveStatus from "./pages/employee/LeaveStatus";
-import HodLeaveApproval from "./pages/hod/HodLeaveApproval";
+
 import AllUser from "./pages/admin/AllUser";
 import DashboardRouter from "./routes/DashboardRoute";
 import { POLICE_RANKS, SENIOR_RANKS } from "./constants/roles";
 import type { ReactNode } from "react";
+import SIDashboard from "./pages/SI/SIDashboard";
+import InspectorDashboard from "./pages/Inspector/InspectorDashboard";
+import SHODashboard from "./pages/SHO/SHODashboard";
 
-function AuthProviderWithUser({ children }: { children: ReactNode }){
+function AuthProviderWithUser({ children }: { children: ReactNode }) {
   const { updateUser } = useUsers();
   return <AuthProvider updateUser={updateUser}>{children}</AuthProvider>;
 }
@@ -86,7 +88,7 @@ function App() {
             </Route>
 
 
-            {/* SENIOR / APPROVER */}
+            {/* HEAD_CONSTABLE  */}
             <Route
               path="/headconstable"
               element={
@@ -96,20 +98,55 @@ function App() {
               }
             />
 
-            {/* HOD */}
+            {/* si */}
             <Route
-              path="/hod"
+              path="/si"
               element={
                 <RoleRoute allowRole={["POLICE"]} allowRank={["SI"]}>
-                  <HodDashboard />
+                  <SIDashboard />
                 </RoleRoute>
               }
             />
             <Route
-              path="/hod/leave-approval"
+              path="si/leave-approval"
               element={
                 <RoleRoute allowRole={["POLICE"]} allowRank={["SI"]}>
-                  <HodLeaveApproval />
+                  <SIDashboard />
+                </RoleRoute>
+              }
+            />
+
+            {/* inspector */}
+            <Route
+              path="/inspector"
+              element={
+                <RoleRoute allowRole={["POLICE"]} allowRank={["INSPECTOR"]}>
+                  <InspectorDashboard />
+                </RoleRoute>
+              }
+            />
+            <Route
+              path="inspector/leave-approval"
+              element={
+                <RoleRoute allowRole={["POLICE"]} allowRank={["INSPECTOR"]}>
+                  <InspectorDashboard />
+                </RoleRoute>
+              }
+            />
+            {/* sho */}
+            <Route
+              path="/sho"
+              element={
+                <RoleRoute allowRole={["POLICE"]} allowRank={["SHO"]}>
+                  <SHODashboard />
+                </RoleRoute>
+              }
+            />
+            <Route
+              path="sho/leave-approval"
+              element={
+                <RoleRoute allowRole={["POLICE"]} allowRank={["SHO"]}>
+                  <SHODashboard />
                 </RoleRoute>
               }
             />

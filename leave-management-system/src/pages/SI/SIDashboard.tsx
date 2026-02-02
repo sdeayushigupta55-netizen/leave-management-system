@@ -3,14 +3,15 @@ import UserDashboard from "../../components/leave/UserDashboard";
 import DashboardLayout from "../../layouts/DashboardLayout";
 
 
-const ConstableDashboard = () => {
- 
+const SIDashboard = () => {
 
-  return (
+ return (
      <DashboardLayout>
      <UserDashboard/>
      </DashboardLayout>
   );
 };
 
-export default ConstableDashboard;
+export default SIDashboard;
+
+

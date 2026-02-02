@@ -4,10 +4,12 @@ export type PoliceRank =
   | "HEAD_CONSTABLE"
   | "SI"
   | "INSPECTOR"
-  | "SHO"
-  | "SP";
+    | "SHO"
+    | "SP";
+//   | "SHO/SO"
+//   | "SP_RURAL"
+//   | "SP_URBAN";
   
-
 // ================= SYSTEM ROLES =====================
 export type UserRole = "POLICE" | "ADMIN";
 
@@ -36,7 +38,7 @@ export interface AuthUser {
   role: UserRole;
   isActive: boolean;
   rank?: PoliceRank;
-   policeStation?: string; 
+  policeStation?: string; 
 }
 
 // ================= PAYLOADS ========================

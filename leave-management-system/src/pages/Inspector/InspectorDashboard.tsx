@@ -3,7 +3,7 @@ import UserDashboard from "../../components/leave/UserDashboard";
 import DashboardLayout from "../../layouts/DashboardLayout";
 
 
-const ConstableDashboard = () => {
+const InspectorDashboard = () => {
  
 
   return (
@@ -13,4 +13,4 @@ const ConstableDashboard = () => {
   );
 };
 
-export default ConstableDashboard;
+export default InspectorDashboard;
