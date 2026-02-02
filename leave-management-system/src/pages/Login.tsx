@@ -15,15 +15,14 @@ const Login = () => {
   // ====== STATE ======
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [contact, setContact] = useState(""); // for OTP login
+  const [contact, setContact] = useState(""); 
   const [otpInput, setOtpInput] = useState("");
   const [showOtp, setShowOtp] = useState(false);
-
-
-    const isContactValid = contact.length === 9;
+  const isContactValid = contact.length === 9;
   const isOtpValid = otpInput.length === 6;
+
   // ====== PASSWORD LOGIN ======
-  const handleLogin = (e: React.FormEvent) => {
+   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
     const matchedUser = users.find(

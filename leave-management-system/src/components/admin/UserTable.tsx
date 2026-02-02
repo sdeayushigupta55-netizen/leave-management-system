@@ -6,9 +6,13 @@ import StatusBadge from "../../ui/StatusBadge";
 import ToggleUserButton from "../../ui/Toggle";
 import {Edit} from "lucide-react";
 
+interface UserTableProps {
+  users: User[];
+  onEdit: (user: User) => void;
+}
 
-const UsersTable = ({ onEdit }: { onEdit: (user: User) => void }) => {
-  const { users, toggleUser } = useUsers();
+const UsersTable = ({ users, onEdit }: UserTableProps) => {
+  const { toggleUser } = useUsers();
    
 
  

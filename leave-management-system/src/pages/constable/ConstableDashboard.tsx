@@ -4,6 +4,8 @@ import { useLeave } from "../../context/LeaveContext";
 import { useNavigate } from "react-router-dom";
 import LeaveStatusTable from "../../components/leave/LeaveStatusTable";
 import Button from "../../ui/Button";
+import DashboardCard from "../../ui/DashboardCard";
+import CardGrid from "../../ui/CardGrid";
 
 const ConstableDashboard = () => {
   const { user } = useAuth();
@@ -41,12 +43,18 @@ const ConstableDashboard = () => {
         </div>
 
         {/* 📊 Leave Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <StatCard title="Pending" value={stats.pending} color="bg-yellow-100 text-yellow-700" />
-          <StatCard title="Approved" value={stats.approved} color="bg-green-100 text-green-700" />
-          <StatCard title="Rejected" value={stats.rejected} color="bg-red-100 text-red-700" />
-          <StatCard title="Draft" value={stats.draft} color="bg-gray-100 text-gray-700" />
-        </div>
+        
+          <section className="rounded p-4 sm:p-6 border bg-white">
+          <h2 className="text-lg font-semibold mb-4">Leave Overview</h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <StatCard title="Pending" value={stats.pending} color="bg-yellow-50 border border-yellow-200 text-yellow-700" />
+          <StatCard title="Approved" value={stats.approved} color="bg-green-50 border border-green-200 text-green-700" />
+          <StatCard title="Rejected" value={stats.rejected} color="bg-red-50 border border-red-200  text-red-700" />
+          <StatCard title="Draft" value={stats.draft} color="bg-gray-50 border border-gray-200 text-gray-700" />
+            
+         </div>
+        </section>
 
         {/* ⚡ Quick Actions */}
         <div className="flex gap-3 flex-wrap">
