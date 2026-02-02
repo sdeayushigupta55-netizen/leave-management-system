@@ -15,7 +15,7 @@ const AllUsers = () => {
   // === FILTER STATE ===
   const [roleFilter, setRoleFilter] = useState("ALL");
   const [rankFilter, setRankFilter] = useState("ALL");
-  const [search, setSearch] = useState("");
+  const [search] = useState("");
 
   // === FILTER LOGIC ===
   const filteredUsers = users.filter(user => {

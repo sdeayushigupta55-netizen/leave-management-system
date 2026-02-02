@@ -11,7 +11,7 @@ import EditProfile from "./pages/EditProfile";
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import HeadConstableDashboard from "./pages/headconstabledashboard/HeadConstableDashboard";
-import SI from "./pages/SI/SIDashboard"
+
 import PendingLeave from "./pages/PendingLeave";
 import ApplyLeave from "./pages/ApplyLeave";
 import PoliceLeaveStatus from "./pages/PoliceLeaveStatus";
