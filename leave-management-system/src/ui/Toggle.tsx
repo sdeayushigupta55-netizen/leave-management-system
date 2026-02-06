@@ -14,8 +14,8 @@ const ToggleSwitch: React.FC<Props> = ({ checked, onChange }) => (
       className="sr-only"
     />
     <span
-      className={`w-10 h-5 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out
-        ${checked ? "bg-primary" : "bg-gray-300"}`}
+      className={`w-11 h-6 flex items-center rounded-full p-1 duration-300 ease-in-out shadow-inner
+        ${checked ? "bg-gradient-to-r from-[#138808] to-[#1b9e10]" : "bg-gray-300"}`}
     >
       <span
         className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out

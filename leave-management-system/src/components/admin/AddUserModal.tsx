@@ -19,14 +19,14 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
     const [form, setForm] = useState<{
         contact: any;
         name: string;
-        email: string;
+        uno: string;
         role?: UserRole;
         rank?: PoliceRank;
         policeStation: string;
         password: string;
     }>({
         name: "",
-        email: "",
+        uno: "",
         role: undefined,
         rank: undefined,
         policeStation: "",
@@ -38,11 +38,11 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
         if (user) {
             setForm({
                 name: user.name,
-                email: user.email,
+                uno: user.uno,
                 contact: user.contact,
                 role: user.role,
                 rank: user.rank,
-                policeStation: user.policeStation,
+                policeStation: user.policeStation ?? "",
                 password: "", // Don't prefill password for security
             });
         }
@@ -56,7 +56,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
             // For update, you may need to handle types similarly if updateUser is typed strictly
             const userData = {
                 name: form.name,
-                email: form.email,
+                uno: form.uno,
                 role: form.role,
                 rank: form.role === "POLICE" ? form.rank : undefined,
                 policeStation: form.policeStation,
@@ -68,7 +68,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
             if (form.role === "POLICE") {
                 addUser({
                     name: form.name,
-                    email: form.email,
+                    uno: form.uno,
                     contact: form.contact,
                     role: "POLICE",
                     rank: form.rank!,
@@ -78,7 +78,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
             } else if (form.role === "ADMIN") {
                 addUser({
                     name: form.name,
-                    email: form.email,
+                    uno: form.uno,
                     contact: form.contact,
                     role: "ADMIN",
                     policeStation: form.policeStation,
@@ -92,7 +92,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
 
     const isDisabled =
         !form.name ||
-        !form.email ||
+        !form.uno ||
         !form.role ||
         !form.policeStation ||
         (!user && !form.password) ||
@@ -107,22 +107,22 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
             };
 
     return (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-white w-full max-w-md rounded-xl shadow-lg">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
 
                 {/* Header */}
-                <div className="px-6 py-4 border-b flex justify-between items-center">
+                <div className="bg-gradient-to-r from-[#1a237e] to-[#303f9f] px-6 py-4 flex justify-between items-center">
                     <div>
-                        <h2 className="text-lg font-semibold">{user ? "Update User" : "Add New User"}</h2>
-                        <p className="text-xs text-gray-500">
+                        <h2 className="text-lg font-bold text-white">{user ? "Update User" : "Add New User"}</h2>
+                        <p className="text-xs text-blue-100">
                             Police Leave Management System
                         </p>
                     </div>
                     <Button
                         onClick={onClose}
-                        className="p-2"
+                        className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
                     >
-                        <X size={16} />
+                        <X size={16} className="text-white" />
                     </Button>
 
                 </div>
@@ -143,11 +143,11 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
                     <div>
 
                         <InputField
-                            label="Email"
-                            placeholder="example@up.gov.in"
-                            onChange={handleInputChange("email")}
+                            label="UNO"
+                            placeholder="Enter UNO"
+                            onChange={handleInputChange("uno")}
                             required
-                            value={form.email}
+                            value={form.uno}
                         />
 
                     </div>
@@ -200,8 +200,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
                         </Select>
                     )}
 
-
-                    <div>
+                     <div>
 
                         <InputField
                             label="Enter Police Station"
@@ -226,7 +225,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
                 </div>
 
                 {/* Footer */}
-                <div className="px-6 py-4 border-t flex justify-end gap-3">
+                <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
                     <Button
                         onClick={onClose}
                         variant="danger"
@@ -237,9 +236,6 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
                         onClick={submit}
                         disabled={isDisabled}
                         variant="primary"
-                        className={`px-4 py-2 text-sm rounded-md text-white
-              ${isDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-primary hover:opacity-90"}
-            `}
                     >
                         {user ? "Update User" : "Create User"}
                     </Button>

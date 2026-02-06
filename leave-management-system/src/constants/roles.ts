@@ -1,22 +1,26 @@
 
-
 import type { PoliceRank, UserRole } from "../type/user";
 
 export const POLICE_RANKS: PoliceRank[] = [
   "CONSTABLE",
   "HEAD_CONSTABLE",
   "SI",
+  "CO",
   "INSPECTOR",
-  "SHO",
-  "SP"
+  "SHO/SO",
+  "SP",
+  "SSP"
 ];
 
 export const SENIOR_RANKS: PoliceRank[] = [
+  "CONSTABLE",
   "HEAD_CONSTABLE",
   "SI",
+  "CO",
   "INSPECTOR",
-  "SHO",
+  "SHO/SO",
   "SP",
+  "SSP"
 ] as const;
 
 export const ROLES: Record<UserRole, UserRole> = {

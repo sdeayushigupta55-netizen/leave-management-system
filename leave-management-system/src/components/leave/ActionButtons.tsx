@@ -1,28 +1,27 @@
-import { Pencil } from "lucide-react";
-import type { Leave } from "../../type/leave";
+import { useTranslation } from "react-i18next";
+import { Edit } from "lucide-react";
 
 type ActionButtonsProps = {
-  status: Leave["status"];
+  status: string;
   onEdit: () => void;
 };
 
 const ActionButtons = ({ status, onEdit }: ActionButtonsProps) => {
-  // Only show edit action for DRAFT
+  const { t } = useTranslation();
+
+  // Only show edit for DRAFT status
   if (status !== "DRAFT") {
-    return <span>-</span>;
+    return <span className="text-gray-400">-</span>;
   }
 
   return (
-    <div className="flex gap-2">
-      <button
-        type="button"
-        className="bg-gray-500 hover:bg-gray-600 text-white px-2 py-1 rounded flex items-center justify-center"
-        title="Edit Leave"
-        onClick={onEdit}
-      >
-        <Pencil size={16} />
-      </button>
-    </div>
+    <button
+      onClick={onEdit}
+      className="flex items-center gap-1.5 text-[#1a237e] text-sm font-semibold hover:text-[#303f9f] transition"
+    >
+      <Edit size={14} />
+      {t("edit")}
+    </button>
   );
 };
 

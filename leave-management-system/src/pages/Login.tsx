@@ -12,190 +12,165 @@ const Login = () => {
   const { login } = useAuth();
   const { users } = useUsers();
 
-  // ====== STATE ======
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [contact, setContact] = useState(""); 
+  const [uno, setUno] = useState("");
+  const [contact, setContact] = useState("");
   const [otpInput, setOtpInput] = useState("");
   const [showOtp, setShowOtp] = useState(false);
-  const isContactValid = contact.length === 9;
+
+  const isFormValid = uno.length > 0 && contact.length === 10;
   const isOtpValid = otpInput.length === 6;
 
-  // ====== PASSWORD LOGIN ======
-   const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleRequestOtp = () => {
+    if (!uno || !contact) {
+      alert(t("enterUno") + " & " + t("enterContact"));
+      return;
+    }
 
     const matchedUser = users.find(
-      u => u.email === email && u.password === password
+      (u) => u.uno === uno && u.contact === contact
     );
 
     if (!matchedUser) {
-      alert("Invalid email or password");
+      alert(t("invalidCredentials"));
       return;
     }
 
     if (!matchedUser.isActive) {
-      alert("Your account is deactivated. Contact admin.");
+      alert(t("accountDeactivated"));
+      return;
+    }
+
+    setShowOtp(true);
+    alert(t("otpSentMessage") + " 123456 (demo)");
+  };
+
+  const handleVerifyOtp = () => {
+    const matchedUser = users.find(
+      (u) => u.uno === uno && u.contact === contact
+    );
+
+    if (!matchedUser) {
+      alert(t("userNotFound"));
+      return;
+    }
+
+    if (!matchedUser.isActive) {
+      alert(t("accountInactive"));
+      return;
+    }
+
+    if (otpInput !== "123456") {
+      alert(t("invalidOtp"));
       return;
     }
 
     login({
       id: matchedUser.id,
       name: matchedUser.name,
-      email: matchedUser.email,
+      uno: matchedUser.uno,
       role: matchedUser.role,
       isActive: matchedUser.isActive,
       contact: matchedUser.contact,
       rank: matchedUser.rank,
+      circleOffice: matchedUser.circleOffice,
       policeStation: matchedUser.policeStation,
-       password: matchedUser.password || "",
+      area: matchedUser.area,
+      gender: matchedUser.gender,
+      password: matchedUser.password || "",
     });
 
     navigate(matchedUser.role === "ADMIN" ? "/admin" : "/police");
   };
 
-  // ====== OTP LOGIN ======
-  const handleRequestOtp = () => {
-    if (!contact) {
-      alert("Enter your contact number");
-      return;
-    }
-
-    const userExists = users.find(u => u.contact === contact);
-    if (!userExists) {
-      alert("User not found");
-      return;
-    }
-
-    setShowOtp(true);
-    alert("OTP sent: 123456 (demo only)"); // 🔴 demo OTP
-  };
-
-  const handleVerifyOtp = () => {
-    const user = users.find(u => u.contact === contact);
-    if (!user) return alert("User not found");
-
-    if (!user.isActive) return alert("Account inactive");
-
-    if (otpInput !== "123456") return alert("Invalid OTP");
-
-    login({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      isActive: user.isActive,
-      contact: user.contact,
-      rank: user.rank,
-      policeStation: user.policeStation,
-    password: user.password || "",
-    });
-
-    navigate(user.role === "ADMIN" ? "/admin" : "/police");
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface px-2 md:px-4">
+    <div className="min-h-screen flex flex-col bg-surface">
       <div className="fixed top-0 left-0 w-full z-50">
         <Header />
       </div>
 
-      <div className="relative bg-white w-full max-w-xs md:max-w-md rounded-lg shadow-md border border-gray-200 mt-24 mb-20">
-        {/* Title */}
-        <div className="px-4 md:px-6 py-4 text-center">
-          <h1 className="text-2xl font-bold text-gray-800">{t("police")}</h1>
+      <div className="flex-1 flex items-center justify-center px-4 pt-20 pb-16">
+        <div className="bg-white w-full max-w-sm sm:max-w-md rounded-lg shadow-md border border-gray-200">
+          <div className="px-4 sm:px-6 py-4 text-center">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{t("police")}</h1>
+          </div>
+
+          <div className="px-4 sm:px-6 space-y-4 pb-6">
+            {!showOtp ? (
+              <>
+                <input
+                  type="text"
+                  placeholder={t("enterUno")}
+                  value={uno}
+                  onChange={(e) => setUno(e.target.value)}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2.5 sm:py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <input
+                  type="text"
+                  placeholder={t("enterContact")}
+                  value={contact}
+                  onChange={(e) => setContact(e.target.value.replace(/\D/g, ""))}
+                  maxLength={10}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2.5 sm:py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <button
+                  type="button"
+                  disabled={!isFormValid}
+                  className={`w-full bg-primary text-white py-3 rounded-md text-sm font-medium transition ${
+                    isFormValid ? "hover:opacity-90 active:scale-[0.98]" : "opacity-60 cursor-not-allowed"
+                  }`}
+                  onClick={handleRequestOtp}
+                >
+                  {t("loginWithOtp")}
+                </button>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-gray-600 text-center">
+                  {t("otpSentTo")} {contact}
+                </p>
+                <input
+                  type="text"
+                  placeholder={t("enterOtp")}
+                  value={otpInput}
+                  onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, ""))}
+                  maxLength={6}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2.5 sm:py-2 text-sm text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <button
+                  type="button"
+                  disabled={!isOtpValid}
+                  className={`w-full bg-primary text-white py-3 rounded-md text-sm font-medium transition ${
+                    isOtpValid ? "hover:opacity-90 active:scale-[0.98]" : "opacity-60 cursor-not-allowed"
+                  }`}
+                  onClick={handleVerifyOtp}
+                >
+                  {t("verifyOtp")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowOtp(false)}
+                  className="w-full text-sm text-gray-500 hover:text-gray-700"
+                >
+                  ← {t("backToLogin")}
+                </button>
+              </>
+            )}
+          </div>
+           <div className="p-4 border-t border-gray-200">
+            <span className="text-xs text-gray-500 block mb-1">{t("demoCredentials")}</span>
+            <span className="text-xs text-gray-500">UNO: UNO6001, Contact: 9876500008 (CONSTABLE)</span><br />
+            <span className="text-xs text-gray-500">UNO: UNO5001, Contact: 9876500007 (HEAD CONSTABLE)</span><br />
+            <span className="text-xs text-gray-500">UNO: UNO4001, Contact: 9876500006 (INSPECTOR)</span><br />
+            <span className="text-xs text-gray-500">UNO: UNO3001, Contact: 9876500005 (SI)</span><br />
+            <span className="text-xs text-gray-500">UNO: UNO2001, Contact: 9876500004 (SHO/SO)</span><br />
+            <span className="text-xs text-gray-500">UNO: UNO1001, Contact: 9876500003 (SP)</span><br />
+            <span className="text-xs text-gray-500">UNO: UNO0001, Contact: 9876500002 (CO)</span><br />
+            <span className="text-xs text-gray-500">UNO: UNO9001, Contact: 9876500001 (ADMIN)</span>
+          </div>
         </div>
-
-          {/* ================= OTP Section ================= */}
-        <div className="px-4 md:px-6 space-y-4">
-          {!showOtp ? (
-            <>
-              <input
-                type="text"
-                placeholder={t("enterContact")}
-                value={contact}
-                onChange={e => setContact(e.target.value.replace(/\D/g, ""))}
-                maxLength={9}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-              />
-              <button
-                type="button"
-                disabled={!isContactValid}
-                className={`w-full bg-primary text-white py-3 rounded-md text-sm font-medium ${
-                  isContactValid ? "hover:opacity-90" : "opacity-60 cursor-not-allowed"
-                }`}
-                onClick={handleRequestOtp}
-              >
-                {t("loginWithOtp")}
-              </button>
-            </>
-          ) : (
-            <>
-              <input
-                type="text"
-                placeholder={t("enterOtp")}
-                value={otpInput}
-                onChange={e =>
-                  setOtpInput(e.target.value.replace(/\D/g, ""))
-                }
-                maxLength={6}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-              />
-              <button
-                type="button"
-                disabled={!isOtpValid}
-                className={`w-full bg-primary text-white py-3 rounded-md text-sm font-medium ${
-                  isOtpValid ? "hover:opacity-90" : "opacity-60 cursor-not-allowed"
-                }`}
-                onClick={handleVerifyOtp}
-              >
-                {t("verifyOtp")}
-              </button>
-            </>
-          )}
-        </div>
-
-        {/* Divider */}
-        <div className="flex items-center my-6 px-4 md:px-6">
-          <hr className="flex-grow border-gray-300" />
-          <span className="mx-3 bg-gray-100 border rounded-full px-4 py-1 text-xs">
-            {t("or")}
-          </span>
-          <hr className="flex-grow border-gray-300" />
-        </div>
-
-        {/* Password Login */}
-        <form onSubmit={handleLogin} className="px-4 md:px-6 space-y-4 pb-6">
-          <input
-            type="email"
-            placeholder={t("emailMobile")}
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            required
-          />
-
-          <input
-            type="password"
-            placeholder={t("password")}
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            required
-          />
-
-          <button
-            type="submit"
-            className="w-full bg-primary text-white py-3 rounded-md text-sm font-medium hover:opacity-90"
-          >
-            {t("loginWithPassword")}
-          </button>
-        </form>
       </div>
 
-      <div className="fixed bottom-0 left-0 w-full z-50">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 };

@@ -1,16 +1,17 @@
 import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
-import type { User, CreatePoliceUserPayload, CreateAdminUserPayload } from "../type/user";
+import type { User} from "../type/user";
 
 interface UserContextType {
     users: User[];
-    addUser: (payload: CreateAdminUserPayload | CreatePoliceUserPayload) => void;
+    loginWithUno: (uno: string, contact: string) => User;
     updateUser: (id: string, updated: Partial<User>) => void;
+    addUser: (payload: any) => void; // You can replace 'any' with a more specific type if needed
     toggleUser: (id: string) => void;
-    resetPassword: (userId: string, newPassword: string) => void;
+    // resetPassword: (userId: string, newPassword: string) => void; // For future use
 }
 
-const UserContext = createContext<UserContextType | null>(null);
+const   UserContext = createContext<UserContextType | null>(null);
 
 export const useUsers = () => {
     const ctx = useContext(UserContext);
@@ -20,95 +21,130 @@ export const useUsers = () => {
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
     const [users, setUsers] = useState<User[]>([
-  {
+   {
     id: "1",
-    name: "CONSTABLE",
-    email: "CONSTABLE@police.gov",
-    contact: "987654321",
+    uno: "UNO6001",
+    name: "Ruapli Singh",
+    contact: "9876500008",
     role: "POLICE",
     rank: "CONSTABLE",
-    policeStation: "HQ",
+    circleOffice: "City Circle",
+    policeStation: "Ramgarh",
+    area: "CITY",
+    gender: "FEMALE",
     isActive: true,
     createdAt: new Date().toISOString(),
-    password: "Police@123", // 🔴 demo only
-    
   },
   {
     id: "2",
-    name: "ADMIN",
-    email: "ADMIN@police.gov",
-     contact: "987645321",
-    role: "ADMIN",
-    policeStation: "HQ",
+    uno: "UNO5001",
+    name: "Rahul Verma",
+    contact: "9876500007",
+    role: "POLICE",
+    rank: "HEAD_CONSTABLE",
+    circleOffice: "City Circle",
+    policeStation: "Ramgarh",
+    area: "CITY",
+    gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
-    password: "Police@123", // 🔴 demo only
   },
   {
     id: "3",
-    name: "HEAD_CONSTABLE",
-    email: "HEAD_CONSTABLE@police.gov",
-     contact: "987645321",
-    role: "POLICE",
-    rank: "HEAD_CONSTABLE",
-    policeStation: "HQ",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    password: "Police@123", // 🔴 demo only
-  },
-  {
-    id: "4",
-    name: "SI",
-    email: "SI@police.gov",
-     contact: "987645321",
+    uno: "UNO3001",
+    name: "Sunil Kumar",
+    contact: "9876500005",
     role: "POLICE",
     rank: "SI",
-    policeStation: "HQ",
+    circleOffice: "City Circle",
+    policeStation: "Ramgarh",
+    area: "CITY",
+    gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
-    password: "Police@123", // 🔴 demo only
+  },
+
+//   🔼 Upper hierarchy (needed later)
+  {
+    id: "10",
+    uno: "UNO2001",
+    name: "Rakesh Mishra",
+    contact: "9876500004",
+    role: "POLICE",
+    rank: "SHO/SO",
+    policeStation: "Ramgarh",
+    circleOffice: "City Circle",
+    area: "CITY",
+    gender: "MALE",
+    isActive: true,
+    createdAt: new Date().toISOString(),
   },
   {
-    id: "5",
-    name: "INSPECTOR",
-    email: "INSPECTOR@police.gov",
-     contact: "987645321",
+    id: "9",
+    uno: "UNO4001",
+    name: "Vikram Singh",
+    contact: "9876500006",
     role: "POLICE",
     rank: "INSPECTOR",
-    policeStation: "HQ",
+    policeStation: "Ramgarh",
+    circleOffice: "City Circle",
+    area: "CITY",
+    gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
-    password: "Police@123", // 🔴 demo only
   },
   {
-    id: "6",
-    name: "SHO",
-    email: "SHO@police.gov",
-     contact: "987645321",
+    id: "11",
+    uno: "UNO0001",
+    name: "Amit Sharma",
+    contact: "9876500002",
     role: "POLICE",
-    rank: "SHO",
-    policeStation: "HQ",
+    rank: "CO",
+    circleOffice: "City Circle",
+    area: "CITY",
+    gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
-    password: "Police@123", // 🔴 demo only
+  },
+  {
+    id: "12",
+    uno: "UNO1001",
+    name: "Anil Kumar",
+    contact: "9876500003",
+    role: "POLICE",
+    rank: "SP",
+    area: "CITY",
+    gender: "MALE",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "13",
+    uno: "UNO9001",
+    name: "Mohan Verma",
+    contact: "9876500001",
+    role: "POLICE",
+    rank: "SSP",
+    gender: "MALE",
+    isActive: true,
+    createdAt: new Date().toISOString(),
   }
 ]);
+ // const addUser = (
+    //     payload: CreateAdminUserPayload | CreatePoliceUserPayload
+    // ) => {
+    //     const { password, ...safePayload } = payload;
 
-    const addUser = (
-        payload: CreateAdminUserPayload | CreatePoliceUserPayload
-    ) => {
-        const { password, ...safePayload } = payload;
-
-        setUsers(prev => [
-            {
-                id: crypto.randomUUID(),
-                isActive: true,
-                createdAt: new Date().toISOString(),
-                ...safePayload,
-            },
-            ...prev,
-        ]);
-    };
+    //     setUsers(prev => [
+    //         {
+    //             id: crypto.randomUUID(),
+    //             isActive: true,
+    //             createdAt: new Date().toISOString(),
+    //             ...safePayload,
+    //         },
+    //         ...prev,
+    //     ]);
+    // };
    
     const updateUser=(id:string,updated:Partial<User>)=> {
         setUsers(prev=>
@@ -126,13 +162,24 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         );
     };
 
-    const resetPassword = (userId: string, newPassword: string) => {
-        console.log("Password reset for", userId, newPassword);
-        // backend later
-    };
+    // const resetPassword = (userId: string, newPassword: string) => {
+    //     console.log("Password reset for", userId, newPassword);
+    //     // backend later
+    // };
+const loginWithUno = (uno: string, contact: string) => {
+  const user = users.find(
+    u => u.uno === uno && u.contact === contact && u.isActive
+  );
+
+  if (!user) {
+    throw new Error("Invalid UNO or contact number");
+  }
+
+  return user;
+};
 
     return (
-        <UserContext.Provider value={{ users, addUser, updateUser, toggleUser, resetPassword }}>
+        <UserContext.Provider value={{ users, loginWithUno ,updateUser, toggleUser, addUser: () => {} }}>
             {children}
         </UserContext.Provider>
     );

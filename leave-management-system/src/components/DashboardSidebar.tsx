@@ -1,74 +1,83 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 import { PanelLeftOpen, PanelRightOpen } from "lucide-react";
 import type { UserRole } from "../type/user";
 
 const DashboardSidebar = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
-  // ================= MENU =====================
   const menuItems: {
-    label: string;
+    labelKey: string;
     path: string;
     roles: UserRole[];
     ranks?: string[];
   }[] = [
     {
-      label: "Dashboard",
+      labelKey: "dashboard",
       path: "/police",
       roles: ["POLICE"],
     },
     {
-      label: "Apply Leave",
+      labelKey: "applyLeave",
       path: "/police/apply-leave",
       roles: ["POLICE"],
+      ranks: ["SHO/SO", "CO", "SP", "INSPECTOR","SI", "HEAD_CONSTABLE","CONSTABLE"],
     },
     {
-      label: "My Leave Status",
+      labelKey: "myLeaveStatus",
       path: "/police/leave-status",
       roles: ["POLICE"],
+      ranks: ["SHO/SO", "CO", "SP", "INSPECTOR","SI", "HEAD_CONSTABLE","CONSTABLE"],
     },
     {
-      label: "Pending Approvals",
+      labelKey: "seniorDetails",
+      path: "/police/senior-details",
+      roles: ["POLICE"],
+      ranks: ["SHO/SO", "CO", "SP", "INSPECTOR","SI", "HEAD_CONSTABLE","CONSTABLE"],
+    },
+    {
+      labelKey: "pendingApprovals",
       path: "/police/pending-leave",
       roles: ["POLICE"],
-      ranks: ["HEAD_CONSTABLE", "SI", "INSPECTOR", "SHO"],
+      ranks: ["SHO/SO", "CO", "SP", "SSP"],
     },
+    // {
+    //   labelKey: "reports",
+    //   path: "/ssp",
+    //   roles: ["POLICE"],
+    //   ranks: ["SSP"],
+    // },
     {
-      label: "Reports",
-      path: "/admin",
-      roles: ["ADMIN"],
-    },
-    {
-      label: "All Users",
-      path: "/admin/all-users",
-      roles: ["ADMIN"],
+      labelKey: "allUsers",
+      path: "/ssp/all-users",
+      roles: ["POLICE"],
+      ranks: ["SSP"],
     },
   ];
 
-  // Filter menu based on logged-in user's role and rank
-  const filteredMenu = menuItems.filter(item =>
-    item.roles.includes(user?.role as UserRole) &&
-    (!item.ranks || item.ranks.includes(user?.rank ?? "CONSTABLE"))
+  const filteredMenu = menuItems.filter(
+    (item) =>
+      item.roles.includes(user?.role as UserRole) &&
+      (!item.ranks || item.ranks.includes(user?.rank ?? "CONSTABLE"))
   );
 
   return (
     <>
-      {/* Mobile toggle */}
       <button
-        className="fixed top-4 left-4 md:hidden bg-primary text-white rounded shadow p-2 z-40"
+        className="fixed top-4 left-4 md:hidden bg-[#1a237e] text-white rounded shadow p-2 z-40"
         onClick={() => setOpen(true)}
-        aria-label="Open sidebar"
+        aria-label={t("openSidebar")}
       >
         <PanelRightOpen size={24} />
       </button>
 
-      {/* Sidebar (slides for mobile, static for desktop) */}
       <aside
         className={`
-          fixed md:static top-0 left-0 w-64 bg-gray-900 text-white z-30
+          fixed md:static top-0 left-0 w-64 bg-[#0d1b2a] text-white z-30
           transition-transform duration-300
           ${open ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0 md:block
@@ -76,18 +85,16 @@ const DashboardSidebar = () => {
         `}
         style={{ minHeight: "100vh" }}
       >
-        {/* Close button for mobile */}
         <button
           className="absolute top-5 right-2 md:hidden text-white text-2xl"
           onClick={() => setOpen(false)}
-          aria-label="Close sidebar"
+          aria-label={t("closeSidebar")}
         >
           <PanelLeftOpen size={24} />
         </button>
-        <SidebarContent menu={filteredMenu} onClose={() => setOpen(false)} />
+        <SidebarContent menu={filteredMenu} onClose={() => setOpen(false)} t={t} />
       </aside>
 
-      {/* Overlay for mobile */}
       {open && (
         <div
           className="fixed inset-0 z-20 bg-black bg-opacity-40 md:hidden"
@@ -98,19 +105,19 @@ const DashboardSidebar = () => {
   );
 };
 
-// ================= SIDEBAR CONTENT =================
 type SidebarContentProps = {
   menu: {
-    label: string;
+    labelKey: string;
     path: string;
     roles: UserRole[];
   }[];
   onClose?: () => void;
+  t: (key: string) => string;
 };
 
-const SidebarContent: React.FC<SidebarContentProps> = ({ menu, onClose }) => (
+const SidebarContent: React.FC<SidebarContentProps> = ({ menu, onClose, t }) => (
   <>
-    <div className="px-4 py-4 border-b border-gray-700">
+    <div className="px-4 py-4 border-b border-[#1a237e]">
       <div className="flex-1 flex justify-center">
         <img
           src="https://auth.mygov.in/sites/all/themes/mygovauth/logo.png"
@@ -121,18 +128,18 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ menu, onClose }) => (
     </div>
 
     <nav className="mt-4 flex flex-col gap-2">
-      {menu.map(item => (
+      {menu.map((item) => (
         <NavLink
           key={item.path}
           to={item.path}
           onClick={onClose}
-          {...(item.path === "/police" || item.path === "/admin" ? { end: true } : {})}
+          {...(item.path === "/police" || item.path === "/ssp" ? { end: true } : {})}
           className={({ isActive }) =>
             `flex items-center gap-3 px-6 py-3 rounded-lg transition
-            ${isActive ? "bg-primary text-white" : "text-gray-300 hover:bg-gray-800"}`
+            ${isActive ? "bg-[#c5a200] text-[#0d1b2a] font-semibold" : "text-gray-300 hover:bg-[#1a237e]"}`
           }
         >
-          <span className="flex-1">{item.label}</span>
+          <span className="flex-1">{t(item.labelKey)}</span>
         </NavLink>
       ))}
     </nav>

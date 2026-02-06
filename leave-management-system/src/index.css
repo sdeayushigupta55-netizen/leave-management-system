@@ -1,9 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+/* ============================================
+   POLICE LEAVE MANAGEMENT SYSTEM - MAIN CSS
+   Color Theme: Navy Blue + Gold (Government)
+   ============================================ */
 
 @layer components {
 
@@ -80,36 +82,97 @@
     background-color: hsl(var(--danger));
     color: hsl(var(--danger-foreground));
   }
+
   .btn-white {
     @apply btn-base;
     background-color: hsl(0, 0%, 100%);
     color: hsl(var(--surface-foreground));
     border: 1px solid hsl(var(--border));
   }
+
+  /* ---------- CARDS ---------- */
+  .card {
+    @apply bg-white rounded-xl border border-gray-100 shadow-sm;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-md transition-shadow;
+  }
+
+  /* ---------- GOVERNMENT THEME UTILITIES ---------- */
+  .govt-gradient {
+    @apply bg-gradient-to-r from-[#1a237e] via-[#283593] to-[#303f9f];
+  }
+
+  .gold-accent {
+    @apply text-[#c5a200];
+  }
+
+  .gold-border {
+    @apply border-[#c5a200];
+  }
 }
 
+/* ============================================
+   CSS VARIABLES - Government Theme
+   ============================================ */
 :root {
-  --primary: 210 63% 16%;        /* #0F2A44 */
+  /* Primary - Navy Blue */
+  --primary: 234 62% 30%;        /* #1a237e */
   --primary-foreground: 0 0% 100%;
 
+  /* Accent - Gold */
+  --accent: 45 100% 39%;         /* #c5a200 */
+  --accent-foreground: 0 0% 10%;
+
+  /* Secondary */
   --secondary: 46 33% 74%;       /* #C2B280 */
   --secondary-foreground: 210 63% 16%;
 
-  --success: 145 62% 31%;        /* #1E7F43 */
+  /* Success - Indian Green */
+  --success: 120 85% 28%;        /* #138808 */
   --success-foreground: 0 0% 100%;
 
-  --danger: 0 64% 33%;           /* #8B1E1E */
+  /* Danger - Official Red */
+  --danger: 0 66% 47%;           /* #c62828 */
   --danger-foreground: 0 0% 100%;
 
+  /* Warning - Saffron */
+  --warning: 28 100% 50%;        /* #FF9933 */
+  --warning-foreground: 0 0% 100%;
+
+  /* Surface */
   --surface: 220 14% 96%;        /* #F3F4F6 */
   --surface-foreground: 210 30% 15%;
 
+  /* Border */
   --border: 210 20% 85%;
 }
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
 body {
   font-family: 'Inter', sans-serif;
   background-color: hsl(var(--surface));
   color: hsl(var(--surface-foreground));
   margin: 0;
   padding: 0;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background-color: #1a237e;
+  color: white;
+}
+
+/* Focus outline for accessibility */
+*:focus-visible {
+  outline: 2px solid #c5a200;
+  outline-offset: 2px;
 }

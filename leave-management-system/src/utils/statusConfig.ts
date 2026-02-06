@@ -2,15 +2,15 @@ import type { LeaveStatus } from "../type/leave";
 
 export type UserStatus = "ACTIVE" | "INACTIVE";
 
+// Government theme colors
 export const statusColorMap: Record<LeaveStatus, string> = {
-  APPROVED: "bg-green-50 border-green-700 text-green-700",
-  REJECTED: "bg-red-50 border-red-700 text-red-700",
-  PENDING: "bg-yellow-50 border-yellow-700 text-yellow-700",
-  DRAFT: "bg-gray-50 border-gray-700 text-gray-700",
-  
+  APPROVED: "bg-[#e8f5e9] border-[#138808] text-[#138808]",
+  REJECTED: "bg-[#ffebee] border-[#c62828] text-[#c62828]",
+  PENDING: "bg-[#fff3e0] border-[#FF9933] text-[#e65100]",
+  DRAFT: "bg-[#e8eaf6] border-[#1a237e] text-[#1a237e]",
 };
 
 export const userStatusColorMap: Record<UserStatus, string> = {
-  ACTIVE: "bg-green-50 border-green-700 text-green-700",
-  INACTIVE: "bg-red-50 border-red-700 text-red-700",
+  ACTIVE: "bg-[#e8f5e9] border-[#138808] text-[#138808]",
+  INACTIVE: "bg-[#ffebee] border-[#c62828] text-[#c62828]",
 };

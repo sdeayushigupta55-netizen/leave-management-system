@@ -2,39 +2,84 @@ import StatusBadge from "../../ui/StatusBadge";
 import ActionButtons from "./ActionButtons";
 import type { Leave } from "../../type/leave";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { statusColorMap } from "../../utils/statusConfig";
+import { leaveTypeToKey } from "../../utils/translationHelper";
+
 interface LeaveStatusCardProps {
   leaves: Leave[];
   onEdit: (leave: Leave) => void;
 }
 
-const LeaveStatusCard  = ({ leaves }: LeaveStatusCardProps) => {
-    const navigate = useNavigate();
-    return (
-  <div className="flex flex-col gap-3">
-    {leaves.map((leave) => (
-      <div key={leave.id} className="bg-white rounded shadow border p-3 flex flex-col gap-2">
-        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-          <span className="font-semibold text-xl">{leave.leaveType}</span>
-           <div className="flex gap-2 flex-wrap">
-          <StatusBadge status={leave.status} colorMap={statusColorMap} />
-           <ActionButtons
-              status={leave.status}
-             onEdit={() => navigate("/police/apply-leave", { state: { leaveId: leave.id } })} 
-            />
+const LeaveStatusCard = ({ leaves }: LeaveStatusCardProps) => {
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString(i18n.language === "hi" ? "hi-IN" : "en-GB", {
+      day: "2-digit",
+      month: "short",
+    });
+  };
+
+  const translateLeaveType = (type: string) => {
+    const key = leaveTypeToKey[type];
+    return key ? t(key) : type;
+  };
+
+  return (
+    <div className="flex flex-col gap-3">
+      {leaves.map((leave) => (
+        <div key={leave.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow">
+          {/* Header */}
+          <div className="flex items-start justify-between gap-2 mb-3">
+            <div className="flex flex-col gap-1">
+              <span className="font-bold text-[#1a237e] text-base sm:text-lg">
+                {translateLeaveType(leave.leaveType)}
+              </span>
+              <span className="text-xs text-gray-500">
+                {formatDate(leave.from)}
+                {leave.from !== leave.to && ` - ${formatDate(leave.to)}`}
+                {leave.numberOfDays && ` (${leave.numberOfDays} ${t("days")})`}
+              </span>
             </div>
+            <StatusBadge status={leave.status} colorMap={statusColorMap} />
+          </div>
+
+          {/* Reason */}
+          <div className="mb-3 bg-gray-50 p-3 rounded-xl">
+            <span className="text-xs text-gray-500 block mb-1">{t("reason")}</span>
+            <p className="text-sm text-gray-700 line-clamp-2">{leave.reason}</p>
+          </div>
+
+          {/* Assigned To */}
+          {leave.currentApproverName && (
+            <div className="mb-3 text-xs text-gray-500">
+              <span>{t("assignedTo")}: </span>
+              <span className="font-semibold text-[#1a237e]">{leave.currentApproverName}</span>
+            </div>
+          )}
+
+          {/* Rejection Reason */}
+          {leave.status === "REJECTED" && leave.rejectionReason && (
+            <div className="mb-3 p-3 bg-[#ffebee] rounded-xl text-xs text-[#c62828]">
+              <span className="font-semibold">{t("rejectionReason")}: </span>
+              {leave.rejectionReason}
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex justify-end pt-3 border-t border-gray-100">
+            <ActionButtons
+              status={leave.status}
+              onEdit={() => navigate("/police/apply-leave", { state: { leaveId: leave.id } })}
+            />
+          </div>
         </div>
-      <div>
-          <span className="block font-bold">Dates:</span>
-          <span>{leave.from}{leave.from !== leave.to && ` - ${leave.to}`}</span>
-        </div>
-        <div>
-          <span className="block font-bold">Reason:</span>
-          <span>{leave.reason}</span>
-        </div>
-      </div>
-    ))}
-  </div>
-)}
+      ))}
+    </div>
+  );
+};
 
 export default LeaveStatusCard;

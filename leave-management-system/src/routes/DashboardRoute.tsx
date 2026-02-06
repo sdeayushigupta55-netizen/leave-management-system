@@ -1,9 +1,12 @@
 import { useAuth } from "../context/AuthContext";
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import CODashboard from "../pages/co/CODashboard";
 import ConstableDashboard from "../pages/constable/ConstableDashboard"
 import HeadConstableDashboard from "../pages/headconstabledashboard/HeadConstableDashboard";
 import InspectorDashboard from "../pages/Inspector/InspectorDashboard";
-import SHODashboard from "../pages/SHO/SHODashboard";
+import SHODashboard from "../pages/SHO/SHO-SODashboard";
 import SIDashboard from "../pages/SI/SIDashboard";
+import SPDashboard from "../pages/sp/SPDashboard";
 // import SIDashboard from "../components/dashboard/SIDashboard";
 // import InspectorDashboard from "../components/dashboard/InspectorDashboard";
 // import SHODashboard from "../components/dashboard/SHODashboard";
@@ -16,6 +19,12 @@ const DashboardRouter = () => {
     return <div>Unauthorized</div>;
   }
 
+  // Handle ADMIN role
+  if (user.role === "ADMIN") {
+    return <AdminDashboard />;
+  }
+
+  // Handle POLICE role based on rank
   switch (user.rank) {
     case "CONSTABLE":
       return <ConstableDashboard />;
@@ -25,10 +34,14 @@ const DashboardRouter = () => {
       return <SIDashboard />;
     case "INSPECTOR":
       return <InspectorDashboard />;
-    case "SHO":
+    case "SHO/SO":
       return <SHODashboard />;
-    // case "SP":
-    //   return <SPDashboard />;
+    case "SP":
+      return <SPDashboard />;
+    case "CO":
+      return <CODashboard />;
+    case "SSP":
+      return <AdminDashboard />;
     default:
       return <div>Unauthorized</div>;
   }

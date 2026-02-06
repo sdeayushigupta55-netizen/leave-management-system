@@ -16,10 +16,10 @@ function CardList<T>({ fields, data, cardClassName }: CardListProps<T>) {
   return (
     <div className="grid gap-4">
       {data.map((row, i) => (
-        <div key={i} className={`bg-white rounded shadow p-4 ${cardClassName || ""}`}>
+        <div key={i} className={`bg-white rounded-2xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow ${cardClassName || ""}`}>
           {fields.map((field, j) => (
             <div key={j} className={field.className || ""}>
-              <span className="font-semibold">{field.label}: </span>
+              <span className="font-semibold text-[#1a237e]">{field.label}: </span>
               {typeof field.accessor === "function"
                 ? field.accessor(row)
                 : (row[field.accessor] as any)}
