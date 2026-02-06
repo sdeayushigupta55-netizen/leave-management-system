@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import type { User} from "../type/user";
 
@@ -19,8 +19,7 @@ export const useUsers = () => {
     return ctx;
 };
 
-export const UserProvider = ({ children }: { children: ReactNode }) => {
-    const [users, setUsers] = useState<User[]>([
+const defaultUsers: User[] = [
    {
     id: "1",
     uno: "UNO6001",
@@ -129,7 +128,28 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     isActive: true,
     createdAt: new Date().toISOString(),
   }
-]);
+];
+
+const getInitialUsers = (): User[] => {
+  if (typeof window === 'undefined') return defaultUsers;
+  const stored = localStorage.getItem("app_users");
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch {
+      return defaultUsers;
+    }
+  }
+  return defaultUsers;
+};
+
+export const UserProvider = ({ children }: { children: ReactNode }) => {
+    const [users, setUsers] = useState<User[]>(getInitialUsers);
+
+    // Persist users to localStorage whenever they change
+    useEffect(() => {
+      localStorage.setItem("app_users", JSON.stringify(users));
+    }, [users]);
  // const addUser = (
     //     payload: CreateAdminUserPayload | CreatePoliceUserPayload
     // ) => {
