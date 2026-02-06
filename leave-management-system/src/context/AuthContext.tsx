@@ -5,6 +5,7 @@ import type { AuthUser } from "../type/user";
 
 interface AuthContextType {
   user: AuthUser | null;
+  isLoading: boolean;
   login: (user: AuthUser) => void;
   logout: () => void;
   updateProfile: (updated: Partial<AuthUser>) => void;
@@ -19,11 +20,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
 
   useEffect(() => {
     const stored = localStorage.getItem("auth_user");
     if (stored) setUser(JSON.parse(stored));
+    setIsLoading(false);
   }, []);
 
   const login = (user: AuthUser) => {
@@ -56,7 +59,7 @@ export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, updateProfile, changePassword }}>
+    <AuthContext.Provider value={{ user, isLoading, login, logout, updateProfile, changePassword }}>
       {children}
     </AuthContext.Provider>
   );

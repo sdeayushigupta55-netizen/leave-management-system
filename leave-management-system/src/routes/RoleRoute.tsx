@@ -9,7 +9,16 @@ type RoleRouteProps = {
 };
 
 const RoleRoute = ({ allowRole, allowRank, children }: RoleRouteProps) => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+
+  // Wait for auth to load before checking
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0d1b2a] to-[#1a237e]">
+        <div className="text-white text-lg">Loading...</div>
+      </div>
+    );
+  }
 
   if (!user) return <Navigate to="/login" replace />;
 
