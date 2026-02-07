@@ -71,5 +71,5 @@ export interface LeaveContextType {
   editLeave: (id: string, updated: Partial<Leave>) => void;
   approveLeave: (id: string) => void;
   rejectLeave: (id: string, reason: string) => void;
-  forwardLeave?: (id: string, reason?: string) => void;
+  forwardLeave: (id: string, reason?: string) => void;
 }
