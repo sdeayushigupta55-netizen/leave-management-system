@@ -2,6 +2,30 @@ import { createContext,useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import type { AuthUser } from "../type/user";
 
+// Safe localStorage helper for mobile compatibility
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      console.warn("localStorage not available");
+    }
+  },
+  removeItem: (key: string): void => {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      console.warn("localStorage not available");
+    }
+  }
+};
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -19,30 +43,49 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(() => {
+    // Initialize from localStorage immediately to prevent flash
+    const stored = safeLocalStorage.getItem("auth_user");
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  });
   const [isLoading, setIsLoading] = useState(true);
 
 
   useEffect(() => {
-    const stored = localStorage.getItem("auth_user");
-    if (stored) setUser(JSON.parse(stored));
+    // Double-check localStorage on mount
+    const stored = safeLocalStorage.getItem("auth_user");
+    if (stored) {
+      try {
+        setUser(JSON.parse(stored));
+      } catch {
+        // Invalid JSON, clear it
+        safeLocalStorage.removeItem("auth_user");
+      }
+    }
     setIsLoading(false);
   }, []);
 
-  const login = (user: AuthUser) => {
-    localStorage.setItem("auth_user", JSON.stringify(user));
-    setUser(user);
+  const login = (userData: AuthUser) => {
+    safeLocalStorage.setItem("auth_user", JSON.stringify(userData));
+    setUser(userData);
   };
 
   const logout = () => {
-    localStorage.removeItem("auth_user");
+    safeLocalStorage.removeItem("auth_user");
     setUser(null);
   };
 
   const updateProfile = (updated: Partial<AuthUser>) => {
     if (!user) return;
     const newUser = { ...user, ...updated };
-    localStorage.setItem("auth_user", JSON.stringify(newUser));
+    safeLocalStorage.setItem("auth_user", JSON.stringify(newUser));
     setUser(newUser);
   };
 
@@ -52,9 +95,9 @@ export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
     if (user.password !== currentPassword) return false;
 
     const updatedUser = { ...user, password: newPassword };
-    localStorage.setItem("auth_user", JSON.stringify(updatedUser));
+    safeLocalStorage.setItem("auth_user", JSON.stringify(updatedUser));
     setUser(updatedUser);
-    updateUser(user.id, { password: newPassword }); // <-- use here
+    updateUser(user.id, { password: newPassword });
     return true;
   };
 

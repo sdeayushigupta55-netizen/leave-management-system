@@ -79,7 +79,11 @@ const Login = () => {
       password: matchedUser.password || "",
     });
 
-    navigate(matchedUser.role === "ADMIN" ? "/admin" : "/police");
+    // Use setTimeout to ensure state is saved before navigation (mobile fix)
+    setTimeout(() => {
+      const targetPath = matchedUser.role === "ADMIN" ? "/admin" : "/police";
+      navigate(targetPath, { replace: true });
+    }, 100);
   };
 
   return (
@@ -165,7 +169,7 @@ const Login = () => {
             <span className="text-xs text-gray-500">UNO: UNO2001, Contact: 9876500004 (SHO/SO)</span><br />
             <span className="text-xs text-gray-500">UNO: UNO1001, Contact: 9876500003 (SP)</span><br />
             <span className="text-xs text-gray-500">UNO: UNO0001, Contact: 9876500002 (CO)</span><br />
-            <span className="text-xs text-gray-500">UNO: UNO9001, Contact: 9876500001 (ADMIN)</span>
+            <span className="text-xs text-gray-500">UNO: UNO9001, Contact: 9876500001 (ADMIN)(SSP)</span>
           </div>
         </div>
       </div>

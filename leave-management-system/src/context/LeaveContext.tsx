@@ -14,8 +14,8 @@ export const useLeave = (): LeaveContextType => {
 };
 
 // 24 hours in milliseconds
-const AUTO_FORWARD_TIME = 24 * 60 * 60 * 1000;
-// const AUTO_FORWARD_TIME = 10 * 1000; // For testing
+// const AUTO_FORWARD_TIME = 24 * 60 * 60 * 1000;
+const AUTO_FORWARD_TIME = 10 * 1000; // For testing
 
 // Get approval chain based on applicant rank, number of days, and leave type
 const getApprovalChain = (

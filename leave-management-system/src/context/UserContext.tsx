@@ -130,9 +130,27 @@ const defaultUsers: User[] = [
   }
 ];
 
+// Safe localStorage helper for mobile compatibility
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      console.warn("localStorage not available");
+    }
+  }
+};
+
 const getInitialUsers = (): User[] => {
   if (typeof window === 'undefined') return defaultUsers;
-  const stored = localStorage.getItem("app_users");
+  const stored = safeLocalStorage.getItem("app_users");
   if (stored) {
     try {
       return JSON.parse(stored);
@@ -148,7 +166,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
     // Persist users to localStorage whenever they change
     useEffect(() => {
-      localStorage.setItem("app_users", JSON.stringify(users));
+      safeLocalStorage.setItem("app_users", JSON.stringify(users));
     }, [users]);
  // const addUser = (
     //     payload: CreateAdminUserPayload | CreatePoliceUserPayload
