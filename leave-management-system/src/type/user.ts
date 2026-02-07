@@ -8,7 +8,7 @@ export interface AuthUser {
   password: string;
   id: string;
   name: string;
-  uno: string; // Unique Police Number
+  pno: string; // Unique Police Number
   contact: string; 
   role: UserRole;
   isActive: boolean;
@@ -74,7 +74,7 @@ export type PoliceRank  =
 
 export interface User {
   id: string;
-  uno: string;               // ✅ NEW
+  pno: string;               // ✅ NEW
   name: string;
   email?: string;
   contact: string;

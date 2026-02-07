@@ -15,11 +15,11 @@ const SeniorDetails = () => {
   const getApprovingOfficers = () => {
     if (user.rank === "CONSTABLE" || user.rank === "HEAD_CONSTABLE") {
       const approvers = [
-        { rank: "SHO/SO", maxDays: 3, label: "Up to 3 days" },
-        { rank: "CO", maxDays: 7, label: "4-7 days" },
-        { rank: "SP", maxDays: 15, label: "8-15 days" },
         { rank: "SSP", maxDays: null, label: "8+ days / EL" },
-      ];
+        { rank: "SP", maxDays: 15, label: "8-15 days" },
+        { rank: "CO", maxDays: 7, label: "4-7 days" },
+        { rank: "SHO/SO", maxDays: 3, label: "Up to 3 days" },
+        ];
 
       return approvers.map((approver) => {
         const officer = users.find(
@@ -37,7 +37,7 @@ const SeniorDetails = () => {
           ...approver,
           name: officer?.name || "Not Assigned",
           contact: officer?.contact || "-",
-          uno: officer?.uno || "-",
+          pno: officer?.pno || "-",
         };
       });
     }
@@ -58,7 +58,7 @@ const SeniorDetails = () => {
           maxDays: null,
           name: officer?.name || "Not Assigned",
           contact: officer?.contact || "-",
-          uno: officer?.uno || "-",
+          pno: officer?.pno || "-",
         };
       });
     }
@@ -74,7 +74,7 @@ const SeniorDetails = () => {
           maxDays: null,
           name: approver?.name || "Not Assigned",
           contact: approver?.contact || "-",
-          uno: approver?.uno || "-",
+          pno: approver?.pno || "-",
         },
       ];
     }

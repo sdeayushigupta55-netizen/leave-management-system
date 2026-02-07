@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { statusColorMap } from "../../utils/statusConfig";
 import { leaveTypeToKey } from "../../utils/translationHelper";
+import { generateLeaveApprovalPDF } from "../../utils/generateLeaveApprovalPDF";
+import { FileDown } from "lucide-react";
 
 interface LeaveStatusCardProps {
   leaves: Leave[];
@@ -44,7 +46,18 @@ const LeaveStatusCard = ({ leaves }: LeaveStatusCardProps) => {
                 {leave.numberOfDays && ` (${leave.numberOfDays} ${t("days")})`}
               </span>
             </div>
-            <StatusBadge status={leave.status} colorMap={statusColorMap} />
+            <div className="flex items-center gap-2">
+              <StatusBadge status={leave.status} colorMap={statusColorMap} />
+              {leave.status === "APPROVED" && (
+                <button
+                  onClick={() => generateLeaveApprovalPDF(leave)}
+                  className="p-1.5 bg-[#138808] hover:bg-[#0d6b06] text-white rounded-lg transition-colors shadow-sm"
+                  title={t("downloadPDF")}
+                >
+                  <FileDown size={14} />
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Reason */}
@@ -62,10 +75,10 @@ const LeaveStatusCard = ({ leaves }: LeaveStatusCardProps) => {
           )}
 
           {/* Rejection Reason */}
-          {leave.status === "REJECTED" && leave.rejectionReason && (
+          {leave.status === "REJECTED" && leave.Reason && (
             <div className="mb-3 p-3 bg-[#ffebee] rounded-xl text-xs text-[#c62828]">
-              <span className="font-semibold">{t("rejectionReason")}: </span>
-              {leave.rejectionReason}
+              <span className="font-semibold">{t("Reason")}: </span>
+              {leave.Reason}
             </div>
           )}
 

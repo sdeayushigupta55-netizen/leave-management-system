@@ -1,5 +1,5 @@
 import DashboardLayout from "../../layouts/DashboardLayout";
-import { useLeave } from "../../context/LeaveContext";
+import { useLeaves } from "../../context/LeaveContext";
 import { useAuth } from "../../context/AuthContext";
 import { useUsers } from "../../context/UserContext";
 import StatusBadge from "../../ui/StatusBadge";
@@ -19,7 +19,7 @@ import {
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
-  const { leaves } = useLeave();
+  const { leaves } = useLeaves();
   const { user } = useAuth();
   const { users } = useUsers();
 

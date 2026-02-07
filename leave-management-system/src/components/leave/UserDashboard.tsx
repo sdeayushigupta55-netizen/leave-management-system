@@ -1,5 +1,5 @@
 import { useAuth } from "../../context/AuthContext";
-import { useLeave } from "../../context/LeaveContext";
+import { useLeaves } from "../../context/LeaveContext";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LeaveStatusTable from "../../components/leave/LeaveStatusTable";
@@ -10,7 +10,7 @@ import { BarChart3, Clock, FileText, CheckCircle } from "lucide-react";
 const UserDashboard = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { leaves } = useLeave();
+  const { leaves } = useLeaves();
   const navigate = useNavigate();
 
   if (!user) return null;
@@ -71,16 +71,17 @@ const UserDashboard = () => {
           </span>
 
           <div className="flex flex-wrap gap-2 sm:gap-x-4 text-gray-600 text-xs sm:text-sm">
-            <span className="bg-gray-50 px-2 py-1 rounded-lg">🆔 {user.uno}</span>
+            <span className="bg-gray-50 px-2 py-1 rounded-lg">🆔 {user.pno}</span>
             {(user.rank === "SP" || user.rank === "CO" || isJuniorRank) && user.area && (
               <span className="bg-gray-50 px-2 py-1 rounded-lg">📍 {user.area}</span>
-            )}
-            {(user.rank === "SHO/SO" || isJuniorRank) && user.policeStation && (
-              <span className="bg-gray-50 px-2 py-1 rounded-lg">🏛️ {user.policeStation}</span>
             )}
             {(user.rank === "SHO/SO" || user.rank === "CO" || isJuniorRank) && user.circleOffice && (
               <span className="bg-gray-50 px-2 py-1 rounded-lg">🏢 {user.circleOffice}</span>
             )}
+            {(user.rank === "SHO/SO" || isJuniorRank) && user.policeStation && (
+              <span className="bg-gray-50 px-2 py-1 rounded-lg">🏛️ {user.policeStation}</span>
+            )}
+            
           </div>
 
           <span

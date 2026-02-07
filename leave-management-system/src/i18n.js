@@ -9,17 +9,23 @@ i18n
     resources: {
       en: {
         translation: {
+          Document: "Document",
+          view: "View",
+          // ===== FILE UPLOAD =====
+          uploadApplication: "Upload Application Document",
+          selectedFile: "Selected File",
           // ===== GENERAL =====
           police: "Uttar Pradesh Police",
           policeLeaveSystem: "Police Leave System",
           govtOfUp: "Government of Uttar Pradesh",
+          downloadPDF: "Download Approval Certificate",
           
           // ===== LOGIN =====
           loginWithOtp: "Log In with OTP",
           emailMobileOtp: "Log In With OTP",
           or: "or",
-          unoNumber: "UNO Number",
-          enterUno: "Enter Your UNO Number",
+          pnoNumber: "PNO Number",
+          enterPno: "Enter Your PNO Number",
           password: "Password",
           forgotPassword: "Forgot your password?",
           loginWithPassword: "Log In With Password",
@@ -33,7 +39,7 @@ i18n
           invalidContact: "Please enter a valid contact number.",
           invalidOtp: "Please enter a valid OTP.",
           otpSentMessage: "OTP has been sent to your contact.",
-          invalidCredentials: "Invalid UNO or contact number",
+          invalidCredentials: "Invalid PNO or contact number",
           accountDeactivated: "Your account is deactivated. Contact admin.",
           userNotFound: "User not found",
           accountInactive: "Account inactive",
@@ -104,7 +110,7 @@ i18n
           assignedTo: "Assigned To",
           status: "Status",
           actions: "Actions",
-          rejectionReason: "Rejection Reason",
+          Reason: "Reason",
           reasonNotProvided: "Reason not provided",
           noLeaveRequests: "No leave requests found",
           showingResults: "Showing",
@@ -122,6 +128,7 @@ i18n
           forwardHistory: "Forward History",
           forwardedTo: "Forwarded To",
           forwardReason: "Forward Reason",
+          autoForwardedReason: "Not approved within 24 hours - Auto forwarded",
           
           // ===== EDIT PROFILE =====
           profileDetails: "Profile Details",
@@ -207,17 +214,21 @@ i18n
       },
       hi: {
         translation: {
+           Document: "दस्तावेज़",
+           view: "देखें",
+           // ===== FILE UPLOAD =====
+           uploadApplication: "आवेदन दस्तावेज़ अपलोड करें",
+           selectedFile: "चयनित फ़ाइल",
           // ===== GENERAL =====
           police: "उत्तर प्रदेश पुलिस",
           policeLeaveSystem: "पुलिस अवकाश प्रणाली",
-          govtOfUp: "उत्तर प्रदेश सरकार",
-          
+          govtOfUp: "उत्तर प्रदेश सरकार",          downloadPDF: "स्वीकृति प्रमाण पत्र डाउनलोड करें",          
           // ===== LOGIN =====
           loginWithOtp: "ओटीपी से लॉगिन करें",
           emailMobileOtp: "ओटीपी से लॉगिन करें",
           or: "या",
-          unoNumber: "यूएनओ नंबर",
-          enterUno: "अपना यूएनओ नंबर दर्ज करें",
+          pnoNumber: "पीएनओ नंबर",
+          enterPno: "अपना पीएनओ नंबर दर्ज करें",
           password: "पासवर्ड",
           forgotPassword: "पासवर्ड भूल गए?",
           loginWithPassword: "पासवर्ड से लॉगिन करें",
@@ -231,7 +242,7 @@ i18n
           invalidContact: "कृपया एक मान्य संपर्क नंबर दर्ज करें।",
           invalidOtp: "कृपया एक मान्य ओटीपी दर्ज करें।",
           otpSentMessage: "ओटीपी आपके संपर्क पर भेजा गया है।",
-          invalidCredentials: "अमान्य यूएनओ या संपर्क नंबर",
+          invalidCredentials: "अमान्य पीएनओ या संपर्क नंबर",
           accountDeactivated: "आपका खाता निष्क्रिय है। व्यवस्थापक से संपर्क करें।",
           userNotFound: "उपयोगकर्ता नहीं मिला",
           accountInactive: "खाता निष्क्रिय",
@@ -302,7 +313,7 @@ i18n
           assignedTo: "को सौंपा गया",
           status: "स्थिति",
           actions: "कार्य",
-          rejectionReason: "अस्वीकृति का कारण",
+          Reason: "कारण",
           reasonNotProvided: "कारण नहीं दिया गया",
           noLeaveRequests: "कोई अवकाश अनुरोध नहीं मिला",
           showingResults: "दिखा रहे हैं",
@@ -320,6 +331,7 @@ i18n
           forwardHistory: "अग्रेषण इतिहास",
           forwardedTo: "को अग्रेषित",
           forwardReason: "अग्रेषण कारण",
+          autoForwardedReason: "24 घंटे के भीतर स्वीकृत नहीं - स्वतः अग्रेषित",
           
           // ===== EDIT PROFILE =====
           profileDetails: "प्रोफ़ाइल विवरण",

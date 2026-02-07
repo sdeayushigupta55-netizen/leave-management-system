@@ -31,7 +31,7 @@ export type OfficeType =
 
 export interface BaseUser {
   id: string;
-  uno: string; // Unique Police Number
+  pno: string; // Unique Police Number
   name: string;
   contact: string;
   email: string;
@@ -128,7 +128,7 @@ export type LeaveType =
 
 export interface LeaveApplication {
   id: string;
-  applicantUNO: string;
+  applicantPNO: string;
   applicantRank: Rank;
   applicantGender?: Gender;
   leaveType: LeaveType;
@@ -150,7 +150,7 @@ export type LeaveStatus =
 export interface LeaveAuthority {
   rank: Rank;
   spType?: SPType;
-  uno?: string;
+  pno?: string;
   name?: string;
   contact?: string;
 }
@@ -168,7 +168,7 @@ export interface LeaveApprovalFlow {
 
 export interface UpperHierarchy {
   rank: Rank;
-  uno: string;
+  pno: string;
   name: string;
   contact: string;
   spType?: SPType;
@@ -197,7 +197,7 @@ export interface ApiResponse<T> {
 ================================ */
 
 export interface CreatePoliceUserPayload {
-  uno: string;
+  pno: string;
   name: string;
   email: string;
   contact: string;

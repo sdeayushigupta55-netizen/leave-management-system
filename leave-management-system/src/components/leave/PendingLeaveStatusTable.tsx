@@ -35,14 +35,13 @@ const PendingLeaveStatusTable = ({
     page * ROWS_PER_PAGE
   );
 
-  // Format date based on current language
+  // Format date - shortest form
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString(i18n.language === "hi" ? "hi-IN" : "en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+    const day = date.getDate();
+    const month = date.toLocaleDateString("en-GB", { month: "short" }).slice(0, 3);
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}'${month}${year}`;
   };
 
   // Translate leave type
@@ -54,6 +53,7 @@ const PendingLeaveStatusTable = ({
   // Define columns with translated headers
   const columns = [
     { header: t("name"), accessor: "name" },
+    {header: t("rank"), accessor: "applicantRank" },
     { header: t("leaveType"), accessor: "leaveType" },
     { header: t("dates"), accessor: "dates" },
     { header: t("numberOfDays"), accessor: "numberOfDays" },
@@ -61,24 +61,31 @@ const PendingLeaveStatusTable = ({
     { header: t("submittedOn"), accessor: "submittedOn" },
     { header: t("status"), accessor: "status" },
     { header: t("actions"), accessor: "actions" },
+   
+    {header: t("Reason"), accessor: "Reason"},
   ] as const;
 
   // Map data with translations
   const data = paginatedLeaves.map((leave) => {
     // Check if current user can approve this leave
     const approverCanApprove = user?.rank 
-      ? canApproverApprove(user.rank, leave.numberOfDays, leave.leaveType, leave.gender)
+      ? canApproverApprove(user.rank, leave.numberOfDays, leave.applicantRank)
       : false;
 
     return {
       name: leave.name,
+      applicantRank: leave.applicantRank,
       leaveType: translateLeaveType(leave.leaveType),
       dates:
         leave.from !== leave.to
           ? `${formatDate(leave.from)} - ${formatDate(leave.to)}`
           : formatDate(leave.from),
       numberOfDays: leave.numberOfDays,
-      reason: leave.reason,
+      reason: (
+        <span className="block max-w-[150px] truncate" title={leave.reason}>
+          {leave.reason}
+        </span>
+      ),
       submittedOn: formatDate(leave.submittedOn),
       status: <StatusBadge status={leave.status} colorMap={statusColorMap} />,
       actions:

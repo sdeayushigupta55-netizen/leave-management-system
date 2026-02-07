@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLeave } from "../context/LeaveContext";
+import { useLeaves } from "../context/LeaveContext";
 import LeaveStatusTable from "../components/leave/LeaveStatusTable";
 import LeaveStatusCard from "../components/leave/LeaveStatusCard";
 import DashboardLayout from "../layouts/DashboardLayout";
@@ -14,7 +14,7 @@ const ROWS_PER_PAGE = 10;
 
 const PoliceLeaveStatus = () => {
   const { t } = useTranslation();
-  const { leaves, editLeave } = useLeave();
+  const { leaves, editLeave } = useLeaves();
   const { user } = useAuth();
   const navigate = useNavigate();
 

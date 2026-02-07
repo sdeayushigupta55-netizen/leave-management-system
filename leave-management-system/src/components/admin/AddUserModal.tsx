@@ -19,14 +19,14 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
     const [form, setForm] = useState<{
         contact: any;
         name: string;
-        uno: string;
+        pno: string;
         role?: UserRole;
         rank?: PoliceRank;
         policeStation: string;
         password: string;
     }>({
         name: "",
-        uno: "",
+        pno: "",
         role: undefined,
         rank: undefined,
         policeStation: "",
@@ -38,7 +38,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
         if (user) {
             setForm({
                 name: user.name,
-                uno: user.uno,
+                pno: user.pno,
                 contact: user.contact,
                 role: user.role,
                 rank: user.rank,
@@ -56,7 +56,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
             // For update, you may need to handle types similarly if updateUser is typed strictly
             const userData = {
                 name: form.name,
-                uno: form.uno,
+                pno: form.pno,
                 role: form.role,
                 rank: form.role === "POLICE" ? form.rank : undefined,
                 policeStation: form.policeStation,
@@ -68,7 +68,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
             if (form.role === "POLICE") {
                 addUser({
                     name: form.name,
-                    uno: form.uno,
+                    pno: form.pno,
                     contact: form.contact,
                     role: "POLICE",
                     rank: form.rank!,
@@ -78,7 +78,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
             } else if (form.role === "ADMIN") {
                 addUser({
                     name: form.name,
-                    uno: form.uno,
+                    pno: form.pno,
                     contact: form.contact,
                     role: "ADMIN",
                     policeStation: form.policeStation,
@@ -92,7 +92,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
 
     const isDisabled =
         !form.name ||
-        !form.uno ||
+        !form.pno ||
         !form.role ||
         !form.policeStation ||
         (!user && !form.password) ||
@@ -143,11 +143,11 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
                     <div>
 
                         <InputField
-                            label="UNO"
-                            placeholder="Enter UNO"
-                            onChange={handleInputChange("uno")}
+                            label="PNO"
+                            placeholder="Enter PNO"
+                            onChange={handleInputChange("pno")}
                             required
-                            value={form.uno}
+                            value={form.pno}
                         />
 
                     </div>

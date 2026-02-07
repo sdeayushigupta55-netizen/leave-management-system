@@ -51,7 +51,7 @@ export interface Leave {
   approvalChain: string[];
   approvals: LeaveApproval[];
 
-  rejectionReason?: string;
+  Reason?: string;
   submittedOn: string;
   lastUpdatedOn?: string;
   lastForwardedAt?: string;

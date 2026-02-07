@@ -4,7 +4,7 @@ import type { User} from "../type/user";
 
 interface UserContextType {
     users: User[];
-    loginWithUno: (uno: string, contact: string) => User;
+    loginWithPno: (pno: string, contact: string) => User;
     updateUser: (id: string, updated: Partial<User>) => void;
     addUser: (payload: any) => void; // You can replace 'any' with a more specific type if needed
     toggleUser: (id: string) => void;
@@ -22,8 +22,8 @@ export const useUsers = () => {
 const defaultUsers: User[] = [
    {
     id: "1",
-    uno: "UNO6001",
-    name: "Ruapli Singh",
+    pno: "PNO6001",
+    name: "Neha Singh",
     contact: "9876500008",
     role: "POLICE",
     rank: "CONSTABLE",
@@ -36,7 +36,7 @@ const defaultUsers: User[] = [
   },
   {
     id: "2",
-    uno: "UNO5001",
+    pno: "PNO5001",
     name: "Rahul Verma",
     contact: "9876500007",
     role: "POLICE",
@@ -50,7 +50,7 @@ const defaultUsers: User[] = [
   },
   {
     id: "3",
-    uno: "UNO3001",
+    pno: "PNO3001",
     name: "Sunil Kumar",
     contact: "9876500005",
     role: "POLICE",
@@ -66,7 +66,7 @@ const defaultUsers: User[] = [
 //   🔼 Upper hierarchy (needed later)
   {
     id: "10",
-    uno: "UNO2001",
+    pno: "PNO2001",
     name: "Rakesh Mishra",
     contact: "9876500004",
     role: "POLICE",
@@ -80,7 +80,7 @@ const defaultUsers: User[] = [
   },
   {
     id: "9",
-    uno: "UNO4001",
+    pno: "PNO4001",
     name: "Vikram Singh",
     contact: "9876500006",
     role: "POLICE",
@@ -94,7 +94,7 @@ const defaultUsers: User[] = [
   },
   {
     id: "11",
-    uno: "UNO0001",
+    pno: "PNO0001",
     name: "Amit Sharma",
     contact: "9876500002",
     role: "POLICE",
@@ -107,7 +107,7 @@ const defaultUsers: User[] = [
   },
   {
     id: "12",
-    uno: "UNO1001",
+    pno: "PNO1001",
     name: "Anil Kumar",
     contact: "9876500003",
     role: "POLICE",
@@ -119,7 +119,7 @@ const defaultUsers: User[] = [
   },
   {
     id: "13",
-    uno: "UNO9001",
+    pno: "PNO9001",
     name: "Mohan Verma",
     contact: "9876500001",
     role: "POLICE",
@@ -204,21 +204,27 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     //     console.log("Password reset for", userId, newPassword);
     //     // backend later
     // };
-const loginWithUno = (uno: string, contact: string) => {
+const loginWithPno = (pno: string, contact: string) => {
   const user = users.find(
-    u => u.uno === uno && u.contact === contact && u.isActive
+    u => u.pno === pno && u.contact === contact && u.isActive
   );
-
+  // Debug log for troubleshooting
+  console.log("Login attempt:", { pno, contact, users });
   if (!user) {
-    throw new Error("Invalid UNO or contact number");
+    console.warn("Login failed: No matching user", { pno, contact });
+    throw new Error("Invalid PNO or contact number");
   }
-
   return user;
 };
 
+    // Add a reset function for troubleshooting
+    const resetUsers = () => {
+      setUsers(defaultUsers);
+      safeLocalStorage.setItem("app_users", JSON.stringify(defaultUsers));
+    };
     return (
-        <UserContext.Provider value={{ users, loginWithUno ,updateUser, toggleUser, addUser: () => {} }}>
-            {children}
-        </UserContext.Provider>
+      <UserContext.Provider value={{ users, loginWithPno ,updateUser, toggleUser, addUser: () => {}, resetUsers }}>
+        {children}
+      </UserContext.Provider>
     );
 };

@@ -5,7 +5,7 @@ type Officer = {
   rank: string;
   name: string;
   contact: string;
-  uno: string;
+  pno: string;
   maxDays: number | null;
   label: string;
 };
@@ -51,7 +51,7 @@ const SeniorOfficersCard = ({ officers }: SeniorOfficersCardProps) => {
                   </div>
                   <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2">
                     <IdCard size={14} className="text-gray-500 flex-shrink-0" />
-                    <span className="text-gray-700">{officer.uno}</span>
+                    <span className="text-gray-700">{officer.pno}</span>
                   </div>
                 </div>
               </div>

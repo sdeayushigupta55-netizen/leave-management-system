@@ -10,22 +10,22 @@ const Login = () => {
   const { login } = useAuth();
   const { users } = useUsers();
 
-  const [uno, setUno] = useState("");
+  const [pno, setPno] = useState("");
   const [contact, setContact] = useState("");
   const [otpInput, setOtpInput] = useState("");
   const [showOtp, setShowOtp] = useState(false);
 
-  const isFormValid = uno.length > 0 && contact.length === 10;
+  const isFormValid = pno.length > 0 && contact.length === 10;
   const isOtpValid = otpInput.length === 6;
 
   const handleRequestOtp = () => {
-    if (!uno || !contact) {
-      alert(t("enterUno") + " & " + t("enterContact"));
+    if (!pno || !contact) {
+      alert(t("enterPno") + " & " + t("enterContact"));
       return;
     }
 
     const matchedUser = users.find(
-      (u) => u.uno === uno && u.contact === contact
+      (u) => u.pno === pno && u.contact === contact
     );
 
     if (!matchedUser) {
@@ -44,7 +44,7 @@ const Login = () => {
 
   const handleVerifyOtp = () => {
     const matchedUser = users.find(
-      (u) => u.uno === uno && u.contact === contact
+      (u) => u.pno === pno && u.contact === contact
     );
 
     if (!matchedUser) {
@@ -65,7 +65,7 @@ const Login = () => {
     login({
       id: matchedUser.id,
       name: matchedUser.name,
-      uno: matchedUser.uno,
+      pno: matchedUser.pno,
       role: matchedUser.role,
       isActive: matchedUser.isActive,
       contact: matchedUser.contact,
@@ -103,9 +103,9 @@ const Login = () => {
               <>
                 <input
                   type="text"
-                  placeholder={t("enterUno")}
-                  value={uno}
-                  onChange={(e) => setUno(e.target.value)}
+                  placeholder={t("enterPno")}
+                  value={pno}
+                  onChange={(e) => setPno(e.target.value)}
                   className="w-full rounded-md border border-gray-300 px-3 py-2.5 sm:py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 />
                 <input
@@ -162,14 +162,14 @@ const Login = () => {
           </div>
            <div className="p-4 border-t border-gray-200">
             <span className="text-xs text-gray-500 block mb-1">{t("demoCredentials")}</span>
-            <span className="text-xs text-gray-500">UNO: UNO6001, Contact: 9876500008 (CONSTABLE)</span><br />
-            <span className="text-xs text-gray-500">UNO: UNO5001, Contact: 9876500007 (HEAD CONSTABLE)</span><br />
-            <span className="text-xs text-gray-500">UNO: UNO4001, Contact: 9876500006 (INSPECTOR)</span><br />
-            <span className="text-xs text-gray-500">UNO: UNO3001, Contact: 9876500005 (SI)</span><br />
-            <span className="text-xs text-gray-500">UNO: UNO2001, Contact: 9876500004 (SHO/SO)</span><br />
-            <span className="text-xs text-gray-500">UNO: UNO1001, Contact: 9876500003 (SP)</span><br />
-            <span className="text-xs text-gray-500">UNO: UNO0001, Contact: 9876500002 (CO)</span><br />
-            <span className="text-xs text-gray-500">UNO: UNO9001, Contact: 9876500001 (ADMIN)(SSP)</span>
+            <span className="text-xs text-gray-500">PNO: PNO6001, Contact: 9876500008 (CONSTABLE)</span><br />
+            <span className="text-xs text-gray-500">PNO: PNO5001, Contact: 9876500007 (HEAD CONSTABLE)</span><br />
+            <span className="text-xs text-gray-500">PNO: PNO4001, Contact: 9876500006 (INSPECTOR)</span><br />
+            <span className="text-xs text-gray-500">PNO: PNO3001, Contact: 9876500005 (SI)</span><br />
+            <span className="text-xs text-gray-500">PNO: PNO2001, Contact: 9876500004 (SHO/SO)</span><br />
+            <span className="text-xs text-gray-500">PNO: PNO1001, Contact: 9876500003 (SP)</span><br />
+            <span className="text-xs text-gray-500">PNO: PNO0001, Contact: 9876500002 (CO)</span><br />
+            <span className="text-xs text-gray-500">PNO: PNO9001, Contact: 9876500001 (ADMIN)(SSP)</span>
           </div>
         </div>
       </div>

@@ -1,13 +1,14 @@
-import { useLeave } from "../context/LeaveContext";
+import { useLeaves } from "../context/LeaveContext";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import DashboardLayout from "../layouts/DashboardLayout";
 import PendingLeaveStatusTable from "../components/leave/PendingLeaveStatusTable";
+import PendingLeaveStatusCard from "../components/leave/PendingLeaveStatusCard";
 import { Clock } from "lucide-react";
 
 const PendingLeave = () => {
   const { t } = useTranslation();
-  const { leaves, approveLeave, rejectLeave, forwardLeave } = useLeave();
+  const { leaves, approveLeave, rejectLeave, forwardLeave } = useLeaves();
   const { user } = useAuth();
 
   // Show pending and forwarded leaves assigned to current user
@@ -40,14 +41,27 @@ const PendingLeave = () => {
             <p className="text-gray-500 text-sm sm:text-base">{t("noPendingLeaves")}</p>
           </div>
         ) : (
-          <div className="overflow-x-auto bg-white rounded-2xl shadow-sm border border-gray-100">
-            <PendingLeaveStatusTable
-              leaves={pendingLeaves}
-              onApprove={approveLeave}
-              onReject={(id) => rejectLeave(id, "No reason provided")}
-              onForward={(id) => forwardLeave(id, "Forwarded to senior authority")}
-            />
-          </div>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto bg-white rounded-2xl shadow-sm border border-gray-100">
+              <PendingLeaveStatusTable
+                leaves={pendingLeaves}
+                onApprove={approveLeave}
+                onReject={(id) => rejectLeave(id, "No reason provided")}
+                onForward={(id) => forwardLeave(id, "Forwarded to senior authority")}
+              />
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden">
+              <PendingLeaveStatusCard
+                leaves={pendingLeaves}
+                onApprove={approveLeave}
+                onReject={(id) => rejectLeave(id, "No reason provided")}
+                onForward={(id) => forwardLeave(id, "Forwarded to senior authority")}
+              />
+            </div>
+          </>
         )}
       </div>
     </DashboardLayout>

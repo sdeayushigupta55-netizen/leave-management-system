@@ -37,7 +37,7 @@ const EditProfile = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-sm">
             <InputField label="Name" value={user.name} disabled />
-            <InputField label="UNO Number" value={user.uno || "-"} disabled />
+            <InputField label="PNO Number" value={user.pno || "-"} disabled />
             <InputField label="Role" value={user.role} disabled />
             <InputField label="Rank" value={user.rank || "-"} disabled />
             <InputField label="Area" value={user.area || "-"} disabled />

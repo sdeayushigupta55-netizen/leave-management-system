@@ -45,24 +45,17 @@ const PendingActionButtons = ({
         className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#138808] to-[#1b9e10] text-white rounded-lg text-xs font-semibold hover:shadow-md transition shadow-sm"
       >
         <Check size={14} />
-        {t("approve")}
+        {/* {t("approve")} */}
       </button>
       <button
         onClick={onReject}
         className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#c62828] to-[#d84315] text-white rounded-lg text-xs font-semibold hover:shadow-md transition shadow-sm"
       >
         <X size={14} />
-        {t("reject")}
+        {/* {t("reject")} */}
       </button>
-      {onForward && (
-        <button
-          onClick={onForward}
-          className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#8d6e63] to-[#6d4c41] text-white rounded-lg text-xs font-semibold hover:shadow-md transition shadow-sm"
-        >
-          <Forward size={14} />
-          {t("forward")}
-        </button>
-      )}
+      {/* No Forward button for first authority - they should only Approve/Reject */}
+      {/* Auto-forward will happen after 24 hours if no action */}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { useState, useEffect, type ChangeEvent, type FormEvent } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
-import { useLeave } from "../context/LeaveContext";
+import { useLeaves } from "../context/LeaveContext";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -13,11 +13,12 @@ interface FormState {
   from: string;
   to: string;
   reason: string;
+  attachment?: File | null;
 }
 
 const ApplyLeave = () => {
   const { t } = useTranslation();
-  const { leaves, addLeave, editLeave } = useLeave();
+  const { leaves, addLeave, editLeave } = useLeaves();
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,6 +29,7 @@ const ApplyLeave = () => {
     from: "",
     to: "",
     reason: "",
+    attachment: null,
   });
 
   const [editingStatus, setEditingStatus] = useState<string | null>(null);
@@ -72,8 +74,14 @@ const ApplyLeave = () => {
     setEditingStatus(leave.status);
   }, [editingId, leaves]);
 
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0] ? e.target.files[0] : null;
+    setForm((prev) => ({ ...prev, attachment: file }));
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -95,6 +103,7 @@ const ApplyLeave = () => {
       }
     }
 
+
     if (editingId) {
       editLeave(editingId, { ...form, status: "PENDING" });
     } else {
@@ -104,6 +113,7 @@ const ApplyLeave = () => {
           from: form.from,
           to: form.to,
           reason: form.reason,
+          attachment: form.attachment || undefined,
         },
         "PENDING"
       );
@@ -117,7 +127,6 @@ const ApplyLeave = () => {
       alert(t("pleaseSelectLeaveType"));
       return;
     }
-
     if (editingId) {
       editLeave(editingId, { ...form, status: "DRAFT" });
     } else {
@@ -127,23 +136,15 @@ const ApplyLeave = () => {
           from: form.from,
           to: form.to,
           reason: form.reason,
+          attachment: form.attachment || undefined,
         },
         "DRAFT"
       );
     }
-
     navigate("/police/leave-status");
   };
 
-  // Map leave types to translation keys
-  const leaveTypeOptions = [
-    { value: "CASUAL", labelKey: "casual" },
-    { value: "SICK", labelKey: "sick" },
-    { value: "EARNED", labelKey: "earned" },
-    { value: "EMERGENCY", labelKey: "emergency" },
-    { value: "CHILD_CARE", labelKey: "childCare" },
-  ];
-
+  // Restore the missing return statement and form JSX
   return (
     <DashboardLayout>
       <div className="w-full h-full p-2 sm:p-4 md:p-6 flex items-start sm:items-center justify-center">
@@ -171,11 +172,11 @@ const ApplyLeave = () => {
             className="w-full border px-3 py-2 rounded text-sm sm:text-base"
           >
             <option value="">{t("selectLeaveType")}</option>
-            {leaveTypeOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {t(opt.labelKey)}
-              </option>
-            ))}
+            <option value="CASUAL">{t("casual")}</option>
+            <option value="SICK">{t("sick")}</option>
+            <option value="EARNED">{t("earned")}</option>
+            <option value="EMERGENCY">{t("emergency")}</option>
+            <option value="CHILD_CARE">{t("childCare")}</option>
           </Select>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -202,8 +203,8 @@ const ApplyLeave = () => {
 
           {form.from && form.to && (
             <div className="text-xs sm:text-sm text-gray-600 bg-gray-50 p-2 rounded">
-              📅 {t("totalDays")}: <span className="font-semibold">{numberOfDays} {t("days")}</span>
-              {form.leaveType === "CHILD_CARE" && numberOfDays >= 180 && (
+              📅 {t("totalDays")}: <span className="font-semibold">{calculateDays(form.from, form.to)} {t("days")}</span>
+              {form.leaveType === "CHILD_CARE" && calculateDays(form.from, form.to) >= 180 && (
                 <span className="text-green-600 ml-2">✅ {t("validForChildCare")}</span>
               )}
             </div>
@@ -228,6 +229,26 @@ const ApplyLeave = () => {
               rows={3}
               className="w-full border px-3 py-2 rounded text-sm sm:text-base resize-none"
             />
+          </div>
+
+          <div>
+            <label htmlFor="attachment" className="block font-medium mb-1 text-sm sm:text-base">
+              {t("uploadApplication")}
+            </label>
+            <input
+              id="attachment"
+              name="attachment"
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+              onChange={handleFileChange}
+              className="w-full border px-3 py-2 rounded text-sm sm:text-base bg-white"
+              required
+            />
+            {form.attachment && (
+              <div className="text-xs text-gray-600 mt-1">
+                {t("selectedFile")}: {form.attachment.name}
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-2">

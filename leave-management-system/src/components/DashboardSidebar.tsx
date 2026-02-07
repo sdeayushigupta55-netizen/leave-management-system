@@ -77,11 +77,13 @@ const DashboardSidebar = () => {
 
       <aside
         className={`
-          fixed md:static top-0 left-0 w-64 bg-[#0d1b2a] text-white z-30
+          fixed md:static top-0 left-0 bg-[#0d1b2a] text-white z-30
           transition-transform duration-300
           ${open ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0 md:block
           overflow-y-auto
+          w-[200px] md:w-[220px] lg:w-64
+          shrink-0
         `}
         style={{ minHeight: "100vh" }}
       >
@@ -127,7 +129,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ menu, onClose, t }) => 
       </div>
     </div>
 
-    <nav className="mt-4 flex flex-col gap-2">
+    <nav className="mt-4 flex flex-col gap-1 px-2">
       {menu.map((item) => (
         <NavLink
           key={item.path}
@@ -135,11 +137,11 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ menu, onClose, t }) => 
           onClick={onClose}
           {...(item.path === "/police" || item.path === "/ssp" ? { end: true } : {})}
           className={({ isActive }) =>
-            `flex items-center gap-3 px-6 py-3 rounded-lg transition
+            `flex items-center gap-2 px-4 py-3 rounded-lg transition text-sm
             ${isActive ? "bg-[#c5a200] text-[#0d1b2a] font-semibold" : "text-gray-300 hover:bg-[#1a237e]"}`
           }
         >
-          <span className="flex-1">{t(item.labelKey)}</span>
+          <span className="whitespace-nowrap">{t(item.labelKey)}</span>
         </NavLink>
       ))}
     </nav>
