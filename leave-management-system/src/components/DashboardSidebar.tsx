@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
-import { PanelLeftOpen, PanelRightOpen } from "lucide-react";
+import { PanelRightOpen } from "lucide-react";
 import type { UserRole } from "../type/user";
 
 const DashboardSidebar = () => {
@@ -68,7 +68,7 @@ const DashboardSidebar = () => {
   return (
     <>
       <button
-        className="fixed top-4 left-4 md:hidden bg-[#1a237e] text-white rounded shadow p-2 z-40"
+        className="fixed left-4 md:hidden bg-[#1a237e] text-white rounded shadow p-2"
         onClick={() => setOpen(true)}
         aria-label={t("openSidebar")}
       >
@@ -85,13 +85,13 @@ const DashboardSidebar = () => {
         `}
         style={{ minHeight: "100vh" }}
       >
-        <button
+        {/* <button
           className="absolute top-5 right-2 md:hidden text-white text-2xl"
           onClick={() => setOpen(false)}
           aria-label={t("closeSidebar")}
         >
           <PanelLeftOpen size={24} />
-        </button>
+        </button> */}
         <SidebarContent menu={filteredMenu} onClose={() => setOpen(false)} t={t} />
       </aside>
 

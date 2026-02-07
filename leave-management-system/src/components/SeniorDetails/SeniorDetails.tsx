@@ -2,8 +2,11 @@ import { useAuth } from "../../context/AuthContext";
 import { useUsers } from "../../context/UserContext";
 import SeniorOfficersCard from "../SeniorDetails/SeniorOfficersCard";
 import DashboardLayout from "../../layouts/DashboardLayout";
+import { useTranslation } from "react-i18next";
+import { Users } from "lucide-react";
 
 const SeniorDetails = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { users } = useUsers();
 
@@ -83,15 +86,30 @@ const SeniorDetails = () => {
 
   return (
     <DashboardLayout>
-       <div className="w-full min-h-screen  space-y-6 flex flex-col">
-      {/* 👮 Profile Card */}
-      {officers.length > 0 ? (
+      <div className="w-full min-h-screen space-y-4 md:space-y-6 flex flex-col p-2 md:p-0">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-[#1a237e] via-[#283593] to-[#303f9f] rounded-xl md:rounded-2xl p-4 md:p-6 text-white shadow-lg border-b-4 border-[#c5a200]">
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="p-2 md:p-3 bg-[#c5a200]/30 rounded-lg md:rounded-xl backdrop-blur-sm border border-[#c5a200]/50">
+              <Users size={24} className="text-[#ffd54f] md:w-8 md:h-8" />
+            </div>
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold">{t("seniorDetails")}</h1>
+              <p className="text-blue-100 text-sm md:text-base mt-0.5 md:mt-1">{t("viewSeniorOfficers") || "View your approving officers hierarchy"}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Officers List */}
+        {officers.length > 0 ? (
           <SeniorOfficersCard officers={officers} />
         ) : (
-          <p className="text-gray-500">No senior officers information available for your rank.</p>
+          <div className="bg-white rounded-xl md:rounded-2xl p-6 md:p-8 text-center border border-gray-100 shadow-sm">
+            <Users size={48} className="text-gray-300 mx-auto mb-3" />
+            <p className="text-gray-500">{t("noSeniorOfficers") || "No senior officers information available for your rank."}</p>
+          </div>
         )}
       </div>
-     
     </DashboardLayout>
   );
 };
