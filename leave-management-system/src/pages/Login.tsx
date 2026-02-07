@@ -4,11 +4,9 @@ import Footer from "../components/Footer";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { useUsers } from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { login } = useAuth();
   const { users } = useUsers();
 
@@ -80,10 +78,12 @@ const Login = () => {
     });
 
     // Use setTimeout to ensure state is saved before navigation (mobile fix)
+    // Increased delay for mobile browsers
     setTimeout(() => {
-      const targetPath = matchedUser.role === "ADMIN" ? "/admin" : "/police";
-      navigate(targetPath, { replace: true });
-    }, 100);
+      // All POLICE users (including SSP) go to /police
+      // DashboardRouter will render the correct dashboard based on rank
+      window.location.href = "/police";
+    }, 150);
   };
 
   return (
