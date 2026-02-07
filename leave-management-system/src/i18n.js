@@ -93,6 +93,7 @@ i18n
           
           // ===== LEAVE STATUS =====
           leaveStatus: "Leave Status",
+          employee: "Employee",
           dates: "Dates",
           numberOfDays: "Number of Days",
           submittedOn: "Submitted On",
@@ -101,6 +102,7 @@ i18n
           actions: "Actions",
           rejectionReason: "Rejection Reason",
           reasonNotProvided: "Reason not provided",
+          noLeaveRequests: "No leave requests found",
           showingResults: "Showing",
           of: "of",
           prev: "Prev",
@@ -282,6 +284,7 @@ i18n
           
           // ===== LEAVE STATUS =====
           leaveStatus: "अवकाश स्थिति",
+          employee: "कर्मचारी",
           dates: "तारीखें",
           numberOfDays: "दिनों की संख्या",
           submittedOn: "जमा करने की तारीख",
@@ -290,6 +293,7 @@ i18n
           actions: "कार्य",
           rejectionReason: "अस्वीकृति का कारण",
           reasonNotProvided: "कारण नहीं दिया गया",
+          noLeaveRequests: "कोई अवकाश अनुरोध नहीं मिला",
           showingResults: "दिखा रहे हैं",
           of: "का",
           prev: "पिछला",

@@ -228,14 +228,47 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          {/* Mobile Cards View */}
+          <div className="md:hidden space-y-3">
+            {recentLeaves.length === 0 ? (
+              <div className="flex flex-col items-center gap-2 text-gray-400 py-8">
+                <FileText size={40} strokeWidth={1.5} />
+                <p>{t("noLeaveRequests") || "No leave requests found"}</p>
+              </div>
+            ) : (
+              recentLeaves.map(leave => (
+                <div key={leave.id} className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-[#1a237e] to-[#303f9f] rounded-full flex items-center justify-center text-white font-semibold">
+                        {leave.name?.charAt(0) ?? "?"}
+                      </div>
+                      <span className="font-semibold text-gray-800">{leave.name ?? "—"}</span>
+                    </div>
+                    <StatusBadge status={leave.status} colorMap={statusColorMap} />
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="px-3 py-1 bg-[#e8eaf6] text-[#1a237e] rounded-lg font-medium">
+                      {leave.leaveType}
+                    </span>
+                    <span className="text-gray-500">
+                      {leave.from === leave.to ? leave.from : `${leave.from} → ${leave.to}`}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="min-w-full">
               <thead>
                 <tr className="bg-gradient-to-r from-[#1a237e] to-[#303f9f]">
-                  <th className="p-4 text-left text-sm font-semibold text-white rounded-l-xl">Employee</th>
-                  <th className="p-4 text-left text-sm font-semibold text-white">Leave Type</th>
-                  <th className="p-4 text-left text-sm font-semibold text-white">Dates</th>
-                  <th className="p-4 text-left text-sm font-semibold text-white rounded-r-xl">Status</th>
+                  <th className="p-4 text-left text-sm font-semibold text-white rounded-l-xl">{t("employee") || "Employee"}</th>
+                  <th className="p-4 text-left text-sm font-semibold text-white">{t("leaveType") || "Leave Type"}</th>
+                  <th className="p-4 text-left text-sm font-semibold text-white">{t("dates") || "Dates"}</th>
+                  <th className="p-4 text-left text-sm font-semibold text-white rounded-r-xl">{t("status")}</th>
                 </tr>
               </thead>
 
@@ -245,7 +278,7 @@ const AdminDashboard = () => {
                     <td colSpan={4} className="p-8 text-center">
                       <div className="flex flex-col items-center gap-2 text-gray-400">
                         <FileText size={40} strokeWidth={1.5} />
-                        <p>No leave requests found</p>
+                        <p>{t("noLeaveRequests") || "No leave requests found"}</p>
                       </div>
                     </td>
                   </tr>
