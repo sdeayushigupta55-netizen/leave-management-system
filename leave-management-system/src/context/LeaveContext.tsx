@@ -13,9 +13,9 @@ export const useLeave = (): LeaveContextType => {
   return ctx;
 };
 
-// 24 hours in milliseconds
+// 30 minutes in milliseconds (for testing)
 // const AUTO_FORWARD_TIME = 24 * 60 * 60 * 1000;
-const AUTO_FORWARD_TIME = 10 * 1000; // For testing
+const AUTO_FORWARD_TIME = 30 * 60 * 1000;
 
 // Get approval chain based on applicant rank, number of days, and leave type
 const getApprovalChain = (
@@ -34,20 +34,30 @@ const getApprovalChain = (
     return ["SSP"];
   }
 
-  // For CONSTABLE and HEAD_CONSTABLE
+  // For CONSTABLE and HEAD_CONSTABLE - all leaves go through full chain
+  // SHO/SO can approve ≤3 days, CO can approve ≤7 days, SP can approve ≤15 days, SSP approves rest
   if (["CONSTABLE", "HEAD_CONSTABLE"].includes(applicantRank)) {
-    if (numberOfDays <= 3) {
-      return ["SHO/SO", "CO", "SP", "SSP"];
-    }
-    if (numberOfDays <= 7) {
-      return ["CO", "SP", "SSP"];
-    }
-    return ["SP", "SSP"];
+    return ["SHO/SO", "CO", "SP", "SSP"];
   }
 
-  // SI, INSPECTOR, SHO/SO, CO -> SP -> SSP
-  if (["SI", "INSPECTOR", "SHO/SO", "CO"].includes(applicantRank)) {
-    return ["SP", "SSP"];
+  // SI, INSPECTOR, SHO/SO, CO:
+  // ≤3 days -> SP -> SSP
+  // >3 days -> Direct to SSP
+  if (["SI", "INSPECTOR"].includes(applicantRank)) {
+    if (numberOfDays <= 3) {
+      return ["SP", "SSP"];
+    }
+    return ["SSP"]; // >3 days goes direct to SSP
+  }
+
+  // SHO/SO, CO:
+  // ≤3 days -> SP -> SSP
+  // >3 days -> Direct to SSP
+  if (["SHO/SO", "CO"].includes(applicantRank)) {
+    if (numberOfDays <= 3) {
+      return ["SP", "SSP"];
+    }
+    return ["SSP"]; // >3 days goes direct to SSP
   }
 
   // SP -> SSP
@@ -76,16 +86,20 @@ const getApproverRankByDays = (
     return "SSP";
   }
 
-  // For CONSTABLE and HEAD_CONSTABLE
+  // For CONSTABLE and HEAD_CONSTABLE - ALL leaves start with SHO/SO
+  // SHO/SO will approve ≤3 days, forward rest to CO, then SP, then SSP
   if (["CONSTABLE", "HEAD_CONSTABLE"].includes(applicantRank)) {
-    if (numberOfDays <= 3) return "SHO/SO";
-    if (numberOfDays <= 7) return "CO";
-    if (numberOfDays > 7) return "SP";
+    return "SHO/SO"; // Always starts with SHO/SO
   }
 
-  // SI, INSPECTOR, SHO/SO, CO -> SP
+  // SI, INSPECTOR, SHO/SO, CO:
+  // ≤3 days -> First goes to SP
+  // >3 days -> Direct to SSP
   if (["SI", "INSPECTOR", "SHO/SO", "CO"].includes(applicantRank)) {
-    return "SP";
+    if (numberOfDays <= 3) {
+      return "SP"; // ≤3 days goes to SP first
+    }
+    return "SSP"; // >3 days goes direct to SSP
   }
 
   // SP -> SSP
@@ -94,6 +108,38 @@ const getApproverRankByDays = (
   }
 
   return undefined;
+};
+
+// Check if current approver can approve/reject or only forward
+// Returns true if approver can approve, false if can only forward
+export const canApproverApprove = (
+  approverRank: string,
+  numberOfDays: number,
+  leaveType: string,
+  gender?: string
+): boolean => {
+  // Special case: Child Care Leave - only SSP can approve
+  if (gender === "FEMALE" && leaveType === "CHILD_CARE" && numberOfDays >= 180) {
+    return approverRank === "SSP";
+  }
+
+  // SHO/SO can only approve leaves ≤3 days, must forward leaves >3 days
+  if (approverRank === "SHO/SO") {
+    return numberOfDays <= 3;
+  }
+
+  // CO can only approve leaves ≤7 days, must forward leaves >7 days
+  if (approverRank === "CO") {
+    return numberOfDays <= 7;
+  }
+
+  // SP can only approve leaves ≤15 days, must forward leaves >15 days (including 1 month)
+  if (approverRank === "SP") {
+    return numberOfDays <= 15;
+  }
+
+  // SSP can approve any leave (final authority)
+  return approverRank === "SSP";
 };
 
 // Validation function for Child Care Leave
@@ -483,17 +529,28 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
 
         return {
           ...leave,
+          status: "FORWARDED" as LeaveStatus,
           currentApproverId: nextApprover.id,
           currentApproverName: nextApprover.name,
           currentApproverRank: nextApprover.rank,
           lastForwardedAt: new Date().toISOString(),
+          approvals: [
+            ...leave.approvals,
+            {
+              approverId: user?.id ?? "",
+              approverRank: user?.rank ?? "",
+              action: "FORWARDED" as const,
+              timestamp: new Date().toISOString(),
+              reason: reason || "Forwarded to next authority",
+            },
+          ],
           forwardHistory: [
             ...(leave.forwardHistory || []),
             {
               fromRank: leave.currentApproverRank,
               toRank: nextApprover.rank!,
               forwardedAt: new Date().toISOString(),
-              reason: reason || "Forwarded by approver",
+              reason: reason || "Forwarded to next authority",
             },
           ],
         };

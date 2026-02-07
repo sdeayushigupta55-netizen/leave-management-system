@@ -66,6 +66,7 @@ i18n
           pending: "Pending",
           approved: "Approved",
           rejected: "Rejected",
+          forwarded: "Forwarded",
           draft: "Draft",
           active: "Active",
           inactive: "Inactive",
@@ -118,6 +119,9 @@ i18n
           approve: "Approve",
           reject: "Reject",
           forward: "Forward",
+          forwardHistory: "Forward History",
+          forwardedTo: "Forwarded To",
+          forwardReason: "Forward Reason",
           
           // ===== EDIT PROFILE =====
           profileDetails: "Profile Details",
@@ -260,6 +264,7 @@ i18n
           pending: "लंबित",
           approved: "स्वीकृत",
           rejected: "अस्वीकृत",
+          forwarded: "अग्रेषित",
           draft: "ड्राफ्ट",
           active: "सक्रिय",
           inactive: "निष्क्रिय",
@@ -312,6 +317,9 @@ i18n
           approve: "स्वीकृत करें",
           reject: "अस्वीकार करें",
           forward: "अग्रेषित करें",
+          forwardHistory: "अग्रेषण इतिहास",
+          forwardedTo: "को अग्रेषित",
+          forwardReason: "अग्रेषण कारण",
           
           // ===== EDIT PROFILE =====
           profileDetails: "प्रोफ़ाइल विवरण",

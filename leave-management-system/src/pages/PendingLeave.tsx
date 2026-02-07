@@ -7,12 +7,13 @@ import { Clock } from "lucide-react";
 
 const PendingLeave = () => {
   const { t } = useTranslation();
-  const { leaves, approveLeave, rejectLeave } = useLeave();
+  const { leaves, approveLeave, rejectLeave, forwardLeave } = useLeave();
   const { user } = useAuth();
 
+  // Show pending and forwarded leaves assigned to current user
   const pendingLeaves = leaves.filter(
     (leave) =>
-      leave.status === "PENDING" &&
+      (leave.status === "PENDING" || leave.status === "FORWARDED") &&
       leave.currentApproverId === user?.id &&
       leave.applicantId !== user?.id
   );
@@ -44,6 +45,7 @@ const PendingLeave = () => {
               leaves={pendingLeaves}
               onApprove={approveLeave}
               onReject={(id) => rejectLeave(id, "No reason provided")}
+              onForward={(id) => forwardLeave(id, "Forwarded to senior authority")}
             />
           </div>
         )}

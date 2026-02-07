@@ -3,7 +3,7 @@ import React from "react";
 type StatCardProps = {
   title: string;
   value: number;
-  color: "pending" | "approved" | "rejected" | "draft";
+  color: "pending" | "approved" | "rejected" | "draft" | "forwarded";
 };
 
 const colorMap: Record<StatCardProps["color"], { bg: string; border: string; text: string; icon: string }> = {
@@ -24,6 +24,12 @@ const colorMap: Record<StatCardProps["color"], { bg: string; border: string; tex
     border: "border-[#c62828]", 
     text: "text-[#c62828]",
     icon: "❌"
+  },
+  forwarded: { 
+    bg: "bg-gradient-to-br from-[#efebe9] to-[#d7ccc8]", 
+    border: "border-[#8d6e63]", 
+    text: "text-[#6d4c41]",
+    icon: "➡️"
   },
   draft: { 
     bg: "bg-gradient-to-br from-[#e8eaf6] to-[#c5cae9]", 

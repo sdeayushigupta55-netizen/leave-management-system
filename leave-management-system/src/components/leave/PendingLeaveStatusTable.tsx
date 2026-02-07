@@ -7,11 +7,14 @@ import { statusColorMap } from "../../utils/statusConfig";
 import { leaveTypeToKey } from "../../utils/translationHelper";
 import PendingActionButtons from "./PendingActionButtons";
 import { Check, X } from "lucide-react";
+import { canApproverApprove } from "../../context/LeaveContext";
+import { useAuth } from "../../context/AuthContext";
 
 type PendingLeaveStatusTableProps = {
   leaves: Leave[];
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
+  onForward: (id: string) => void;
 };
 
 const ROWS_PER_PAGE = 10;
@@ -20,8 +23,10 @@ const PendingLeaveStatusTable = ({
   leaves,
   onApprove,
   onReject,
+  onForward,
 }: PendingLeaveStatusTableProps) => {
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
   const [page, setPage] = useState(1);
 
   const totalPages = Math.ceil(leaves.length / ROWS_PER_PAGE);
@@ -59,31 +64,40 @@ const PendingLeaveStatusTable = ({
   ] as const;
 
   // Map data with translations
-  const data = paginatedLeaves.map((leave) => ({
-    name: leave.name,
-    leaveType: translateLeaveType(leave.leaveType),
-    dates:
-      leave.from !== leave.to
-        ? `${formatDate(leave.from)} - ${formatDate(leave.to)}`
-        : formatDate(leave.from),
-    numberOfDays: leave.numberOfDays,
-    reason: leave.reason,
-    submittedOn: formatDate(leave.submittedOn),
-    status: <StatusBadge status={leave.status} colorMap={statusColorMap} />,
-    actions:
-      leave.status === "APPROVED" ? (
-        <Check size={16} className="text-green-500" />
-      ) : leave.status === "REJECTED" ? (
-        <X size={16} className="text-red-500" />
-      ) : (
-        <PendingActionButtons
-          status={leave.status}
-          leaveId={leave.id}
-          onApprove={() => onApprove(leave.id)}
-          onReject={() => onReject(leave.id)}
-        />
-      ),
-  }));
+  const data = paginatedLeaves.map((leave) => {
+    // Check if current user can approve this leave
+    const approverCanApprove = user?.rank 
+      ? canApproverApprove(user.rank, leave.numberOfDays, leave.leaveType, leave.gender)
+      : false;
+
+    return {
+      name: leave.name,
+      leaveType: translateLeaveType(leave.leaveType),
+      dates:
+        leave.from !== leave.to
+          ? `${formatDate(leave.from)} - ${formatDate(leave.to)}`
+          : formatDate(leave.from),
+      numberOfDays: leave.numberOfDays,
+      reason: leave.reason,
+      submittedOn: formatDate(leave.submittedOn),
+      status: <StatusBadge status={leave.status} colorMap={statusColorMap} />,
+      actions:
+        leave.status === "APPROVED" ? (
+          <Check size={16} className="text-green-500" />
+        ) : leave.status === "REJECTED" ? (
+          <X size={16} className="text-red-500" />
+        ) : (
+          <PendingActionButtons
+            status={leave.status}
+            leaveId={leave.id}
+            canApprove={approverCanApprove}
+            onApprove={() => onApprove(leave.id)}
+            onReject={() => onReject(leave.id)}
+            onForward={() => onForward(leave.id)}
+          />
+        ),
+    };
+  });
 
   return (
     <div className="w-full overflow-x-auto">

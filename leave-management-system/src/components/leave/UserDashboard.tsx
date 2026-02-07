@@ -30,12 +30,16 @@ const UserDashboard = () => {
     rejected: leaves.filter((leave) =>
       leave.approvals.some((a) => a.approverId === user.id && a.action === "REJECTED")
     ).length,
+    forwarded: leaves.filter((leave) =>
+      leave.approvals.some((a) => a.approverId === user.id && a.action === "FORWARDED")
+    ).length,
   };
 
   const stats = {
     pending: myLeaves.filter((l) => l.status === "PENDING").length,
     approved: myLeaves.filter((l) => l.status === "APPROVED").length,
     rejected: myLeaves.filter((l) => l.status === "REJECTED").length,
+    forwarded: myLeaves.filter((l) => l.status === "FORWARDED").length,
     draft: myLeaves.filter((l) => l.status === "DRAFT").length,
   };
 
@@ -49,6 +53,9 @@ const UserDashboard = () => {
 
   const isSeniorRank =
     user.rank === "SHO/SO" || user.rank === "CO" || user.rank === "SP" || user.rank === "SSP";
+
+  // Only SHO/SO, CO, SP can forward leaves (SSP is final authority, cannot forward)
+  const canForward = user.rank === "SHO/SO" || user.rank === "CO" || user.rank === "SP";
 
   return (
     <div className="w-full min-h-screen p-2 sm:p-4 md:p-6 space-y-4 sm:space-y-6 flex flex-col">
@@ -97,10 +104,13 @@ const UserDashboard = () => {
             <p className="text-sm text-gray-500">{t("yourLeaveStats")}</p>
           </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <div className={`grid grid-cols-2 ${isJuniorRank ? 'sm:grid-cols-4' : 'sm:grid-cols-4'} gap-3 sm:gap-4`}>
           <StatCard title={t("pending")} value={stats.pending} color="pending" />
           <StatCard title={t("approved")} value={stats.approved} color="approved" />
           <StatCard title={t("rejected")} value={stats.rejected} color="rejected" />
+          {/* {!isJuniorRank && (
+            <StatCard title={t("forwarded")} value={stats.forwarded} color="forwarded" />
+          )} */}
           <StatCard title={t("draft")} value={stats.draft} color="draft" />
         </div>
       </section>
@@ -117,10 +127,13 @@ const UserDashboard = () => {
               <p className="text-sm text-gray-500">{t("requestsPendingApproval")}</p>
             </div>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+          <div className={`grid grid-cols-2 ${canForward ? 'sm:grid-cols-4' : 'sm:grid-cols-3'} gap-3 sm:gap-4`}>
             <StatCard title={t("pending")} value={approvalStats.pending} color="pending" />
             <StatCard title={t("approved")} value={approvalStats.approved} color="approved" />
             <StatCard title={t("rejected")} value={approvalStats.rejected} color="rejected" />
+            {canForward && (
+              <StatCard title={t("forwarded")} value={approvalStats.forwarded} color="forwarded" />
+            )}
           </div>
         </section>
       )}
@@ -182,6 +195,8 @@ const UserDashboard = () => {
                           ? "bg-[#ffebee] text-[#c62828]"
                           : leave.status === "PENDING"
                           ? "bg-[#fff8e1] text-[#f57c00]"
+                          : leave.status === "FORWARDED"
+                          ? "bg-[#efebe9] text-[#6d4c41]"
                           : "bg-[#e8eaf6] text-[#1a237e]"
                       }`}
                     >
@@ -196,7 +211,19 @@ const UserDashboard = () => {
                     {leave.currentApproverName && (
                       <p>
                         👤 {t("assignedTo")}: <span className="font-semibold text-[#1a237e]">{leave.currentApproverName}</span>
+                        {leave.currentApproverRank && <span className="text-gray-400"> ({leave.currentApproverRank})</span>}
                       </p>
+                    )}
+                    {/* Show forward history */}
+                    {leave.forwardHistory && leave.forwardHistory.length > 0 && (
+                      <div className="mt-2 pt-2 border-t border-gray-100">
+                        <p className="font-semibold text-[#8d6e63] mb-1">➡️ {t("forwardHistory") || "Forward History"}:</p>
+                        {leave.forwardHistory.map((fh, idx) => (
+                          <p key={idx} className="text-[10px] text-gray-500">
+                            {fh.fromRank} → {fh.toRank}: {fh.reason}
+                          </p>
+                        ))}
+                      </div>
                     )}
                   </div>
                   {leave.status === "DRAFT" && (

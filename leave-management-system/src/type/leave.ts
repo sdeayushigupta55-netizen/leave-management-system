@@ -3,6 +3,7 @@ import type { PoliceRank } from "./user";
 export type LeaveStatus =
   | "DRAFT"
   | "PENDING"
+  | "FORWARDED"
   | "APPROVED"
   | "REJECTED";
 
