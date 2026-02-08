@@ -55,7 +55,7 @@ const AdminDashboard = () => {
 
   const rankLabels: Record<string, string> = {
     CONSTABLE: "Constable",
-    HEAD_CONSTABLE: "Head Constable",
+    HEADCONSTABLE: "Head Constable",
     SI: "Sub Inspector",
     INSPECTOR: "Inspector",
     "SHO/SO": "SHO/SO",
@@ -63,7 +63,7 @@ const AdminDashboard = () => {
     SP: "SP",
   };
 
-  const ranks = ["CONSTABLE", "HEAD_CONSTABLE", "SI", "INSPECTOR", "SHO/SO", "CO", "SP"];
+  const ranks = ["CONSTABLE", "HEADCONSTABLE", "SI", "INSPECTOR", "SHO/SO", "CO", "SP"];
 
   return (
     <DashboardLayout>

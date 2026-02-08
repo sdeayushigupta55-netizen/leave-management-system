@@ -1,5 +1,13 @@
 
-  
+export type PoliceRank  =
+  | "CONSTABLE"
+  | "HEADCONSTABLE"
+  | "SI"
+  | "SHO/SO"
+  | "INSPECTOR"
+  | "CO"
+  | "SP"
+  | "SSP";
 // ================= SYSTEM ROLES =====================
 export type UserRole = "POLICE" | "ADMIN";
 
@@ -14,7 +22,7 @@ export interface AuthUser {
   isActive: boolean;
   rank?: PoliceRank;
   circleOffice?: string;
-  area?: "CITY" | "RURAL";
+  area?: "SP-CITY" | "SP-RURAL";
   gender?: "MALE" | "FEMALE";
   policeStation?: string; 
 }
@@ -58,33 +66,62 @@ export interface UpdateUserPayload {
 
 
 
-
-
-
-
-export type PoliceRank  =
-  | "CONSTABLE"
-  | "HEAD_CONSTABLE"
-  | "SI"
-  | "SHO/SO"
-  | "INSPECTOR"
-  | "CO"
-  | "SP"
-  | "SSP";
-
 export interface User {
   id: string;
   pno: string;               // ✅ NEW
   name: string;
-  email?: string;
+  // email?: string;
   contact: string;
   role: "POLICE" | "ADMIN";
   rank?: PoliceRank;
   circleOffice?: string;
   policeStation?: string;
-  area?: "CITY" | "RURAL";
+  area?: "SP-CITY" | "SP-RURAL";
   gender?: "MALE" | "FEMALE";
   isActive: boolean;
   createdAt: string;
   password?: string; // demo only
 }
+
+export const POLICE_HIERARCHY = {
+  "SP-CITY": {
+    "CO City": [
+      "North",
+      "South",
+      "Ramgarh",
+      "Rasulapur"
+    ],
+    "CO Tundla": [
+      "Tundla",
+      "Narkhi",
+      "Pachokhara",
+      "Nagla Sindhi",
+      "Rojavali"
+    ],
+    "CO Sadar": [
+      "Matsena",
+      "Basai Mohammadpur",
+      "Linepar",
+      "Women Police Station"
+    ]
+  },
+  "SP-RURAL": {
+    "CO Shikohabad": [
+      "Shikohabad",
+      "Khergarh",
+      "Makhnapur"
+    ],
+    "CO Sirsaganj": [
+      "Nagla Khangar",
+      "Nasirpur",
+      "Sirsaganj",
+      "Arang"
+    ],
+    "CO Jasrana": [
+      "Jasrana",
+      "Eka",
+      "Fariha"
+    ]
+  }
+};
+

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { statusColorMap } from "../../utils/statusConfig";
 import { leaveTypeToKey } from "../../utils/translationHelper";
 import PendingActionButtons from "./PendingActionButtons";
-import { Check, X } from "lucide-react";
+import { Check, X ,FileText} from "lucide-react";
 import { canApproverApprove } from "../../context/LeaveContext";
 import { useAuth } from "../../context/AuthContext";
 
@@ -61,6 +61,26 @@ const PendingLeaveStatusCard = ({
                 </span>
               </div>
               <StatusBadge status={leave.status} colorMap={statusColorMap} />
+              {leave.attachment && (
+  <div className="mb-3">
+    <a
+      href={
+        typeof leave.attachment === 'string'
+          ? leave.attachment
+          : leave.attachment instanceof Blob
+            ? URL.createObjectURL(leave.attachment)
+            : undefined
+      }
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 underline flex items-center gap-1"
+      title={t("viewLeaveApplication")}
+    >
+      <FileText size={24} className="inline-block text-blue-600" />
+      
+    </a>
+  </div>
+)}
             </div>
 
             {/* Leave Type & Dates */}
@@ -84,6 +104,7 @@ const PendingLeaveStatusCard = ({
               <span className="text-xs text-gray-500 block mb-1">{t("reason")}</span>
               <p className="text-sm text-gray-700 line-clamp-2">{leave.reason}</p>
             </div>
+
 
             {/* Submitted On */}
             <div className="mb-3 text-xs text-gray-500">

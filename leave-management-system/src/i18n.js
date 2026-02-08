@@ -100,6 +100,10 @@ i18n
           earned: "Earned",
           emergency: "Emergency",
           childCare: "Child Care",
+          medical: "Medical",
+          paternity: "Paternity",
+          maternity: "Maternity",
+          optional: "Optional",
           
           // ===== LEAVE STATUS =====
           leaveStatus: "Leave Status",
@@ -118,6 +122,7 @@ i18n
           prev: "Prev",
           next: "Next",
           allStatus: "All Status",
+          totalleaves: "Total Leaves",
           
           // ===== PENDING LEAVE =====
           pendingLeaves: "Pending Leaves",
@@ -303,6 +308,10 @@ i18n
           earned: "अर्जित",
           emergency: "आपातकालीन",
           childCare: "बाल देखभाल",
+          medical: "चिकित्सा",
+          paternity: "पितृत्व",
+          maternity: "मातृत्व",
+          optional: "वैकल्पिक",
           
           // ===== LEAVE STATUS =====
           leaveStatus: "अवकाश स्थिति",
@@ -321,6 +330,7 @@ i18n
           prev: "पिछला",
           next: "अगला",
           allStatus: "सभी स्थिति",
+          totalLeaves: "कुल अवकाश",
           
           // ===== PENDING LEAVE =====
           pendingLeaves: "लंबित अवकाश",
@@ -383,6 +393,7 @@ i18n
           yourLeaveStats: "आपके अवकाश आवेदन की सांख्यिकी",
           requestsPendingApproval: "आपकी स्वीकृति के लंबित अनुरोध",
           yourLatestApplications: "आपके नवीनतम अवकाश आवेदन",
+          totalleaves: "कुल अवकाश",
           
           // ===== ADMIN DASHBOARD =====
           sspDashboard: "एसएसपी डैशबोर्ड",

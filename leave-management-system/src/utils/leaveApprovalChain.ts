@@ -30,7 +30,7 @@ export const getApprovalChain = (
   }
 
   // C/CH goes through full chain with SHO/SO as first authority
-  if (applicantRank === "CONSTABLE" || applicantRank === "HEAD_CONSTABLE") {
+  if (applicantRank === "CONSTABLE" || applicantRank === "HEADCONSTABLE") {
     // ≤3 days: SHO/SO can approve, but higher chain exists
     if (numberOfDays <= APPROVAL_LIMITS.SHO_SO) {
       return ["SHO/SO", "CO", "SP", "SSP"];
@@ -102,7 +102,7 @@ export const getApproverRankByDays = (
   }
 
   // C/CH always starts with SHO/SO
-  if (applicantRank === "CONSTABLE" || applicantRank === "HEAD_CONSTABLE") {
+  if (applicantRank === "CONSTABLE" || applicantRank === "HEADCONSTABLE") {
     return "SHO/SO";
   }
 
@@ -156,7 +156,7 @@ export const canApproverApprove = (
   applicantRank: string
 ): boolean => {
   // C/CH leaves - follow the approval authority limits
-  if (applicantRank === "CONSTABLE" || applicantRank === "HEAD_CONSTABLE") {
+  if (applicantRank === "CONSTABLE" || applicantRank === "HEADCONSTABLE") {
     // SHO/SO can only approve leaves ≤3 days, must forward leaves >3 days
     if (approverRank === "SHO/SO") {
       return numberOfDays <= APPROVAL_LIMITS.SHO_SO;

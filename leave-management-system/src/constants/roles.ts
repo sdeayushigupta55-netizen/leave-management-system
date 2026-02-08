@@ -3,7 +3,7 @@ import type { PoliceRank, UserRole } from "../type/user";
 
 export const POLICE_RANKS: PoliceRank[] = [
   "CONSTABLE",
-  "HEAD_CONSTABLE",
+  "HEADCONSTABLE",
   "SI",
   "CO",
   "INSPECTOR",
@@ -14,7 +14,7 @@ export const POLICE_RANKS: PoliceRank[] = [
 
 export const SENIOR_RANKS: PoliceRank[] = [
   "CONSTABLE",
-  "HEAD_CONSTABLE",
+  "HEADCONSTABLE",
   "SI",
   "CO",
   "INSPECTOR",

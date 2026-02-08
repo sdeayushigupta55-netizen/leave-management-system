@@ -35,6 +35,7 @@ const UsersTable = ({ users, onEdit }: UserTableProps) => {
     { header: t("role"), accessor: (u) => translateRole(u.role) },
     { header: t("rank"), accessor: (u) => translateRank(u.rank) },
     { header: t("pno"), accessor: "pno" },
+    {header: t("contact"), accessor: "contact" },
     {
       header: t("status"),
       accessor: (u) => (

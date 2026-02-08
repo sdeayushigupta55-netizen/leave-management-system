@@ -291,11 +291,56 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const approveLeave = (id: string, approverId: string, remarks?: string) => {
-    // Implement your approve logic here if needed
+    setLeaves((prev) =>
+      prev.map((leave) => {
+        if (leave.id !== id || leave.status !== "PENDING") return leave;
+        return {
+          ...leave,
+          status: "APPROVED" as LeaveStatus,
+          currentApproverId: undefined,
+          currentApproverName: undefined,
+          currentApproverRank: undefined,
+          approvals: [
+            ...leave.approvals,
+            {
+              approverId: approverId,
+              approverRank: leave.currentApproverRank ?? "",
+              action: "APPROVED",
+              timestamp: new Date().toISOString(),
+              reason: remarks,
+            },
+          ],
+          lastUpdatedOn: new Date().toISOString(),
+        };
+      })
+    );
   };
 
   const rejectLeave = (id: string, approverId: string, reason?: string) => {
-    // Implement your reject logic here if needed
+    setLeaves((prev) =>
+      prev.map((leave) => {
+        if (leave.id !== id || leave.status !== "PENDING") return leave;
+        return {
+          ...leave,
+          status: "REJECTED" as LeaveStatus,
+          currentApproverId: undefined,
+          currentApproverName: undefined,
+          currentApproverRank: undefined,
+          approvals: [
+            ...leave.approvals,
+            {
+              approverId: approverId,
+              approverRank: leave.currentApproverRank ?? "",
+              action: "REJECTED",
+              timestamp: new Date().toISOString(),
+              reason: reason,
+            },
+          ],
+          Reason: reason,
+          lastUpdatedOn: new Date().toISOString(),
+        };
+      })
+    );
   };
 
   const forwardLeave = (id: string, reason?: string) => {

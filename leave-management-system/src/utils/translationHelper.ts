@@ -18,7 +18,7 @@ export const statusToKey: Record<string, string> = {
 
 export const rankToKey: Record<string, string> = {
   CONSTABLE: "constable",
-  HEAD_CONSTABLE: "headConstable",
+  HEADCONSTABLE: "headConstable",
   SI: "si",
   INSPECTOR: "inspector",
   "SHO/SO": "shoSo",

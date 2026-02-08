@@ -25,19 +25,19 @@ const DashboardSidebar = () => {
       labelKey: "applyLeave",
       path: "/police/apply-leave",
       roles: ["POLICE"],
-      ranks: ["SHO/SO", "CO", "SP", "INSPECTOR","SI", "HEAD_CONSTABLE","CONSTABLE"],
+      ranks: ["SHO/SO", "CO", "SP", "INSPECTOR","SI", "HEADCONSTABLE","CONSTABLE"],
     },
     {
       labelKey: "myLeaveStatus",
       path: "/police/leave-status",
       roles: ["POLICE"],
-      ranks: ["SHO/SO", "CO", "SP", "INSPECTOR","SI", "HEAD_CONSTABLE","CONSTABLE"],
+      ranks: ["SHO/SO", "CO", "SP", "INSPECTOR","SI", "HEADCONSTABLE","CONSTABLE"],
     },
     {
       labelKey: "seniorDetails",
       path: "/police/senior-details",
       roles: ["POLICE"],
-      ranks: ["SHO/SO", "CO", "SP", "INSPECTOR","SI", "HEAD_CONSTABLE","CONSTABLE"],
+      ranks: ["SHO/SO", "CO", "SP", "INSPECTOR","SI", "HEADCONSTABLE","CONSTABLE"],
     },
     {
       labelKey: "pendingApprovals",

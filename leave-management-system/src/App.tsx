@@ -92,11 +92,11 @@ function App() {
             </Route>
 
 
-            {/* HEAD_CONSTABLE  */}
+            {/* HEADCONSTABLE  */}
             <Route
               path="/headconstable"
               element={
-                <RoleRoute allowRole={["POLICE"]} allowRank={["HEAD_CONSTABLE"]}>
+                <RoleRoute allowRole={["POLICE"]} allowRank={["HEADCONSTABLE"]}>
                   <HeadConstableDashboard />
                 </RoleRoute>
               }
@@ -226,7 +226,7 @@ export default App;
 //   circle-OFFICE":"CITY",
  
 //   policesttaion:"NORTH CITY",
-//   rank:"CONSTABLE","computer operator","HEAD_CONSTABLE","SI","INSPECTOR","SHO-SO"
+//   rank:"CONSTABLE","computer operator","HEADCONSTABLE","SI","INSPECTOR","SHO-SO"
   
   
 //   pno:"123456",
@@ -239,6 +239,6 @@ export default App;
 
 // {
 //   office":"SP-CITY" 
-//   RANK :"INSPECTOR" ,"SI","HEAD_CONSTABLE","CONSTABLE","computer operator"
+//   RANK :"INSPECTOR" ,"SI","HEADCONSTABLE","CONSTABLE","computer operator"
 // }
 

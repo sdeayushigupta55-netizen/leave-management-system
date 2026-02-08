@@ -6,7 +6,7 @@ export type Role = "ADMIN" | "POLICE";
 
 export type Rank =
   | "CONSTABLE"
-  | "HEAD_CONSTABLE"
+  | "HEADCONSTABLE"
   | "SI"
   | "SHO/SO"
   | "INSPECTOR"

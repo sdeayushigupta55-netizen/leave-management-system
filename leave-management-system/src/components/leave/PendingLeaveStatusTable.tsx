@@ -7,6 +7,7 @@ import { statusColorMap } from "../../utils/statusConfig";
 import { leaveTypeToKey } from "../../utils/translationHelper";
 import PendingActionButtons from "./PendingActionButtons";
 import { Check, X } from "lucide-react";
+import { FileText } from "lucide-react";
 import { canApproverApprove } from "../../context/LeaveContext";
 import { useAuth } from "../../context/AuthContext";
 
@@ -53,7 +54,7 @@ const PendingLeaveStatusTable = ({
   // Define columns with translated headers
   const columns = [
     { header: t("name"), accessor: "name" },
-    {header: t("rank"), accessor: "applicantRank" },
+    { header: t("rank"), accessor: "applicantRank" },
     { header: t("leaveType"), accessor: "leaveType" },
     { header: t("dates"), accessor: "dates" },
     { header: t("numberOfDays"), accessor: "numberOfDays" },
@@ -61,18 +62,35 @@ const PendingLeaveStatusTable = ({
     { header: t("submittedOn"), accessor: "submittedOn" },
     { header: t("status"), accessor: "status" },
     { header: t("actions"), accessor: "actions" },
-   
-    {header: t("Reason"), accessor: "Reason"},
+    { header: t("Document"), accessor: "Document" },
+    // { header: "Attachment Debug", accessor: "attachmentDebug" },
+    { header: t("Reason"), accessor: "Reason" },
   ] as const;
 
   // Map data with translations
   const data = paginatedLeaves.map((leave) => {
     // Check if current user can approve this leave
+    
     const approverCanApprove = user?.rank 
       ? canApproverApprove(user.rank, leave.numberOfDays, leave.applicantRank)
       : false;
 
     return {
+            attachmentDebug: (
+              <span style={{ fontSize: 10 }}>
+                {leave.attachment === undefined
+                  ? 'undefined'
+                  : leave.attachment === null
+                  ? 'null'
+                  : typeof leave.attachment === 'string'
+                  ? `string: ${leave.attachment}`
+                  : leave.attachment instanceof File
+                  ? `File: ${leave.attachment.name}`
+                  : leave.attachment instanceof Blob
+                  ? 'Blob'
+                  : `type: ${typeof leave.attachment}`}
+              </span>
+            ),
       name: leave.name,
       applicantRank: leave.applicantRank,
       leaveType: translateLeaveType(leave.leaveType),
@@ -87,7 +105,7 @@ const PendingLeaveStatusTable = ({
         </span>
       ),
       submittedOn: formatDate(leave.submittedOn),
-      status: <StatusBadge status={leave.status} colorMap={statusColorMap} />,
+      status: <StatusBadge status={leave.status} colorMap={statusColorMap} />, 
       actions:
         leave.status === "APPROVED" ? (
           <Check size={16} className="text-green-500" />
@@ -103,6 +121,32 @@ const PendingLeaveStatusTable = ({
             onForward={() => onForward(leave.id)}
           />
         ),
+      // Document: (() => {
+      //   let url;
+      //   if (typeof leave.attachment === 'string') {
+      //     url = leave.attachment;
+      //   } else if (leave.attachment instanceof Blob || leave.attachment instanceof File) {
+      //     url = URL.createObjectURL(leave.attachment);
+      //   }
+      //   if (url) {
+      //     return (
+      //       <a
+      //         href={url}
+      //         target="_blank"
+      //         rel="noopener noreferrer"
+      //         className="text-blue-600 underline whitespace-nowrap flex items-center gap-1"
+      //         title={t("viewLeaveApplication")}
+      //       >
+      //         <FileText size={24} className="inline-block text-blue-600" />
+      //       </a>
+      //     );
+      //   }
+      //   return <span className="text-gray-400">-</span>;
+      // })(),
+      Reason:
+        leave.status === "REJECTED"
+          ? leave.Reason || t("reasonNotProvided")
+          : "-",
     };
   });
 

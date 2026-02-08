@@ -28,7 +28,7 @@ const DashboardRouter = () => {
   switch (user.rank) {
     case "CONSTABLE":
       return <ConstableDashboard />;
-    case "HEAD_CONSTABLE":
+    case "HEADCONSTABLE":
       return <HeadConstableDashboard />;
     case "SI":
       return <SIDashboard />;

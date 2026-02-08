@@ -60,7 +60,7 @@ const AllUsers = () => {
               >
                 <option value="ALL">{t("allRanks")}</option>
                 <option value="CONSTABLE">{t("constable")}</option>
-                <option value="HEAD_CONSTABLE">{t("headConstable")}</option>
+                <option value="HEADCONSTABLE">{t("headConstable")}</option>
                 <option value="SI">{t("si")}</option>
                 <option value="INSPECTOR">{t("inspector")}</option>
                 <option value="SHO/SO">{t("shoSo")}</option>

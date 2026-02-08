@@ -40,7 +40,7 @@ const defaultUsers: User[] = [
     name: "Rahul Verma",
     contact: "9876500007",
     role: "POLICE",
-    rank: "HEAD_CONSTABLE",
+    rank: "HEADCONSTABLE",
     circleOffice: "City Circle",
     policeStation: "Ramgarh",
     area: "CITY",
@@ -73,7 +73,7 @@ const defaultUsers: User[] = [
     rank: "SHO/SO",
     policeStation: "Ramgarh",
     circleOffice: "City Circle",
-    area: "CITY",
+    area: "SP-CITY",
     gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
@@ -87,7 +87,7 @@ const defaultUsers: User[] = [
     rank: "INSPECTOR",
     policeStation: "Ramgarh",
     circleOffice: "City Circle",
-    area: "CITY",
+    area: "SP-CITY",
     gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
@@ -100,7 +100,7 @@ const defaultUsers: User[] = [
     role: "POLICE",
     rank: "CO",
     circleOffice: "City Circle",
-    area: "CITY",
+    area: "SP-CITY",
     gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
@@ -112,7 +112,7 @@ const defaultUsers: User[] = [
     contact: "9876500003",
     role: "POLICE",
     rank: "SP",
-    area: "CITY",
+    area: "SP-CITY",
     gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
@@ -168,21 +168,20 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
       safeLocalStorage.setItem("app_users", JSON.stringify(users));
     }, [users]);
- // const addUser = (
-    //     payload: CreateAdminUserPayload | CreatePoliceUserPayload
-    // ) => {
-    //     const { password, ...safePayload } = payload;
-
-    //     setUsers(prev => [
-    //         {
-    //             id: crypto.randomUUID(),
-    //             isActive: true,
-    //             createdAt: new Date().toISOString(),
-    //             ...safePayload,
-    //         },
-    //         ...prev,
-    //     ]);
-    // };
+  const addUser = (
+    payload: any // You can replace 'any' with CreateAdminUserPayload | CreatePoliceUserPayload
+  ) => {
+    const { password, ...safePayload } = payload;
+    setUsers(prev => [
+      {
+        id: crypto.randomUUID(),
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        ...safePayload,
+      },
+      ...prev,
+    ]);
+  };
    
     const updateUser=(id:string,updated:Partial<User>)=> {
         setUsers(prev=>
@@ -223,7 +222,7 @@ const loginWithPno = (pno: string, contact: string) => {
       safeLocalStorage.setItem("app_users", JSON.stringify(defaultUsers));
     };
     return (
-      <UserContext.Provider value={{ users, loginWithPno ,updateUser, toggleUser, addUser: () => {}, resetUsers }}>
+      <UserContext.Provider value={{ users, loginWithPno ,updateUser, toggleUser, addUser, resetUsers }}>
         {children}
       </UserContext.Provider>
     );

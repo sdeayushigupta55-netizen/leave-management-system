@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import LeaveStatusTable from "../../components/leave/LeaveStatusTable";
 import Button from "../../ui/Button";
 import StatCard from "../../ui/StatCard";
-import { BarChart3, Clock, FileText, CheckCircle } from "lucide-react";
+import { BarChart3, Clock, FileText, CheckCircle, MapPin, Landmark, Building2, BadgeInfo,LucideIdCard } from "lucide-react";
 
 const UserDashboard = () => {
   const { t } = useTranslation();
@@ -33,6 +33,7 @@ const UserDashboard = () => {
     forwarded: leaves.filter((leave) =>
       leave.approvals.some((a) => a.approverId === user.id && a.action === "FORWARDED")
     ).length,
+    
   };
 
   const stats = {
@@ -41,13 +42,14 @@ const UserDashboard = () => {
     rejected: myLeaves.filter((l) => l.status === "REJECTED").length,
     forwarded: myLeaves.filter((l) => l.status === "FORWARDED").length,
     draft: myLeaves.filter((l) => l.status === "DRAFT").length,
+    total: myLeaves.length,
   };
 
   const recentLeaves = [...myLeaves].slice(0, 5);
 
   const isJuniorRank =
     user.rank === "CONSTABLE" ||
-    user.rank === "HEAD_CONSTABLE" ||
+    user.rank === "HEADCONSTABLE" ||
     user.rank === "SI" ||
     user.rank === "INSPECTOR";
 
@@ -70,18 +72,25 @@ const UserDashboard = () => {
             {user.rank}
           </span>
 
-          <div className="flex flex-wrap gap-2 sm:gap-x-4 text-gray-600 text-xs sm:text-sm">
-            <span className="bg-gray-50 px-2 py-1 rounded-lg">🆔 {user.pno}</span>
+          <div className="flex flex-wrap gap-2 sm:gap-x-4 text-gray-600 text-xs sm:text-sm items-center">
+            <span className="bg-gray-50 px-2 py-1 rounded-lg flex items-center gap-1">
+              <LucideIdCard size={14} className="text-[#1a237e]" />{user.pno}
+            </span>
             {(user.rank === "SP" || user.rank === "CO" || isJuniorRank) && user.area && (
-              <span className="bg-gray-50 px-2 py-1 rounded-lg">📍 {user.area}</span>
+              <span className="bg-gray-50 px-2 py-1 rounded-lg flex items-center gap-2">
+                <MapPin size={14} className="text-[#1a237e]" /> {user.area}
+              </span>
             )}
             {(user.rank === "SHO/SO" || user.rank === "CO" || isJuniorRank) && user.circleOffice && (
-              <span className="bg-gray-50 px-2 py-1 rounded-lg">🏢 {user.circleOffice}</span>
+              <span className="bg-gray-50 px-2 py-1 rounded-lg flex items-center gap-2">
+                <Building2 size={14} className="text-[#1a237e]" /> {user.circleOffice}
+              </span>
             )}
             {(user.rank === "SHO/SO" || isJuniorRank) && user.policeStation && (
-              <span className="bg-gray-50 px-2 py-1 rounded-lg">🏛️ {user.policeStation}</span>
+              <span className="bg-gray-50 px-2 py-1 rounded-lg flex items-center gap-1">
+                <Landmark size={14} className="text-[#1a237e]" /> {user.policeStation}
+              </span>
             )}
-            
           </div>
 
           <span
@@ -106,6 +115,7 @@ const UserDashboard = () => {
           </div>
         </div>
         <div className={`grid grid-cols-2 ${isJuniorRank ? 'sm:grid-cols-4' : 'sm:grid-cols-4'} gap-3 sm:gap-4`}>
+          {/* <StatCard title={t("totalleaves")} value={stats.total} color="total" /> */}
           <StatCard title={t("pending")} value={stats.pending} color="pending" />
           <StatCard title={t("approved")} value={stats.approved} color="approved" />
           <StatCard title={t("rejected")} value={stats.rejected} color="rejected" />

@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { statusColorMap } from "../../utils/statusConfig";
 import { leaveTypeToKey } from "../../utils/translationHelper";
 import { generateLeaveApprovalPDF } from "../../utils/generateLeaveApprovalPDF";
-import { FileDown } from "lucide-react";
+import { FileDown, FileText } from "lucide-react";
 
 type LeaveStatusTableProps = {
   leaves: Leave[];
@@ -53,24 +53,35 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
     { header: t("assignedTo"), accessor: "currentApproverName" },
     { header: t("status"), accessor: "status" },
     { header: t("Document"), accessor: "Document" },
-    { header: t("actions"), accessor: "actions" },
+    // { header: t("actions"), accessor: "actions" },
     { header: t("Reason"), accessor: "Reason" },
   ] as const;
 
   // Map data with translations
   const data = paginatedLeaves.map((leave) => ({
-        Document: leave.attachment ? (
-          <a
-            href={typeof leave.attachment === 'string' ? leave.attachment : URL.createObjectURL(leave.attachment)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline whitespace-nowrap"
-          >
-            {t("view")}
-          </a>
-        ) : (
-          <span className="text-gray-400">-</span>
-        ),
+        Document: (() => {
+          let url;
+          if (typeof leave.attachment === 'string') {
+            url = leave.attachment;
+          } else if (leave.attachment instanceof Blob || leave.attachment instanceof File) {
+            url = URL.createObjectURL(leave.attachment);
+          }
+          if (url) {
+            return (
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline whitespace-nowrap flex items-center gap-1"
+                title={t("viewLeaveApplication")}
+              >
+                <FileText size={24} className="inline-block text-blue-600" />
+                {/* {t("viewLeaveApplication")} */}
+              </a>
+            );
+          }
+          return <span className="text-gray-400">-</span>;
+        })(),
     leaveType: translateLeaveType(leave.leaveType),
     dates:
       leave.from !== leave.to
@@ -96,14 +107,20 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
             <FileDown size={14} />
           </button>
         )}
-      </div>
-    ),
-    actions: (
-      <ActionButtons
+        {leave.status === "DRAFT" && (
+           <ActionButtons
         status={leave.status}
         onEdit={() => navigate("/police/apply-leave", { state: { leaveId: leave.id } })}
       />
+        )}
+      </div>
     ),
+    // actions: (
+    //   <ActionButtons
+    //     status={leave.status}
+    //     onEdit={() => navigate("/police/apply-leave", { state: { leaveId: leave.id } })}
+    //   />
+    // ),
     Reason:
       leave.status === "REJECTED"
         ? leave.Reason || t("reasonNotProvided")

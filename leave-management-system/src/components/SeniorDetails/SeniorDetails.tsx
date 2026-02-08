@@ -13,7 +13,7 @@ const SeniorDetails = () => {
   if (!user) return null;
 
   const getApprovingOfficers = () => {
-    if (user.rank === "CONSTABLE" || user.rank === "HEAD_CONSTABLE") {
+    if (user.rank === "CONSTABLE" || user.rank === "HEADCONSTABLE") {
       const approvers = [
         { rank: "SSP", maxDays: null, label: "8+ days / EL" },
         { rank: "SP", maxDays: 15, label: "8-15 days" },

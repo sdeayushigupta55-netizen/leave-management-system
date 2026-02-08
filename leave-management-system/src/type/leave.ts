@@ -56,6 +56,7 @@ export interface Leave {
   lastUpdatedOn?: string;
   lastForwardedAt?: string;
   forwardHistory?: ForwardHistory[];
+
 }
 
 export interface ApplyLeavePayload {

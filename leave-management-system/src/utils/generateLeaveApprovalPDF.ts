@@ -23,6 +23,10 @@ const leaveTypeLabels: Record<string, string> = {
   EARNED: "Earned Leave",
   EMERGENCY: "Emergency Leave",
   CHILD_CARE: "Child Care Leave",
+  MEDICAL: "Medical Leave",
+  PATERNITY: "Paternity Leave",
+  MATERNITY: "Maternity Leave",
+  OPTIONAL: "Optional Leave",
 };
 
 /**

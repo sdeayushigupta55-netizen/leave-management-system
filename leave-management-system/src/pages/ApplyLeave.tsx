@@ -177,6 +177,10 @@ const ApplyLeave = () => {
             <option value="EARNED">{t("earned")}</option>
             <option value="EMERGENCY">{t("emergency")}</option>
             <option value="CHILD_CARE">{t("childCare")}</option>
+            <option value="MEDICAL">{t("medical")}</option>
+            <option value="PATERNITY">{t("paternity")}</option>
+            <option value="MATERNITY">{t("maternity")}</option>
+            <option value="OPTIONAL">{t("optional")}</option>
           </Select>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -268,7 +272,7 @@ const ApplyLeave = () => {
                 validationError ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-[#1a237e] to-[#303f9f] hover:shadow-lg"
               }`}
             >
-              {editingId ? t("updateLeave") : t("applyLeave")}
+              {editingId ? t("updateLeave") : t("Submit")}
             </button>
           </div>
         </form>

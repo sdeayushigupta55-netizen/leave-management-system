@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { POLICE_RANKS, USER_ROLES } from "../../constants/roles";
 import type { PoliceRank, User, UserRole } from "../../type/user";
+import { POLICE_HIERARCHY } from "../../type/user";
 import { useUsers } from "../../context/UserContext";
 import { InputField } from "../../ui/Input";
 import Button from "../../ui/Button";
@@ -8,241 +9,253 @@ import Select from "../../ui/Select";
 import { X } from "lucide-react";
 
 type AddUserModalProps = {
-    onClose: () => void;
-    user?: User;
+  onClose: () => void;
+  user?: User;
 };
 
 const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
+  const { addUser, updateUser } = useUsers();
 
-    const { addUser, updateUser } = useUsers();
+  const [form, setForm] = useState<{
+    name: string;
+    pno: string;
+    contact: string;
+    role?: UserRole;
+    rank?: PoliceRank;
+    area?: "SP-CITY" | "SP-RURAL";
+    circleOffice?: string;
+    policeStation?: string;
+    
+  }>({
+    name: "",
+    pno: "",
+    contact: "",
+    role: undefined,
+    rank: undefined,
+    area: undefined,
+    circleOffice: undefined,
+    policeStation: undefined,
+ 
+  });
 
-    const [form, setForm] = useState<{
-        contact: any;
-        name: string;
-        pno: string;
-        role?: UserRole;
-        rank?: PoliceRank;
-        policeStation: string;
-        password: string;
-    }>({
-        name: "",
-        pno: "",
-        role: undefined,
-        rank: undefined,
-        policeStation: "",
-        password: "",
-        contact: "",
-    });
+  useEffect(() => {
+    if (user) {
+      setForm({
+        name: user.name,
+        pno: user.pno,
+        contact: user.contact,
+        role: user.role,
+        rank: user.rank,
+        area: user.area,
+        circleOffice: user.circleOffice,
+        policeStation: user.policeStation,
+      
+      });
+    }
+  }, [user]);
 
-    useEffect(() => {
-        if (user) {
-            setForm({
-                name: user.name,
-                pno: user.pno,
-                contact: user.contact,
-                role: user.role,
-                rank: user.rank,
-                policeStation: user.policeStation ?? "",
-                password: "", // Don't prefill password for security
-            });
-        }
-    }, [user]);
+  const needsHierarchy =
+    form.role === "POLICE" &&
+    ["CONSTABLE", "HEADCONSTABLE", "SI", "SHO/SO", "INSPECTOR"].includes(
+      form.rank as PoliceRank
+    );
 
-    const submit = () => {
-        if (!form.role) return;
-        if (form.role === "POLICE" && !form.rank) return;
+  const submit = () => {
+    if (!form.role) return;
 
-        if (user) {
-            // For update, you may need to handle types similarly if updateUser is typed strictly
-            const userData = {
-                name: form.name,
-                pno: form.pno,
-                role: form.role,
-                rank: form.role === "POLICE" ? form.rank : undefined,
-                policeStation: form.policeStation,
-                password: form.password,
-                contact: form.contact,
-            };
-            updateUser(user.id, userData);
-        } else {
-            if (form.role === "POLICE") {
-                addUser({
-                    name: form.name,
-                    pno: form.pno,
-                    contact: form.contact,
-                    role: "POLICE",
-                    rank: form.rank!,
-                    policeStation: form.policeStation,
-                    password: form.password,
-                });
-            } else if (form.role === "ADMIN") {
-                addUser({
-                    name: form.name,
-                    pno: form.pno,
-                    contact: form.contact,
-                    role: "ADMIN",
-                    policeStation: form.policeStation,
-                    password: form.password,
-                });
-            }
-        }
+    const payload = {
+      name: form.name,
+      pno: form.pno,
+      contact: form.contact,
+      role: form.role,
+      rank: form.role === "POLICE" ? form.rank : undefined,
+      area: form.area,
+      circleOffice: form.circleOffice,
+      policeStation: form.policeStation,
 
-        onClose();
     };
 
-    const isDisabled =
-        !form.name ||
-        !form.pno ||
-        !form.role ||
-        !form.policeStation ||
-        (!user && !form.password) ||
-        (form.role === "POLICE" && !form.rank);
+    if (user) {
+      updateUser(user.id, payload);
+    } else {
+      addUser(payload as any);
+    }
 
-    const handleInputChange =
-        (key: keyof typeof form) =>
-            (
-                e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-            ) => {
-                setForm(prev => ({ ...prev, [key]: e.target.value }));
-            };
+    onClose();
+  };
 
-    return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+  const isDisabled =
+    !form.name ||
+    !form.pno ||
+    !form.role ||
+   
+    (form.role === "POLICE" &&
+      (!form.rank ||
+        (needsHierarchy &&
+          (!form.area || !form.circleOffice || !form.policeStation))));
 
-                {/* Header */}
-                <div className="bg-gradient-to-r from-[#1a237e] to-[#303f9f] px-6 py-4 flex justify-between items-center">
-                    <div>
-                        <h2 className="text-lg font-bold text-white">{user ? "Update User" : "Add New User"}</h2>
-                        <p className="text-xs text-blue-100">
-                            Police Leave Management System
-                        </p>
-                    </div>
-                    <Button
-                        onClick={onClose}
-                        className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
-                    >
-                        <X size={16} className="text-white" />
-                    </Button>
-
-                </div>
-
-                {/* Form */}
-                <div className="p-6 space-y-4">
-                    <div>
-                        <InputField
-                            label="Full Name"
-                            placeholder="Enter full name"
-                            required
-                            value={form.name}
-                            onChange={handleInputChange("name")}
-
-                        />
-                    </div>
-
-                    <div>
-
-                        <InputField
-                            label="PNO"
-                            placeholder="Enter PNO"
-                            onChange={handleInputChange("pno")}
-                            required
-                            value={form.pno}
-                        />
-
-                    </div>
-
-                    <div>
-
-                        <Select
-                            id="role"
-                            label="User Role"
-                            required
-                            value={form.role ?? ""}
-                            onChange={e =>
-                                setForm({
-                                    ...form,
-                                    role: e.target.value as UserRole,
-                                    rank: undefined,
-                                })
-                            }
-                        >
-                            <option value="" disabled>
-                                Select role
-                            </option>
-                            {USER_ROLES.map(role => (
-                                <option key={role} value={role}>
-                                    {role}
-                                </option>
-                            ))}
-                        </Select>
-
-                    </div>
-
-                    {form.role === "POLICE" && (
-                        <Select
-                            id="rank"
-                            label="Police Rank"
-                            required
-                            value={form.rank ?? ""}
-                            onChange={e =>
-                                setForm({ ...form, rank: e.target.value as PoliceRank })
-                            }
-                        >
-                            <option value="" disabled>
-                                Select rank
-                            </option>
-                            {POLICE_RANKS.map(rank => (
-                                <option key={rank} value={rank}>
-                                    {rank}
-                                </option>
-                            ))}
-                        </Select>
-                    )}
-
-                     <div>
-
-                        <InputField
-                            label="Enter Police Station"
-                            placeholder="Ayodhya Police Station"
-                            onChange={handleInputChange("policeStation")}
-                            value={form.policeStation}
-                        />
-                    </div>
-
-                    <div>
-
-                        {!user && (
-                            <InputField
-                                label="Password"
-                                type="password"
-                                placeholder="••••••••"
-                                onChange={handleInputChange("password")}
-                                value={form.password}
-                            />
-                        )}
-                    </div>
-                </div>
-
-                {/* Footer */}
-                <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
-                    <Button
-                        onClick={onClose}
-                        variant="danger"
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={submit}
-                        disabled={isDisabled}
-                        variant="primary"
-                    >
-                        {user ? "Update User" : "Create User"}
-                    </Button>
-                </div>
-            </div>
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+        
+        {/* Header */}
+        <div className="bg-gradient-to-r from-[#1a237e] to-[#303f9f] px-6 py-4 flex justify-between items-center">
+          <div>
+            <h2 className="text-lg font-bold text-white">
+              {user ? "Update User" : "Add New User"}
+            </h2>
+            <p className="text-xs text-blue-100">
+              Police Leave Management System
+            </p>
+          </div>
+          <Button
+            onClick={onClose}
+            className="p-2 bg-white/10 hover:bg-white/20 rounded-lg"
+          >
+            <X size={16} className="text-white" />
+          </Button>
         </div>
-    );
-};
 
+        {/* Form */}
+        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputField
+            label="Full Name"
+            required
+            value={form.name}
+            onChange={e => setForm({ ...form, name: e.target.value })}
+            placeholder="Enter full name"
+          />
+
+          <InputField
+            label="PNO"
+            required
+            value={form.pno}
+            onChange={e => setForm({ ...form, pno: e.target.value })}
+            placeholder="Enter PNO (e.g., PNO045) Number only"
+          />
+          <InputField
+            label="Contact"
+            required
+            value={form.contact}
+            onChange={e => {
+              const value = e.target.value.replace(/\D/g, "").slice(0, 9);
+              setForm({ ...form, contact: value });
+            }}
+            placeholder="Enter contact number"
+            inputProps={{ maxLength: 9, inputMode: "numeric", pattern: "\\d*" }}
+          />
+          <Select
+            label="User Role"
+            required
+            value={form.role ?? ""}
+            onChange={e =>
+              setForm({
+                ...form,
+                role: e.target.value as UserRole,
+                rank: undefined,
+                area: undefined,
+                circleOffice: undefined,
+                policeStation: undefined,
+              })
+            }
+            placeholder="Select Role"
+          >
+            <option value="" disabled>Select Role</option>
+            {USER_ROLES.map(role => (
+              <option key={role} value={role}>{role}</option>
+            ))}
+          </Select>
+          {form.role === "POLICE" && (
+            <Select
+              label="Police Rank"
+              required
+              value={form.rank ?? ""}
+              onChange={e =>
+                setForm({
+                  ...form,
+                  rank: e.target.value as PoliceRank,
+                  area: undefined,
+                  circleOffice: undefined,
+                  policeStation: undefined,
+                })
+              }
+              placeholder="Select Rank"
+            >
+              <option value="" disabled>Select Rank</option>
+              {POLICE_RANKS.map(rank => (
+                <option key={rank} value={rank}>{rank}</option>
+              ))}
+            </Select>
+          )}
+          {needsHierarchy && (
+            <Select
+              label="Area"
+              required
+              value={form.area ?? ""}
+              onChange={e =>
+                setForm({
+                  ...form,
+                  area: e.target.value as "SP-CITY" | "SP-RURAL",
+                  circleOffice: undefined,
+                  policeStation: undefined,
+                })
+              }
+                placeholder="Select Area"
+            >
+              <option value="" disabled>Select Area</option>
+              <option value="SP-CITY">SP-CITY</option>
+              <option value="SP-RURAL">SP-RURAL</option>
+            </Select>
+          )}
+          {needsHierarchy && form.area && (
+            <Select
+              label="Circle Office"
+              required
+              value={form.circleOffice ?? ""}
+              onChange={e =>
+                setForm({
+                  ...form,
+                  circleOffice: e.target.value,
+                  policeStation: undefined,
+                })
+              }
+                placeholder="Select Circle"
+            >
+              <option value="" disabled>Select Circle</option>
+              {Object.keys(POLICE_HIERARCHY[form.area]).map(circle => (
+                <option key={circle} value={circle}>{circle}</option>
+              ))}
+            </Select>
+          )}
+          {needsHierarchy && form.area && form.circleOffice && (
+            <Select
+              label="Police Station"
+              required
+              value={form.policeStation ?? ""}
+              onChange={e =>
+                setForm({ ...form, policeStation: e.target.value })
+              }
+            >
+              <option value="" disabled>Select Police Station</option>
+              {POLICE_HIERARCHY[form.area][form.circleOffice].map(ps => (
+                <option key={ps} value={ps}>{ps}</option>
+              ))}
+            </Select>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end">
+          <Button
+            onClick={submit}
+            variant="primary"
+            disabled={isDisabled}
+          >
+            {user ? "Update User" : "Add User"}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
 export default AddUserModal;
