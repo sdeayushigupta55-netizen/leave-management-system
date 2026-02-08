@@ -57,6 +57,7 @@ export interface Leave {
   lastForwardedAt?: string;
   forwardHistory?: ForwardHistory[];
 
+  attachment?: string;
 }
 
 export interface ApplyLeavePayload {
@@ -64,6 +65,7 @@ export interface ApplyLeavePayload {
   from: string;
   to: string;
   reason: string;
+  attachment?: string;
 }
 
 export interface LeaveContextType {

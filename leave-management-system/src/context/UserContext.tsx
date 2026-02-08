@@ -8,7 +8,7 @@ interface UserContextType {
     updateUser: (id: string, updated: Partial<User>) => void;
     addUser: (payload: any) => void; // You can replace 'any' with a more specific type if needed
     toggleUser: (id: string) => void;
-    // resetPassword: (userId: string, newPassword: string) => void; // For future use
+    resetUsers: () => void;
 }
 
 const   UserContext = createContext<UserContextType | null>(null);
