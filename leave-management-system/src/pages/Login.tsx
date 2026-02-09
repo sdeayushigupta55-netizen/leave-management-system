@@ -86,6 +86,14 @@ const Login = () => {
     }, 150);
   };
 
+  // Handler to clear storage and reload
+  const handleClearStorage = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    // For cookies, you can add code if needed
+    window.location.reload();
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-surface">
       <div className="fixed top-0 left-0 w-full z-50">
@@ -159,6 +167,16 @@ const Login = () => {
                 </button>
               </>
             )}
+          </div>
+          {/* Clear Storage Button */}
+          <div className="px-4 sm:px-6 pb-2">
+            <button
+              type="button"
+              onClick={handleClearStorage}
+              className="w-full bg-red-500 text-white py-2 rounded-md text-xs font-medium mt-2 hover:bg-red-600 transition"
+            >
+              {t("clearStorage") || "Clear Storage (Reset App)"}
+            </button>
           </div>
            <div className="p-4 border-t border-gray-200">
             <span className="text-xs text-gray-500 block mb-1">{t("demoCredentials")}</span>
