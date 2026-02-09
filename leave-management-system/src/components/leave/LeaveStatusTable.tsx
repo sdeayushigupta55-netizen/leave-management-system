@@ -4,6 +4,7 @@ import ActionButtons from "./ActionButtons";
 import type { Leave } from "../../type/leave";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useUsers } from "../../context/UserContext";
 import { useTranslation } from "react-i18next";
 import { statusColorMap } from "../../utils/statusConfig";
 import { leaveTypeToKey } from "../../utils/translationHelper";
@@ -21,6 +22,7 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
+  const { users } = useUsers();
 
   const columns = [
     { header: t("leaveType"), accessor: "leaveType" as const },
@@ -53,6 +55,15 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
   };
 
   const data = paginatedLeaves.map((leave) => {
+    // Find the last approval (APPROVED or REJECTED)
+    let lastApproverName = "-";
+    if (leave.status === "APPROVED" || leave.status === "REJECTED") {
+      const lastApproval = [...leave.approvals].reverse().find(a => a.action === leave.status);
+      if (lastApproval) {
+        const approverUser = users.find(u => u.id === lastApproval.approverId);
+        lastApproverName = approverUser ? approverUser.name : lastApproval.approverId;
+      }
+    }
     return {
       Document:
         typeof leave.attachment === 'string' && leave.attachment ? (
@@ -78,7 +89,10 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
         </span>
       ),
       submittedOn: formatDate(leave.submittedOn),
-      currentApproverName: leave.currentApproverName ?? "-",
+      currentApproverName:
+        leave.status === "APPROVED" || leave.status === "REJECTED"
+          ? lastApproverName
+          : leave.currentApproverName ?? "-",
       status: (
         <div className="flex items-center gap-2">
           <StatusBadge status={leave.status} colorMap={statusColorMap} />

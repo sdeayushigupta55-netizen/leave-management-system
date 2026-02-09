@@ -34,6 +34,8 @@ const ApplyLeave = () => {
 
   const [editingStatus, setEditingStatus] = useState<string | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const calculateDays = (from: string, to: string): number => {
     if (!from || !to) return 0;
@@ -103,7 +105,6 @@ const ApplyLeave = () => {
       }
     }
 
-
     let attachmentUrl: string | undefined = undefined;
     if (form.attachment instanceof File) {
       attachmentUrl = URL.createObjectURL(form.attachment);
@@ -125,7 +126,8 @@ const ApplyLeave = () => {
       );
     }
 
-    navigate("/police/leave-status");
+    setSuccessMessage(t("leaveAppliedSuccessfully") || "Leave applied successfully!");
+    setShowSuccessModal(true);
   };
 
   const handleSaveDraft = () => {
@@ -288,6 +290,19 @@ const ApplyLeave = () => {
             </button>
           </div>
         </form>
+        {showSuccessModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-xs flex flex-col gap-3 items-center">
+              <h3 className="font-semibold text-lg mb-2 text-green-700">{successMessage}</h3>
+              <button
+                onClick={() => { setShowSuccessModal(false); navigate("/police/leave-status"); }}
+                className="px-4 py-2 rounded bg-[#138808] hover:bg-[#0d6b06] text-white font-semibold mt-2"
+              >
+                {t("ok") || "OK"}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );

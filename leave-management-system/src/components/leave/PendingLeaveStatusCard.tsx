@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { statusColorMap } from "../../utils/statusConfig";
 import { leaveTypeToKey } from "../../utils/translationHelper";
 import PendingActionButtons from "./PendingActionButtons";
-import { Check, X ,FileText} from "lucide-react";
+import { Check, X } from "lucide-react";
 import { canApproverApprove } from "../../context/LeaveContext";
 import { useAuth } from "../../context/AuthContext";
 
@@ -41,9 +41,17 @@ const PendingLeaveStatusCard = ({
     <div className="flex flex-col gap-3">
       {leaves.map((leave) => {
         // Check if current user can approve this leave
-        const approverCanApprove = user?.rank
+        let approverCanApprove = user?.rank
           ? canApproverApprove(user.rank, leave.numberOfDays, leave.applicantRank)
           : false;
+        // Special rule: For SI/Inspector/SHO/SO/CO, if current approver is SP and leave >3 days, only Forward allowed
+        if (
+          ["SI", "INSPECTOR", "SHO/SO", "CO"].includes(leave.applicantRank) &&
+          user?.rank === "SP" &&
+          leave.numberOfDays > 3
+        ) {
+          approverCanApprove = false;
+        }
 
         return (
           <div
@@ -61,13 +69,13 @@ const PendingLeaveStatusCard = ({
                 </span>
               </div>
               <StatusBadge status={leave.status} colorMap={statusColorMap} />
-              {leave.attachment && (
+              {/* {leave.attachment && (
   <div className="mb-3">
     <a
       href={
         typeof leave.attachment === 'string'
           ? leave.attachment
-          : leave.attachment instanceof Blob
+          : (typeof Blob !== 'undefined' && leave.attachment instanceof Blob)
             ? URL.createObjectURL(leave.attachment)
             : undefined
       }
@@ -80,7 +88,7 @@ const PendingLeaveStatusCard = ({
       
     </a>
   </div>
-)}
+)} */}
             </div>
 
             {/* Leave Type & Dates */}
@@ -131,9 +139,9 @@ const PendingLeaveStatusCard = ({
                   status={leave.status}
                   leaveId={leave.id}
                   canApprove={approverCanApprove}
-                  onApprove={(remarks?: string) => onApprove(leave.id, user?.id || "", remarks)}
-                  onReject={(remarks?: string) => onReject(leave.id, user?.id || "", remarks)}
-                  onForward={(remarks?: string) => onForward(leave.id, user?.id || "", remarks)}
+                  onApprove={(remarks?: string) => onApprove(leave.id, user?.id || '', remarks)}
+                  onReject={(remarks?: string) => onReject(leave.id, user?.id || '', remarks)}
+                  onForward={(remarks?: string) => onForward(leave.id, user?.id || '', remarks)}
                 />
               )}
             </div>

@@ -9,6 +9,7 @@ i18n
     resources: {
       en: {
         translation: {
+          all: "All",
           Document: "Document",
           view: "View",
           // ===== FILE UPLOAD =====
@@ -123,6 +124,9 @@ i18n
           next: "Next",
           allStatus: "All Status",
           totalleaves: "Total Leaves",
+          leaveAppliedSuccessfully: "Leave applied successfully!",
+          leaveUpdatedSuccessfully: "Leave updated successfully!",
+          leaveForwardedSuccessfully: "Leave forwarded successfully!",  
           
           // ===== PENDING LEAVE =====
           pendingLeaves: "Pending Leaves",
@@ -219,6 +223,7 @@ i18n
       },
       hi: {
         translation: {
+          all: "सभी",
            Document: "दस्तावेज़",
            view: "देखें",
            // ===== FILE UPLOAD =====
@@ -331,6 +336,9 @@ i18n
           next: "अगला",
           allStatus: "सभी स्थिति",
           totalLeaves: "कुल अवकाश",
+          leaveAppliedSuccessfully: "अवकाश सफलतापूर्वक लागू किया गया!",
+          leaveUpdatedSuccessfully: "अवकाश सफलतापूर्वक अपडेट किया गया!",
+          leaveForwardedSuccessfully: "अवकाश सफलतापूर्वक अग्रेषित किया गया!",
           
           // ===== PENDING LEAVE =====
           pendingLeaves: "लंबित अवकाश",

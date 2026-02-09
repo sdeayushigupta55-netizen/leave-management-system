@@ -46,9 +46,12 @@ const PendingLeave = () => {
             <div className="hidden md:block overflow-x-auto bg-white rounded-2xl shadow-sm border border-gray-100">
               <PendingLeaveStatusTable
                 leaves={pendingLeaves}
-                onApprove={(id, approverId, remarks) => approveLeave(id, approverId, remarks)}
-                onReject={(id, approverId, remarks) => rejectLeave(id, approverId, remarks || "No reason provided")}
-                onForward={(id, approverId, remarks) => forwardLeave(id, approverId, remarks || "Forwarded to senior authority")}
+                onApprove={(id, _approverId, remarks) => approveLeave(id, user?.id || '', remarks)}
+                onReject={(id, _approverId, remarks) => rejectLeave(id, user?.id || '', remarks)}
+                onForward={(id, _approverId, remarks) => {
+                  console.log('[onForward] Clicked Forward:', { id, user, remarks });
+                  forwardLeave(id, remarks || "Forwarded to senior authority");
+                }}
               />
             </div>
 
@@ -56,9 +59,12 @@ const PendingLeave = () => {
             <div className="md:hidden">
               <PendingLeaveStatusCard
                 leaves={pendingLeaves}
-                onApprove={(id, approverId, remarks) => approveLeave(id, approverId, remarks)}
-                onReject={(id, approverId, remarks) => rejectLeave(id, approverId, remarks || "No reason provided")}
-                onForward={(id, approverId, remarks) => forwardLeave(id, approverId, remarks || "Forwarded to senior authority")}
+                onApprove={(id, remarks) => approveLeave(id, user?.id || '', remarks)}
+                onReject={(id, remarks) => rejectLeave(id, user?.id || '', remarks)}
+                onForward={(id, remarks) => {
+                  console.log('[onForward] Clicked Forward:', { id, user, remarks });
+                  forwardLeave(id, remarks || "Forwarded to senior authority");
+                }}
               />
             </div>
           </>

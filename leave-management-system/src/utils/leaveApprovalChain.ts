@@ -47,34 +47,14 @@ export const getApprovalChain = (
     return ["SHO/SO", "CO", "SP", "SSP"];
   }
 
-  // SI/Inspector goes to SP first, then SSP
-  if (applicantRank === "SI" || applicantRank === "INSPECTOR") {
-    // ≤3 days: SP can approve
-    if (numberOfDays <= APPROVAL_LIMITS.SHO_SO) {
-      return ["SP", "SSP"];
-    }
-    // >3 days: Direct to SSP
-    return ["SSP"];
-  }
-
-  // SHO/SO goes to SP first, then SSP
-  if (applicantRank === "SHO/SO") {
-    // ≤3 days: SP can approve
-    if (numberOfDays <= APPROVAL_LIMITS.SHO_SO) {
-      return ["SP", "SSP"];
-    }
-    // >3 days: Direct to SSP
-    return ["SSP"];
-  }
-
-  // CO goes to SP first, then SSP
-  if (applicantRank === "CO") {
-    // ≤3 days: SP can approve
-    if (numberOfDays <= APPROVAL_LIMITS.SHO_SO) {
-      return ["SP", "SSP"];
-    }
-    // >3 days: Direct to SSP
-    return ["SSP"];
+  // SI/Inspector/SHO/SO/CO always go to SP first, then SSP
+  if (
+    applicantRank === "SI" ||
+    applicantRank === "INSPECTOR" ||
+    applicantRank === "SHO/SO" ||
+    applicantRank === "CO"
+  ) {
+    return ["SP", "SSP"];
   }
 
   // SP's leave goes directly to SSP
@@ -106,34 +86,14 @@ export const getApproverRankByDays = (
     return "SHO/SO";
   }
 
-  // SI/Inspector leaves
-  if (applicantRank === "SI" || applicantRank === "INSPECTOR") {
-    // ≤3 days: Go to SP
-    if (numberOfDays <= APPROVAL_LIMITS.SHO_SO) {
-      return "SP";
-    }
-    // >3 days: Direct to SSP
-    return "SSP";
-  }
-
-  // SHO/SO leaves
-  if (applicantRank === "SHO/SO") {
-    // ≤3 days: Go to SP
-    if (numberOfDays <= APPROVAL_LIMITS.SHO_SO) {
-      return "SP";
-    }
-    // >3 days: Direct to SSP
-    return "SSP";
-  }
-
-  // CO leaves
-  if (applicantRank === "CO") {
-    // ≤3 days: Go to SP
-    if (numberOfDays <= APPROVAL_LIMITS.SHO_SO) {
-      return "SP";
-    }
-    // >3 days: Direct to SSP
-    return "SSP";
+  // SI/Inspector/SHO/SO/CO always start with SP
+  if (
+    applicantRank === "SI" ||
+    applicantRank === "INSPECTOR" ||
+    applicantRank === "SHO/SO" ||
+    applicantRank === "CO"
+  ) {
+    return "SP";
   }
 
   // SP leaves go directly to SSP

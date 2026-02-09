@@ -167,8 +167,9 @@ const Login = () => {
             <span className="text-xs text-gray-500">PNO: PNO4001, Contact: 9876500006 (INSPECTOR)</span><br />
             <span className="text-xs text-gray-500">PNO: PNO3001, Contact: 9876500005 (SI)</span><br />
             <span className="text-xs text-gray-500">PNO: PNO2001, Contact: 9876500004 (SHO/SO)</span><br />
-            <span className="text-xs text-gray-500">PNO: PNO1001, Contact: 9876500003 (SP)</span><br />
+           
             <span className="text-xs text-gray-500">PNO: PNO0001, Contact: 9876500002 (CO)</span><br />
+             <span className="text-xs text-gray-500">PNO: PNO1001, Contact: 9876500003 (SP)</span><br />
             <span className="text-xs text-gray-500">PNO: PNO9001, Contact: 9876500001 (ADMIN)(SSP)</span>
           </div>
         </div>

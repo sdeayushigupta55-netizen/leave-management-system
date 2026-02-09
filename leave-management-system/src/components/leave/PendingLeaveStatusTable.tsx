@@ -12,7 +12,7 @@ import { useAuth } from "../../context/AuthContext";
 
 type PendingLeaveStatusTableProps = {
   leaves: Leave[];
-  onApprove: (id: string, approverId: string, remarks?: string) => void;
+  onApprove:(id: string, approverId: string, remarks?: string) => void;
   onReject: (id: string, approverId: string, remarks?: string) => void;
   onForward: (id: string, approverId: string, remarks?: string) => void;
 };
@@ -61,28 +61,26 @@ const PendingLeaveStatusTable = ({
     { header: t("submittedOn"), accessor: "submittedOn" as const },
     { header: t("status"), accessor: "status" as const },
     { header: t("actions"), accessor: "actions" as const },
-    { header: t("Document"), accessor: "Document" as const },
-    // { header: "Attachment Debug", accessor: "attachmentDebug" as const },
+    // { header: t("Document"), accessor: "Document" as const },
+
     { header: t("Reason"), accessor: "Reason" as const },
   ];
 
   // Map data with translations
   const data = paginatedLeaves.map((leave) => {
-    const approverCanApprove = user?.rank 
+    let approverCanApprove = user?.rank 
       ? canApproverApprove(user.rank, leave.numberOfDays, leave.applicantRank)
       : false;
+    // Special rule: For SI/Inspector/SHO/SO/CO, if current approver is SP and leave >3 days, only Forward allowed
+    if (
+      ["SI", "INSPECTOR", "SHO/SO", "CO"].includes(leave.applicantRank) &&
+      user?.rank === "SP" &&
+      leave.numberOfDays > 3
+    ) {
+      approverCanApprove = false;
+    }
     return {
-      attachmentDebug: (
-        <span style={{ fontSize: 10 }}>
-          {leave.attachment === undefined
-            ? 'undefined'
-            : leave.attachment === null
-            ? 'null'
-            : typeof leave.attachment === 'string'
-            ? `string: ${leave.attachment}`
-            : ''}
-        </span>
-      ),
+      
       name: leave.name,
       applicantRank: leave.applicantRank,
       leaveType: translateLeaveType(leave.leaveType),
@@ -108,9 +106,9 @@ const PendingLeaveStatusTable = ({
             status={leave.status}
             leaveId={leave.id}
             canApprove={approverCanApprove}
-            onApprove={(remarks?: string) => onApprove(leave.id, user?.id || "", remarks)}
-            onReject={(remarks?: string) => onReject(leave.id, user?.id || "", remarks)}
-            onForward={(remarks?: string) => onForward(leave.id, user?.id || "", remarks)}
+            onApprove={(remarks?: string) => onApprove(leave.id, user?.id || '', remarks)}
+            onReject={(remarks?: string) => onReject(leave.id, user?.id || '', remarks)}
+            onForward={(remarks?: string) => onForward(leave.id, user?.id || '', remarks)}
           />
         ),
       Reason:
@@ -154,3 +152,9 @@ const PendingLeaveStatusTable = ({
 };
 
 export default PendingLeaveStatusTable;
+
+
+
+
+
+

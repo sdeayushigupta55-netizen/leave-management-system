@@ -70,7 +70,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
         );
       }
       if (rank === "SSP") {
-        return users.find((u) => u.rank === "SSP" && u.isActive);
+        return users.find((u) => (u.rank === "SSP" && (u.role === "POLICE" || u.role === "ADMIN") && u.isActive));
       }
       return undefined;
     },
@@ -291,9 +291,11 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const approveLeave = (id: string, approverId: string, remarks?: string) => {
-    setLeaves((prev) =>
-      prev.map((leave) => {
-        if (leave.id !== id || leave.status !== "PENDING") return leave;
+    console.log('[approveLeave] called with:', { id, approverId, remarks });
+    setLeaves((prev) => {
+      console.log('[approveLeave] prev leaves:', prev);
+      const updated = prev.map((leave) => {
+        if (leave.id !== id || (leave.status !== "PENDING" && leave.status !== "FORWARDED")) return { ...leave };
         return {
           ...leave,
           status: "APPROVED" as LeaveStatus,
@@ -312,14 +314,16 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
           ],
           lastUpdatedOn: new Date().toISOString(),
         };
-      })
-    );
+      });
+      console.log('[approveLeave] updated leaves:', updated);
+      return updated;
+    });
   };
 
   const rejectLeave = (id: string, approverId: string, reason?: string) => {
     setLeaves((prev) =>
       prev.map((leave) => {
-        if (leave.id !== id || leave.status !== "PENDING") return leave;
+      if (leave.id !== id || (leave.status !== "PENDING" && leave.status !== "FORWARDED")) return { ...leave };
         return {
           ...leave,
           status: "REJECTED" as LeaveStatus,
@@ -353,7 +357,17 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
           leave.policeStation,
           leave.circleOffice
         );
-        if (!nextApprover.id) return leave;
+        console.log('[forwardLeave] Attempting to forward leave:', {
+          leaveId: leave.id,
+          currentApproverRank: leave.currentApproverRank,
+          approvalChain: leave.approvalChain,
+          nextApprover,
+          allUsers: users
+        });
+        if (!nextApprover.id) {
+          console.warn('[forwardLeave] No next approver found for leave:', leave.id, 'Current approver:', leave.currentApproverRank, 'Chain:', leave.approvalChain);
+          return leave;
+        }
         return {
           ...leave,
           status: "FORWARDED" as LeaveStatus,
