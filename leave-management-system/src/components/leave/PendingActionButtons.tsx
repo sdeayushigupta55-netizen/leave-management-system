@@ -5,9 +5,9 @@ type PendingActionButtonsProps = {
   status: string;
   leaveId: string;
   canApprove: boolean; // Whether current approver can approve or only forward
-  onApprove: () => void;
-  onReject: () => void;
-  onForward?: () => void;
+  onApprove: (remarks?: string) => void;
+  onReject: (remarks?: string) => void;
+  onForward?: (remarks?: string) => void;
 };
 
 const PendingActionButtons = ({
@@ -28,7 +28,7 @@ const PendingActionButtons = ({
     return (
       <div className="flex items-center gap-2">
         <button
-          onClick={onForward}
+          onClick={() => onForward && onForward()}
           className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#8d6e63] to-[#6d4c41] text-white rounded-lg text-xs font-semibold hover:shadow-md transition shadow-sm"
         >
           <Forward size={14} />

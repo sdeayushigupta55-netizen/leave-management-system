@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { statusColorMap } from "../../utils/statusConfig";
 import { leaveTypeToKey } from "../../utils/translationHelper";
 import { generateLeaveApprovalPDF } from "../../utils/generateLeaveApprovalPDF";
-import { FileDown, FileText } from "lucide-react";
+import { FileDown } from "lucide-react";
 
 type LeaveStatusTableProps = {
   leaves: Leave[];
@@ -18,32 +18,10 @@ type LeaveStatusTableProps = {
 const ROWS_PER_PAGE = 10;
 
 const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
 
-  const totalPages = Math.ceil(leaves.length / ROWS_PER_PAGE);
-  const paginatedLeaves = leaves.slice(
-    (page - 1) * ROWS_PER_PAGE,
-    page * ROWS_PER_PAGE
-  );
-
-  // Format date - shortest form
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const day = date.getDate();
-    const month = date.toLocaleDateString("en-GB", { month: "short" }).slice(0, 3);
-    const year = String(date.getFullYear()).slice(-2);
-    return `${day}'${month}${year}`;
-  };
-
-  // Translate leave type
-  const translateLeaveType = (type: string) => {
-    const key = leaveTypeToKey[type];
-    return key ? t(key) : type;
-  };
-
-  // Define columns with translated headers
   const columns = [
     { header: t("leaveType"), accessor: "leaveType" },
     { header: t("dates"), accessor: "dates" },
@@ -53,84 +31,86 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
     { header: t("assignedTo"), accessor: "currentApproverName" },
     { header: t("status"), accessor: "status" },
     { header: t("Document"), accessor: "Document" },
-    // { header: t("actions"), accessor: "actions" },
     { header: t("Reason"), accessor: "Reason" },
-  ] as const;
+  ];
 
-  // Map data with translations
-  const data = paginatedLeaves.map((leave) => ({
-        Document: (() => {
-          let url;
-          if (typeof leave.attachment === 'string') {
-            url = leave.attachment;
-          } else if (leave.attachment instanceof Blob || leave.attachment instanceof File) {
-            url = URL.createObjectURL(leave.attachment);
-          }
-          if (url) {
-            return (
-              <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 underline whitespace-nowrap flex items-center gap-1"
-                title={t("viewLeaveApplication")}
-              >
-                <FileText size={24} className="inline-block text-blue-600" />
-                {/* {t("viewLeaveApplication")} */}
-              </a>
-            );
-          }
-          return <span className="text-gray-400">-</span>;
-        })(),
-    leaveType: translateLeaveType(leave.leaveType),
-    dates:
-      leave.from !== leave.to
-        ? `${formatDate(leave.from)} - ${formatDate(leave.to)}`
-        : formatDate(leave.from),
-    numberOfDays: leave.numberOfDays,
-    reason: (
-      <span className="block max-w-[150px] truncate" title={leave.reason}>
-        {leave.reason}
-      </span>
-    ),
-    submittedOn: formatDate(leave.submittedOn),
-    currentApproverName: leave.currentApproverName ?? "-",
-    status: (
-      <div className="flex items-center gap-2">
-        <StatusBadge status={leave.status} colorMap={statusColorMap} />
-        {leave.status === "APPROVED" && (
-          <button
-            onClick={() => generateLeaveApprovalPDF(leave)}
-            className="p-1.5 bg-[#138808] hover:bg-[#0d6b06] text-white rounded-lg transition-colors shadow-sm"
-            title={t("downloadPDF")}
+  const paginatedLeaves = leaves.slice(
+    (page - 1) * ROWS_PER_PAGE,
+    page * ROWS_PER_PAGE
+  );
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const day = date.getDate();
+    const month = date.toLocaleDateString("en-GB", { month: "short" }).slice(0, 3);
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}'${month}${year}`;
+  };
+
+  const translateLeaveType = (type: string) => {
+    const key = leaveTypeToKey[type];
+    return key ? t(key) : type;
+  };
+
+  const data = paginatedLeaves.map((leave) => {
+    return {
+      Document:
+        typeof leave.attachment === 'string' && leave.attachment ? (
+          <a
+            href={leave.attachment}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline whitespace-nowrap flex items-center gap-1"
+            title={t("viewLeaveApplication")}
           >
-            <FileDown size={14} />
-          </button>
-        )}
-        {leave.status === "DRAFT" && (
-           <ActionButtons
-        status={leave.status}
-        onEdit={() => navigate("/police/apply-leave", { state: { leaveId: leave.id } })}
-      />
-        )}
-      </div>
-    ),
-    // actions: (
-    //   <ActionButtons
-    //     status={leave.status}
-    //     onEdit={() => navigate("/police/apply-leave", { state: { leaveId: leave.id } })}
-    //   />
-    // ),
-    Reason:
-      leave.status === "REJECTED"
-        ? leave.Reason || t("reasonNotProvided")
-        : "-",
-  }));
+            View
+          </a>
+        ) : null,
+      leaveType: translateLeaveType(leave.leaveType),
+      dates:
+        leave.from !== leave.to
+          ? `${formatDate(leave.from)} - ${formatDate(leave.to)}`
+          : formatDate(leave.from),
+      numberOfDays: leave.numberOfDays,
+      reason: (
+        <span className="block max-w-[150px] truncate" title={leave.reason}>
+          {leave.reason}
+        </span>
+      ),
+      submittedOn: formatDate(leave.submittedOn),
+      currentApproverName: leave.currentApproverName ?? "-",
+      status: (
+        <div className="flex items-center gap-2">
+          <StatusBadge status={leave.status} colorMap={statusColorMap} />
+          {leave.status === "APPROVED" && (
+            <button
+              onClick={() => generateLeaveApprovalPDF(leave)}
+              className="p-1.5 bg-[#138808] hover:bg-[#0d6b06] text-white rounded-lg transition-colors shadow-sm"
+              title={t("downloadPDF")}
+            >
+              <FileDown size={14} />
+            </button>
+          )}
+          {leave.status === "DRAFT" && (
+            <ActionButtons
+              status={leave.status}
+              onEdit={() => navigate("/police/apply-leave", { state: { leaveId: leave.id } })}
+            />
+          )}
+        </div>
+      ),
+      Reason:
+        leave.status === "REJECTED"
+          ? leave.Reason || t("reasonNotProvided")
+          : "-",
+    };
+  });
+
+  const totalPages = Math.ceil(leaves.length / ROWS_PER_PAGE);
 
   return (
     <div className="w-full overflow-x-auto">
       <Table columns={[...columns]} data={data} />
-      
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-between items-center mt-4 text-sm bg-white rounded-xl p-4 shadow-sm border border-gray-100">

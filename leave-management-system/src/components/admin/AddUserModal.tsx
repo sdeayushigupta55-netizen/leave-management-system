@@ -122,7 +122,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
             label="Full Name"
             required
             value={form.name}
-            onChange={e => setForm({ ...form, name: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, name: e.target.value })}
             placeholder="Enter full name"
           />
 
@@ -130,19 +130,21 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
             label="PNO"
             required
             value={form.pno}
-            onChange={e => setForm({ ...form, pno: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, pno: e.target.value })}
             placeholder="Enter PNO (e.g., PNO045) Number only"
           />
           <InputField
             label="Contact"
             required
             value={form.contact}
-            onChange={e => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               const value = e.target.value.replace(/\D/g, "").slice(0, 9);
               setForm({ ...form, contact: value });
             }}
             placeholder="Enter contact number"
-            inputProps={{ maxLength: 9, inputMode: "numeric", pattern: "\\d*" }}
+            maxLength={9}
+            inputMode="numeric"
+            pattern="\d*"
           />
           <Select
             label="User Role"
@@ -158,7 +160,6 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
                 policeStation: undefined,
               })
             }
-            placeholder="Select Role"
           >
             <option value="" disabled>Select Role</option>
             {USER_ROLES.map(role => (
@@ -179,7 +180,6 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
                   policeStation: undefined,
                 })
               }
-              placeholder="Select Rank"
             >
               <option value="" disabled>Select Rank</option>
               {POLICE_RANKS.map(rank => (
@@ -200,7 +200,6 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
                   policeStation: undefined,
                 })
               }
-                placeholder="Select Area"
             >
               <option value="" disabled>Select Area</option>
               <option value="SP-CITY">SP-CITY</option>
@@ -219,7 +218,6 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
                   policeStation: undefined,
                 })
               }
-                placeholder="Select Circle"
             >
               <option value="" disabled>Select Circle</option>
               {Object.keys(POLICE_HIERARCHY[form.area]).map(circle => (
@@ -237,9 +235,15 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
               }
             >
               <option value="" disabled>Select Police Station</option>
-              {POLICE_HIERARCHY[form.area][form.circleOffice].map(ps => (
-                <option key={ps} value={ps}>{ps}</option>
-              ))}
+              {(
+                POLICE_HIERARCHY[form.area] &&
+                Object.prototype.hasOwnProperty.call(POLICE_HIERARCHY[form.area], form.circleOffice!) &&
+                Array.isArray((POLICE_HIERARCHY[form.area] as Record<string, string[]>)[form.circleOffice!])
+              )
+                ? (POLICE_HIERARCHY[form.area] as Record<string, string[]>)[form.circleOffice!].map((ps: string) => (
+                    <option key={ps} value={ps}>{ps}</option>
+                  ))
+                : null}
             </Select>
           )}
         </div>

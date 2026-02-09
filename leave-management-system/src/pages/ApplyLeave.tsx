@@ -104,8 +104,14 @@ const ApplyLeave = () => {
     }
 
 
+    let attachmentUrl: string | undefined = undefined;
+    if (form.attachment instanceof File) {
+      attachmentUrl = URL.createObjectURL(form.attachment);
+    } else if (typeof form.attachment === 'string') {
+      attachmentUrl = form.attachment;
+    }
     if (editingId) {
-      editLeave(editingId, { ...form, status: "PENDING" });
+      editLeave(editingId, { ...form, status: "PENDING", attachment: attachmentUrl });
     } else {
       addLeave(
         {
@@ -113,7 +119,7 @@ const ApplyLeave = () => {
           from: form.from,
           to: form.to,
           reason: form.reason,
-          attachment: form.attachment || undefined,
+          attachment: attachmentUrl,
         },
         "PENDING"
       );
@@ -127,8 +133,14 @@ const ApplyLeave = () => {
       alert(t("pleaseSelectLeaveType"));
       return;
     }
+    let attachmentUrl: string | undefined = undefined;
+    if (form.attachment instanceof File) {
+      attachmentUrl = URL.createObjectURL(form.attachment);
+    } else if (typeof form.attachment === 'string') {
+      attachmentUrl = form.attachment;
+    }
     if (editingId) {
-      editLeave(editingId, { ...form, status: "DRAFT" });
+      editLeave(editingId, { ...form, status: "DRAFT", attachment: attachmentUrl });
     } else {
       addLeave(
         {
@@ -136,7 +148,7 @@ const ApplyLeave = () => {
           from: form.from,
           to: form.to,
           reason: form.reason,
-          attachment: form.attachment || undefined,
+          attachment: attachmentUrl,
         },
         "DRAFT"
       );

@@ -46,9 +46,9 @@ const PendingLeave = () => {
             <div className="hidden md:block overflow-x-auto bg-white rounded-2xl shadow-sm border border-gray-100">
               <PendingLeaveStatusTable
                 leaves={pendingLeaves}
-                onApprove={approveLeave}
-                onReject={(id) => rejectLeave(id, "No reason provided")}
-                onForward={(id) => forwardLeave(id, "Forwarded to senior authority")}
+                onApprove={(id, approverId, remarks) => approveLeave(id, approverId, remarks)}
+                onReject={(id, approverId, remarks) => rejectLeave(id, approverId, remarks || "No reason provided")}
+                onForward={(id, approverId, remarks) => forwardLeave(id, approverId, remarks || "Forwarded to senior authority")}
               />
             </div>
 

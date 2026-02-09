@@ -72,7 +72,7 @@ export interface LeaveContextType {
   leaves: Leave[];
   addLeave: (payload: ApplyLeavePayload, status?: LeaveStatus) => void;
   editLeave: (id: string, updated: Partial<Leave>) => void;
-  approveLeave: (id: string) => void;
+  approveLeave: (id: string, approverId: string, remarks?: string) => void;
   rejectLeave: (id: string, reason: string) => void;
   forwardLeave: (id: string, reason?: string) => void;
 }

@@ -7,15 +7,14 @@ import { statusColorMap } from "../../utils/statusConfig";
 import { leaveTypeToKey } from "../../utils/translationHelper";
 import PendingActionButtons from "./PendingActionButtons";
 import { Check, X } from "lucide-react";
-import { FileText } from "lucide-react";
 import { canApproverApprove } from "../../context/LeaveContext";
 import { useAuth } from "../../context/AuthContext";
 
 type PendingLeaveStatusTableProps = {
   leaves: Leave[];
-  onApprove: (id: string) => void;
-  onReject: (id: string) => void;
-  onForward: (id: string) => void;
+  onApprove: (id: string, approverId: string, remarks?: string) => void;
+  onReject: (id: string, approverId: string, remarks?: string) => void;
+  onForward: (id: string, approverId: string, remarks?: string) => void;
 };
 
 const ROWS_PER_PAGE = 10;
@@ -26,7 +25,7 @@ const PendingLeaveStatusTable = ({
   onReject,
   onForward,
 }: PendingLeaveStatusTableProps) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [page, setPage] = useState(1);
 
@@ -69,28 +68,21 @@ const PendingLeaveStatusTable = ({
 
   // Map data with translations
   const data = paginatedLeaves.map((leave) => {
-    // Check if current user can approve this leave
-    
     const approverCanApprove = user?.rank 
       ? canApproverApprove(user.rank, leave.numberOfDays, leave.applicantRank)
       : false;
-
     return {
-            attachmentDebug: (
-              <span style={{ fontSize: 10 }}>
-                {leave.attachment === undefined
-                  ? 'undefined'
-                  : leave.attachment === null
-                  ? 'null'
-                  : typeof leave.attachment === 'string'
-                  ? `string: ${leave.attachment}`
-                  : leave.attachment instanceof File
-                  ? `File: ${leave.attachment.name}`
-                  : leave.attachment instanceof Blob
-                  ? 'Blob'
-                  : `type: ${typeof leave.attachment}`}
-              </span>
-            ),
+      attachmentDebug: (
+        <span style={{ fontSize: 10 }}>
+          {leave.attachment === undefined
+            ? 'undefined'
+            : leave.attachment === null
+            ? 'null'
+            : typeof leave.attachment === 'string'
+            ? `string: ${leave.attachment}`
+            : ''}
+        </span>
+      ),
       name: leave.name,
       applicantRank: leave.applicantRank,
       leaveType: translateLeaveType(leave.leaveType),
@@ -116,33 +108,11 @@ const PendingLeaveStatusTable = ({
             status={leave.status}
             leaveId={leave.id}
             canApprove={approverCanApprove}
-            onApprove={() => onApprove(leave.id)}
-            onReject={() => onReject(leave.id)}
-            onForward={() => onForward(leave.id)}
+            onApprove={(remarks?: string) => onApprove(leave.id, user?.id || "", remarks)}
+            onReject={(remarks?: string) => onReject(leave.id, user?.id || "", remarks)}
+            onForward={(remarks?: string) => onForward(leave.id, user?.id || "", remarks)}
           />
         ),
-      // Document: (() => {
-      //   let url;
-      //   if (typeof leave.attachment === 'string') {
-      //     url = leave.attachment;
-      //   } else if (leave.attachment instanceof Blob || leave.attachment instanceof File) {
-      //     url = URL.createObjectURL(leave.attachment);
-      //   }
-      //   if (url) {
-      //     return (
-      //       <a
-      //         href={url}
-      //         target="_blank"
-      //         rel="noopener noreferrer"
-      //         className="text-blue-600 underline whitespace-nowrap flex items-center gap-1"
-      //         title={t("viewLeaveApplication")}
-      //       >
-      //         <FileText size={24} className="inline-block text-blue-600" />
-      //       </a>
-      //     );
-      //   }
-      //   return <span className="text-gray-400">-</span>;
-      // })(),
       Reason:
         leave.status === "REJECTED"
           ? leave.Reason || t("reasonNotProvided")

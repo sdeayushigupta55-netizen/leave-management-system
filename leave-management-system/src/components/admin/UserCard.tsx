@@ -14,14 +14,11 @@ const UserCard = ({ user, onToggle, onEdit }: Props) => {
     
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 space-y-3 hover:shadow-md transition-shadow">
-      
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
           <h3 className="font-bold text-[#1a237e] text-base">{user.name}</h3>
-          <p className="text-xs text-gray-500">{user.email}</p>
         </div>
-
         <StatusBadge
           status={user.isActive ? "ACTIVE" : "INACTIVE"}
           colorMap={userStatusColorMap}

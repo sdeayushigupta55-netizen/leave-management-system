@@ -1,11 +1,12 @@
 import { useAuth } from "../../context/AuthContext";
 import { useLeaves } from "../../context/LeaveContext";
+import { FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LeaveStatusTable from "../../components/leave/LeaveStatusTable";
 import Button from "../../ui/Button";
 import StatCard from "../../ui/StatCard";
-import { BarChart3, Clock, FileText, CheckCircle, MapPin, Landmark, Building2, BadgeInfo,LucideIdCard } from "lucide-react";
+import { BarChart3, Clock, CheckCircle, MapPin, Landmark, Building2, LucideIdCard} from "lucide-react";
 
 const UserDashboard = () => {
   const { t } = useTranslation();
