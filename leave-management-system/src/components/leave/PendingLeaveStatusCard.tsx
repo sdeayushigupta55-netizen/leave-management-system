@@ -10,9 +10,9 @@ import { useAuth } from "../../context/AuthContext";
 
 type PendingLeaveStatusCardProps = {
   leaves: Leave[];
-  onApprove: (id: string) => void;
-  onReject: (id: string) => void;
-  onForward: (id: string) => void;
+  onApprove: (id: string, approverId: string, remarks?: string) => void;
+  onReject: (id: string, approverId: string, remarks?: string) => void;
+  onForward: (id: string, approverId: string, remarks?: string) => void;
 };
 
 const PendingLeaveStatusCard = ({
@@ -131,9 +131,9 @@ const PendingLeaveStatusCard = ({
                   status={leave.status}
                   leaveId={leave.id}
                   canApprove={approverCanApprove}
-                  onApprove={() => onApprove(leave.id)}
-                  onReject={() => onReject(leave.id)}
-                  onForward={() => onForward(leave.id)}
+                  onApprove={(remarks?: string) => onApprove(leave.id, user?.id || "", remarks)}
+                  onReject={(remarks?: string) => onReject(leave.id, user?.id || "", remarks)}
+                  onForward={(remarks?: string) => onForward(leave.id, user?.id || "", remarks)}
                 />
               )}
             </div>

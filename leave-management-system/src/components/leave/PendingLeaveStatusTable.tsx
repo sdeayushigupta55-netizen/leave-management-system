@@ -52,19 +52,19 @@ const PendingLeaveStatusTable = ({
 
   // Define columns with translated headers
   const columns = [
-    { header: t("name"), accessor: "name" },
-    { header: t("rank"), accessor: "applicantRank" },
-    { header: t("leaveType"), accessor: "leaveType" },
-    { header: t("dates"), accessor: "dates" },
-    { header: t("numberOfDays"), accessor: "numberOfDays" },
-    { header: t("reason"), accessor: "reason" },
-    { header: t("submittedOn"), accessor: "submittedOn" },
-    { header: t("status"), accessor: "status" },
-    { header: t("actions"), accessor: "actions" },
-    { header: t("Document"), accessor: "Document" },
-    // { header: "Attachment Debug", accessor: "attachmentDebug" },
-    { header: t("Reason"), accessor: "Reason" },
-  ] as const;
+    { header: t("name"), accessor: "name" as const },
+    { header: t("rank"), accessor: "applicantRank" as const },
+    { header: t("leaveType"), accessor: "leaveType" as const },
+    { header: t("dates"), accessor: "dates" as const },
+    { header: t("numberOfDays"), accessor: "numberOfDays" as const },
+    { header: t("reason"), accessor: "reason" as const },
+    { header: t("submittedOn"), accessor: "submittedOn" as const },
+    { header: t("status"), accessor: "status" as const },
+    { header: t("actions"), accessor: "actions" as const },
+    { header: t("Document"), accessor: "Document" as const },
+    // { header: "Attachment Debug", accessor: "attachmentDebug" as const },
+    { header: t("Reason"), accessor: "Reason" as const },
+  ];
 
   // Map data with translations
   const data = paginatedLeaves.map((leave) => {

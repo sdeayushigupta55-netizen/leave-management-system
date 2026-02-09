@@ -23,15 +23,15 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
   const [page, setPage] = useState(1);
 
   const columns = [
-    { header: t("leaveType"), accessor: "leaveType" },
-    { header: t("dates"), accessor: "dates" },
-    { header: t("numberOfDays"), accessor: "numberOfDays" },
-    { header: t("reason"), accessor: "reason" },
-    { header: t("submittedOn"), accessor: "submittedOn" },
-    { header: t("assignedTo"), accessor: "currentApproverName" },
-    { header: t("status"), accessor: "status" },
-    { header: t("Document"), accessor: "Document" },
-    { header: t("Reason"), accessor: "Reason" },
+    { header: t("leaveType"), accessor: "leaveType" as const },
+    { header: t("dates"), accessor: "dates" as const },
+    { header: t("numberOfDays"), accessor: "numberOfDays" as const },
+    { header: t("reason"), accessor: "reason" as const },
+    { header: t("submittedOn"), accessor: "submittedOn" as const },
+    { header: t("assignedTo"), accessor: "currentApproverName" as const },
+    { header: t("status"), accessor: "status" as const },
+    { header: t("Document"), accessor: "Document" as const },
+    { header: t("Reason"), accessor: "Reason" as const },
   ];
 
   const paginatedLeaves = leaves.slice(
