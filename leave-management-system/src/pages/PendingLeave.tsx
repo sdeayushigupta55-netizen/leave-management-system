@@ -47,7 +47,7 @@ const PendingLeave = () => {
               <PendingLeaveStatusTable
                 leaves={pendingLeaves}
                 onApprove={(id, _approverId, remarks) => approveLeave(id, user?.id || '', remarks)}
-                onReject={(id, _approverId, remarks) => rejectLeave(id, user?.id || '', remarks)}
+                onReject={(id, remarks) => rejectLeave(id, remarks)}
                 onForward={(id, _approverId, remarks) => {
                   console.log('[onForward] Clicked Forward:', { id, user, remarks });
                   forwardLeave(id, remarks || "Forwarded to senior authority");
@@ -60,7 +60,7 @@ const PendingLeave = () => {
               <PendingLeaveStatusCard
                 leaves={pendingLeaves}
                 onApprove={(id, remarks) => approveLeave(id, user?.id || '', remarks)}
-                onReject={(id, remarks) => rejectLeave(id, user?.id || '', remarks)}
+                onReject={(id, remarks) => rejectLeave(id, remarks)}
                 onForward={(id, remarks) => {
                   console.log('[onForward] Clicked Forward:', { id, user, remarks });
                   forwardLeave(id, remarks || "Forwarded to senior authority");
