@@ -54,16 +54,19 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
     }
   }, [user]);
 
-  // Only these ranks need full hierarchy (area, circle, police station)
-  const needsHierarchy =
+  // Hierarchy logic by rank
+  const showFullHierarchy =
     form.role === "POLICE" &&
-    ["CONSTABLE", "HEADCONSTABLE", "INSPECTOR", "SHO/SO", "SI"].includes(
-      form.rank as PoliceRank
-    );
+    ["CONSTABLE", "HEADCONSTABLE", "INSPECTOR", "SHO/SO", "SI"].includes(form.rank as PoliceRank);
 
-  // Only SP rank should show Area (SP-CITY/SP-RURAL)
-  const showAreaForSP = form.role === "POLICE" && form.rank === "SP";
+  const showCircleAndAreaOnly =
+    form.role === "POLICE" && form.rank === "CO";
 
+  const showAreaOnly =
+    form.role === "POLICE" && form.rank === "SP";
+
+  // SSP shows nothing extra
+  
   const submit = () => {
     if (!form.role) return;
 
@@ -92,11 +95,14 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
     !form.name ||
     !form.pno ||
     !form.role ||
-   
     (form.role === "POLICE" &&
-      (!form.rank ||
-        (needsHierarchy &&
-          (!form.area || !form.circleOffice || !form.policeStation))));
+      (
+        !form.rank ||
+        (showFullHierarchy && (!form.area || !form.circleOffice || !form.policeStation)) ||
+        (showCircleAndAreaOnly && (!form.area || !form.circleOffice)) ||
+        (showAreaOnly && !form.area)
+      )
+    );
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
@@ -191,7 +197,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
               ))}
             </Select>
           )}
-          {(showAreaForSP || needsHierarchy) && (
+          {(showFullHierarchy || showCircleAndAreaOnly || showAreaOnly) && (
             <Select
               label="Area"
               required
@@ -210,7 +216,8 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
               <option value="SP-RURAL">SP-RURAL</option>
             </Select>
           )}
-          {needsHierarchy && form.area && (
+          {/* Circle Office: show for full hierarchy and CO */}
+          {(showFullHierarchy || showCircleAndAreaOnly) && form.area && (
             <Select
               label="Circle Office"
               required
@@ -229,7 +236,8 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
               ))}
             </Select>
           )}
-          {needsHierarchy && form.area && form.circleOffice && (
+          {/* Police Station: show for full hierarchy only */}
+          {showFullHierarchy && form.area && form.circleOffice && (
             <Select
               label="Police Station"
               required
@@ -250,6 +258,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
                 : null}
             </Select>
           )}
+          {/* (removed needsHierarchy duplicate rendering) */}
         </div>
 
         {/* Footer */}

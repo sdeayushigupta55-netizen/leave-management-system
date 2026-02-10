@@ -5,9 +5,9 @@ export const POLICE_RANKS: PoliceRank[] = [
   "CONSTABLE",
   "HEADCONSTABLE",
   "SI",
-  "CO",
   "INSPECTOR",
   "SHO/SO",
+  "CO",
   "SP",
   "SSP"
 ];
@@ -16,9 +16,10 @@ export const SENIOR_RANKS: PoliceRank[] = [
   "CONSTABLE",
   "HEADCONSTABLE",
   "SI",
-  "CO",
+  
   "INSPECTOR",
   "SHO/SO",
+  "CO",
   "SP",
   "SSP"
 ] as const;
