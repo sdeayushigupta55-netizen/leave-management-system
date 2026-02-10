@@ -54,11 +54,15 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
     }
   }, [user]);
 
+  // Only these ranks need full hierarchy (area, circle, police station)
   const needsHierarchy =
     form.role === "POLICE" &&
-    ["CONSTABLE", "HEADCONSTABLE", "SI", "SHO/SO", "INSPECTOR"].includes(
+    ["CONSTABLE", "HEADCONSTABLE", "INSPECTOR", "SHO/SO", "SI"].includes(
       form.rank as PoliceRank
     );
+
+  // Only SP rank should show Area (SP-CITY/SP-RURAL)
+  const showAreaForSP = form.role === "POLICE" && form.rank === "SP";
 
   const submit = () => {
     if (!form.role) return;
@@ -187,7 +191,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
               ))}
             </Select>
           )}
-          {needsHierarchy && (
+          {(showAreaForSP || needsHierarchy) && (
             <Select
               label="Area"
               required
