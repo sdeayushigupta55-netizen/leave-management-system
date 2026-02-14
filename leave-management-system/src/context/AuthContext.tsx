@@ -1,6 +1,7 @@
-import { createContext,useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import type { AuthUser } from "../type/user";
+import { useUsers } from "./UserContext";
 
 // Safe localStorage helper for mobile compatibility
 const safeLocalStorage = {
@@ -43,6 +44,7 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
+  const { users } = useUsers();
   const [user, setUser] = useState<AuthUser | null>(() => {
     // Initialize from localStorage immediately to prevent flash
     const stored = safeLocalStorage.getItem("auth_user");
@@ -72,9 +74,21 @@ export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
     setIsLoading(false);
   }, []);
 
+  // Enhanced login: always use the full user object from users context (with profilPic)
   const login = (userData: AuthUser) => {
-    safeLocalStorage.setItem("auth_user", JSON.stringify(userData));
-    setUser(userData);
+    // Find the full user object by id or pno
+    let fullUser = users.find(u => u.id === userData.id || u.pno === userData.pno);
+    if (!fullUser) {
+      // fallback to passed userData if not found
+      fullUser = userData;
+    }
+    // Ensure password is always a string
+    const authUser: AuthUser = {
+      ...fullUser,
+      password: fullUser.password ?? ""
+    };
+    safeLocalStorage.setItem("auth_user", JSON.stringify(authUser));
+    setUser(authUser);
   };
 
   const logout = () => {

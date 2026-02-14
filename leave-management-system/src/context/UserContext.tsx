@@ -33,6 +33,7 @@ const defaultUsers: User[] = [
     gender: "FEMALE",
     isActive: true,
     createdAt: new Date().toISOString(),
+     profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
   },
   {
     id: "2",
@@ -47,6 +48,7 @@ const defaultUsers: User[] = [
     gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
+     profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
   },
   {
     id: "3",
@@ -61,6 +63,7 @@ const defaultUsers: User[] = [
     gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
+    profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
   },
 
 //   🔼 Upper hierarchy (needed later)
@@ -77,6 +80,7 @@ const defaultUsers: User[] = [
     gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
+     profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
   },
   {
     id: "9",
@@ -91,6 +95,7 @@ const defaultUsers: User[] = [
     gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
+     profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
   },
   {
     id: "11",
@@ -104,6 +109,7 @@ const defaultUsers: User[] = [
     gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
+     profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
   },
   {
     id: "12",
@@ -116,6 +122,7 @@ const defaultUsers: User[] = [
     gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
+    profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
   },
   {
     id: "13",
@@ -127,6 +134,7 @@ const defaultUsers: User[] = [
     gender: "MALE",
     isActive: true,
     createdAt: new Date().toISOString(),
+    profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
   }
 ];
 

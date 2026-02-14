@@ -75,6 +75,8 @@ const Login = () => {
       area: matchedUser.area,
       gender: matchedUser.gender,
       password: matchedUser.password || "",
+      profilPic: matchedUser.profilPic,
+      createdAt: matchedUser.createdAt,
     });
 
     // Use setTimeout to ensure state is saved before navigation (mobile fix)

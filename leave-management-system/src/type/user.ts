@@ -25,6 +25,9 @@ export interface AuthUser {
   area?: "SP-CITY" | "SP-RURAL";
   gender?: "MALE" | "FEMALE";
   policeStation?: string; 
+  profilPic?: string; // New field for profile picture URL
+  createdAt: string;
+
 }
 
 // ================= PAYLOADS ========================
@@ -81,6 +84,7 @@ export interface User {
   isActive: boolean;
   createdAt: string;
   password?: string; // demo only
+  profilPic?: string; // New field for profile picture URL
 }
 
 export const POLICE_HIERARCHY = {
@@ -103,6 +107,26 @@ export const POLICE_HIERARCHY = {
       "Basai Mohammadpur",
       "Linepar",
       "Women Police Station"
+    ],
+    "CO LINE": [
+       "RI RESERVE INSPECTER OFFICE",
+       "GADNA OFFICE",
+       "CASE OFFICE",
+       "GD OFFICE",
+       "QUATER GARD",
+       "SURVEILLANCE CELL",
+       "SOG",
+       "GOPNEEY OFFICE",
+       "MEDIA CELL",
+       "TELEFON OFFICE",
+       "IGRS OFFICE",
+       "SHIKAYAT PRAKOST",
+       "DCRB",
+       "ELECTION CELL",
+       "VIP CELL",
+       "BADI PESI",
+       "TRAFFIC OFFICE",
+       "TRAFFIC CENTRE",
     ]
   },
   "SP-RURAL": {
@@ -122,6 +146,7 @@ export const POLICE_HIERARCHY = {
       "Eka",
       "Fariha"
     ]
-  }
+  },
+
 };
 

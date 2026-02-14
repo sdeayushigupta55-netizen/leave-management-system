@@ -25,6 +25,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
     area?: "SP-CITY" | "SP-RURAL";
     circleOffice?: string;
     policeStation?: string;
+    profilPic?: string;
     
   }>({
     name: "",
@@ -35,6 +36,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
     area: undefined,
     circleOffice: undefined,
     policeStation: undefined,
+    profilPic: undefined,
  
   });
 
@@ -49,6 +51,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
         area: user.area,
         circleOffice: user.circleOffice,
         policeStation: user.policeStation,
+        profilPic: user.profilPic,
       
       });
     }
@@ -65,8 +68,23 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
   const showAreaOnly =
     form.role === "POLICE" && form.rank === "SP";
 
+  
   // SSP shows nothing extra
   
+
+  useEffect(() => {
+    if (
+      user &&
+      form.role === "POLICE" &&
+      form.area &&
+      form.circleOffice &&
+      user.policeStation &&
+      !form.policeStation
+    ) {
+      setForm(f => ({ ...f, policeStation: user.policeStation! }));
+    }
+  }, [form.role, form.area, form.circleOffice, user]);
+
   const submit = () => {
     if (!form.role) return;
 
@@ -79,6 +97,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
       area: form.area,
       circleOffice: form.circleOffice,
       policeStation: form.policeStation,
+      profilPic: form.profilPic,
 
     };
 
@@ -141,20 +160,21 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
             required
             value={form.pno}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, pno: e.target.value })}
-            placeholder="Enter PNO (e.g., PNO045) Number only"
+            placeholder="Enter PNO Number"
           />
           <InputField
             label="Contact"
             required
             value={form.contact}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const value = e.target.value.replace(/\D/g, "").slice(0, 9);
+              let value = e.target.value.replace(/\D/g, "");
+              if (value.length > 10) value = value.slice(0, 10);
               setForm({ ...form, contact: value });
             }}
-            placeholder="Enter contact number"
-            maxLength={9}
+            placeholder="Enter 10-digit contact number"
+            maxLength={10}
             inputMode="numeric"
-            pattern="\d*"
+            pattern="\d{10}"
           />
           <Select
             label="User Role"
@@ -214,6 +234,10 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
               <option value="" disabled>Select Area</option>
               <option value="SP-CITY">SP-CITY</option>
               <option value="SP-RURAL">SP-RURAL</option>
+              {/* <option value="SSP OFFICE">SSP OFFICE</option>
+              <option value="CAMP OFFICE">CAMP OFFICE</option>
+              <option value="TRAFFIC OFFICE">TRAFFIC OFFICE</option> */}
+
             </Select>
           )}
           {/* Circle Office: show for full hierarchy and CO */}
@@ -247,20 +271,51 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
               }
             >
               <option value="" disabled>Select Police Station</option>
-              {(
-                POLICE_HIERARCHY[form.area] &&
-                Object.prototype.hasOwnProperty.call(POLICE_HIERARCHY[form.area], form.circleOffice!) &&
-                Array.isArray((POLICE_HIERARCHY[form.area] as Record<string, string[]>)[form.circleOffice!])
-              )
-                ? (POLICE_HIERARCHY[form.area] as Record<string, string[]>)[form.circleOffice!].map((ps: string) => (
+              {(() => {
+                const stations =
+                  POLICE_HIERARCHY[form.area] &&
+                  Object.prototype.hasOwnProperty.call(POLICE_HIERARCHY[form.area], form.circleOffice!) &&
+                  Array.isArray((POLICE_HIERARCHY[form.area] as Record<string, string[]>)[form.circleOffice!])
+                    ? (POLICE_HIERARCHY[form.area] as Record<string, string[]>)[form.circleOffice!]
+                    : [];
+                // If editing and the user's policeStation is not in the list, add it as a fallback option
+                const showFallback =
+                  form.policeStation && stations.indexOf(form.policeStation) === -1;
+                return [
+                  ...stations.map((ps: string) => (
                     <option key={ps} value={ps}>{ps}</option>
-                  ))
-                : null}
+                  )),
+                  showFallback ? (
+                    <option key={form.policeStation} value={form.policeStation}>{form.policeStation}</option>
+                  ) : null
+                ];
+              })()}
             </Select>
           )}
+        
+       
+       
           {/* (removed needsHierarchy duplicate rendering) */}
         </div>
-
+        <div className="px-6">
+          <InputField
+          label="Profile Picture"
+         type="file"
+         accept="image/*"
+         className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 mb-2"
+         onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
+           const file = e.target.files && e.target.files[0];
+           if (file) {
+             const reader = new FileReader();
+             reader.onloadend = () => {
+               setForm(f => ({ ...f, profilPic: reader.result as string }));
+             };
+             reader.readAsDataURL(file);
+           }
+         }}
+       />
+        </div>
+    
         {/* Footer */}
         <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end">
           <Button

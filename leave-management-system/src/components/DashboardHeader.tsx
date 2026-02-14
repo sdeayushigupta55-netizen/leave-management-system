@@ -27,17 +27,16 @@ const DashboardHeader = () => {
         {user && (
           <div className="relative user_pic">
             <button
-              className="flex items-center gap-2 focus:outline-none text-white"
+              className="flex items-center focus:outline-none text-white"
               onClick={() => setDropdownOpen((open) => !open)}
               tabIndex={0}
               onBlur={handleBlur}
             >
               <img
-                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name ?? "")}&background=fff&color=000`}
+                src={user.profilPic ? user.profilPic : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name ?? "")}&background=fff&color=000`}
                 alt="user picture"
                 className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border profile-image"
               />
-              <span className="hidden md:block text-sm">{user.name}</span>
             </button>
 
             {dropdownOpen && (
