@@ -20,7 +20,28 @@ i18n
           policeLeaveSystem: "Police Leave System",
           govtOfUp: "Government of Uttar Pradesh",
           downloadPDF: "Download Approval Certificate",
-          
+
+          // ===== FILTER LABELS =====
+          allAreas: "All Areas",
+          allPoliceStations: "All Police Stations",
+          allCircleOffices: "All Circle Offices",
+          allGenders: "All Genders",
+          allStatus: "All Status",
+
+          // ===== AREAS =====
+          spCity: "SP-CITY",
+          spRural: "SP-RURAL",
+
+          // ===== RANKS =====
+          constable: "Constable",
+          headconstable: "Head Constable",
+          si: "SI",
+          inspector: "Inspector",
+          "sho/so": "SHO/SO",
+          co: "CO",
+          sp: "SP",
+          ssp: "SSP",
+
           // ===== LOGIN =====
           loginWithOtp: "Log In with OTP",
           emailMobileOtp: "Log In With OTP",
@@ -44,7 +65,7 @@ i18n
           accountDeactivated: "Your account is deactivated. Contact admin.",
           userNotFound: "User not found",
           accountInactive: "Account inactive",
-          
+
           // ===== SIDEBAR / NAVIGATION =====
           dashboard: "Dashboard",
           applyLeave: "Apply Leave",
@@ -58,7 +79,7 @@ i18n
           allUsers: "All Users",
           editProfile: "Edit Profile",
           logout: "Logout",
-          
+
           // ===== DASHBOARD =====
           welcome: "Welcome",
           employeeDashboard: "Employee Dashboard",
@@ -68,7 +89,8 @@ i18n
           noLeaveRecords: "No leave records found.",
           quickActions: "Quick Actions",
           viewLeaveStatus: "View Leave Status",
-          
+          recentLeaveApprovals: "Recent Leave Approvals",
+
           // ===== STATS =====
           pending: "Pending",
           approved: "Approved",
@@ -80,7 +102,7 @@ i18n
           totalLeaves: "Total Leaves",
           usedLeaves: "Used Leaves",
           pendingRequests: "Pending Requests",
-          
+
           // ===== APPLY LEAVE =====
           editLeave: "Edit Leave",
           selectLeaveType: "Select Leave Type",
@@ -94,7 +116,7 @@ i18n
           saveDraft: "Save Draft",
           updateLeave: "Update Leave",
           pleaseSelectLeaveType: "Please select leave type",
-          
+
           // ===== LEAVE TYPES =====
           casual: "Casual",
           sick: "Sick",
@@ -105,7 +127,7 @@ i18n
           paternity: "Paternity",
           maternity: "Maternity",
           optional: "Optional",
-          
+
           // ===== LEAVE STATUS =====
           leaveStatus: "Leave Status",
           employee: "Employee",
@@ -126,8 +148,18 @@ i18n
           totalleaves: "Total Leaves",
           leaveAppliedSuccessfully: "Leave applied successfully!",
           leaveUpdatedSuccessfully: "Leave updated successfully!",
-          leaveForwardedSuccessfully: "Leave forwarded successfully!",  
-          
+          leaveForwardedSuccessfully: "Leave forwarded successfully!",
+          leaveApprovedSuccessfully: "Leave approved successfully!",
+          leaveRejectedSuccessfully: "Leave rejected successfully!",
+          provideRejectionReason: "Please provide a reason for rejection",
+          leaveSummary: "Leave Summary",
+          leaveSummaryDescription: "Your total and remaining leaves",
+          earnedLeave: "Earned Leave",
+          casualLeave: "Casual Leave",
+          total: "Total",
+          remaining: "Remaining",
+          enterReason: "Enter reason",
+
           // ===== PENDING LEAVE =====
           pendingLeaves: "Pending Leaves",
           noPendingLeaves: "No pending leaves assigned to you.",
@@ -138,7 +170,7 @@ i18n
           forwardedTo: "Forwarded To",
           forwardReason: "Forward Reason",
           autoForwardedReason: "Not approved within 24 hours - Auto forwarded",
-          
+
           // ===== EDIT PROFILE =====
           profileDetails: "Profile Details",
           updateContact: "Update Contact",
@@ -152,10 +184,10 @@ i18n
           enterContactNumber: "Enter 10-digit contact number",
           saveChanges: "Save Changes",
           profileUpdated: "Profile updated successfully",
-          
+
           // ===== SENIOR DETAILS =====
           seniorOfficers: "Senior Officers",
-          
+
           // ===== ADMIN / USERS =====
           users: "Users",
           addUser: "Add User",
@@ -163,22 +195,12 @@ i18n
           allRanks: "All Ranks",
           email: "Email",
           edit: "Edit",
-          
-          // ===== RANKS =====
-          constable: "Constable",
-          headConstable: "Head Constable",
-          si: "SI",
-          inspector: "Inspector",
-          shoSo: "SHO/SO",
-          co: "CO",
-          sp: "SP",
-          ssp: "SSP",
-          
+
           // ===== VALIDATION =====
           childCareOnlyFemale: "Child Care Leave is only available for female employees.",
           childCareMinDays: "Child Care Leave must be at least 6 months (180 days).",
           youSelected: "You selected",
-          
+
           // ===== SUBTITLES/DESCRIPTIONS =====
           manageAllPersonnel: "Manage all police personnel",
           activePersonnelDesc: "Currently active personnel",
@@ -189,7 +211,7 @@ i18n
           yourLeaveStats: "Your leave application statistics",
           requestsPendingApproval: "Requests pending your approval",
           yourLatestApplications: "Your latest leave applications",
-          
+
           // ===== ADMIN DASHBOARD =====
           sspDashboard: "SSP Dashboard",
           welcomeBack: "Welcome back",
@@ -203,7 +225,7 @@ i18n
           usersOverview: "Users Overview",
           activeUsers: "Active Users",
           inactiveUsers: "Inactive Users",
-          
+
           // ===== MISC =====
           noDataFound: "No data found",
           loading: "Loading...",
@@ -224,15 +246,38 @@ i18n
       hi: {
         translation: {
           all: "सभी",
-           Document: "दस्तावेज़",
-           view: "देखें",
-           // ===== FILE UPLOAD =====
-           uploadApplication: "आवेदन दस्तावेज़ अपलोड करें",
-           selectedFile: "चयनित फ़ाइल",
+          Document: "दस्तावेज़",
+          view: "देखें",
+          // ===== FILE UPLOAD =====
+          uploadApplication: "आवेदन दस्तावेज़ अपलोड करें",
+          selectedFile: "चयनित फ़ाइल",
           // ===== GENERAL =====
           police: "उत्तर प्रदेश पुलिस",
           policeLeaveSystem: "पुलिस अवकाश प्रणाली",
-          govtOfUp: "उत्तर प्रदेश सरकार",          downloadPDF: "स्वीकृति प्रमाण पत्र डाउनलोड करें",          
+          govtOfUp: "उत्तर प्रदेश सरकार",
+          downloadPDF: "स्वीकृति प्रमाण पत्र डाउनलोड करें",
+
+          // ===== FILTER LABELS =====
+          allAreas: "सभी क्षेत्र",
+          allPoliceStations: "सभी थाने",
+          allCircleOffices: "सभी सर्कल कार्यालय",
+          allGenders: "सभी लिंग",
+          allStatus: "सभी स्थिति",
+
+          // ===== AREAS =====
+          spCity: "एसपी-सिटी",
+          spRural: "एसपी-रूरल",
+
+          // ===== RANKS =====
+          constable: "कांस्टेबल",
+          headconstable: "हेड कांस्टेबल",
+          si: "एसआई",
+          inspector: "इंस्पेक्टर",
+          "sho/so": "एसएचओ/एसओ",
+          co: "सीओ",
+          sp: "एसपी",
+          ssp: "एसएसपी",
+
           // ===== LOGIN =====
           loginWithOtp: "ओटीपी से लॉगिन करें",
           emailMobileOtp: "ओटीपी से लॉगिन करें",
@@ -256,7 +301,7 @@ i18n
           accountDeactivated: "आपका खाता निष्क्रिय है। व्यवस्थापक से संपर्क करें।",
           userNotFound: "उपयोगकर्ता नहीं मिला",
           accountInactive: "खाता निष्क्रिय",
-          
+
           // ===== SIDEBAR / NAVIGATION =====
           dashboard: "डैशबोर्ड",
           applyLeave: "अवकाश के लिए आवेदन करें",
@@ -270,7 +315,7 @@ i18n
           allUsers: "सभी उपयोगकर्ता",
           editProfile: "प्रोफ़ाइल संपादित करें",
           logout: "लॉग आउट",
-          
+
           // ===== DASHBOARD =====
           welcome: "स्वागत है",
           employeeDashboard: "कर्मचारी डैशबोर्ड",
@@ -280,7 +325,7 @@ i18n
           noLeaveRecords: "कोई अवकाश रिकॉर्ड नहीं मिला।",
           quickActions: "त्वरित कार्य",
           viewLeaveStatus: "अवकाश स्थिति देखें",
-          
+
           // ===== STATS =====
           pending: "लंबित",
           approved: "स्वीकृत",
@@ -292,7 +337,7 @@ i18n
           totalLeaves: "कुल अवकाश",
           usedLeaves: "प्रयुक्त अवकाश",
           pendingRequests: "लंबित अनुरोध",
-          
+
           // ===== APPLY LEAVE =====
           editLeave: "अवकाश संपादित करें",
           selectLeaveType: "अवकाश प्रकार चुनें",
@@ -306,7 +351,7 @@ i18n
           saveDraft: "ड्राफ्ट सहेजें",
           updateLeave: "अवकाश अपडेट करें",
           pleaseSelectLeaveType: "कृपया अवकाश प्रकार चुनें",
-          
+
           // ===== LEAVE TYPES =====
           casual: "आकस्मिक",
           sick: "बीमारी",
@@ -317,7 +362,7 @@ i18n
           paternity: "पितृत्व",
           maternity: "मातृत्व",
           optional: "वैकल्पिक",
-          
+
           // ===== LEAVE STATUS =====
           leaveStatus: "अवकाश स्थिति",
           employee: "कर्मचारी",
@@ -339,7 +384,18 @@ i18n
           leaveAppliedSuccessfully: "अवकाश सफलतापूर्वक लागू किया गया!",
           leaveUpdatedSuccessfully: "अवकाश सफलतापूर्वक अपडेट किया गया!",
           leaveForwardedSuccessfully: "अवकाश सफलतापूर्वक अग्रेषित किया गया!",
-          
+          leaveApprovedSuccessfully: "अवकाश सफलतापूर्वक स्वीकृत किया गया!",
+          leaveRejectedSuccessfully: "अवकाश सफलतापूर्वक अस्वीकृत किया गया!",
+          leaveSummary: "शेष अवकाश",
+          leaveSummaryDescription: "आपके कुल और शेष अवकाश",
+          earnedLeave: "अर्जित अवकाश",
+          casualLeave: "आकस्मिक अवकाश",
+          total: "कुल",
+          remaining: "शेष",
+          provideRejectionReason: "कृपया अस्वीकृति का कारण प्रदान करें",
+          enterReason: "कारण दर्ज करें",
+          recentLeaveApprovals: "हाल के अवकाश स्वीकृतियाँ",
+
           // ===== PENDING LEAVE =====
           pendingLeaves: "लंबित अवकाश",
           noPendingLeaves: "आपको कोई लंबित अवकाश नहीं सौंपा गया है।",
@@ -350,7 +406,7 @@ i18n
           forwardedTo: "को अग्रेषित",
           forwardReason: "अग्रेषण कारण",
           autoForwardedReason: "24 घंटे के भीतर स्वीकृत नहीं - स्वतः अग्रेषित",
-          
+
           // ===== EDIT PROFILE =====
           profileDetails: "प्रोफ़ाइल विवरण",
           updateContact: "संपर्क अपडेट करें",
@@ -364,10 +420,10 @@ i18n
           enterContactNumber: "10 अंकों का संपर्क नंबर दर्ज करें",
           saveChanges: "परिवर्तन सहेजें",
           profileUpdated: "प्रोफ़ाइल सफलतापूर्वक अपडेट की गई",
-          
+
           // ===== SENIOR DETAILS =====
           seniorOfficers: "वरिष्ठ अधिकारी",
-          
+
           // ===== ADMIN / USERS =====
           users: "उपयोगकर्ता",
           addUser: "उपयोगकर्ता जोड़ें",
@@ -375,22 +431,12 @@ i18n
           allRanks: "सभी पद",
           email: "ईमेल",
           edit: "संपादित करें",
-          
-          // ===== RANKS =====
-          constable: "कांस्टेबल",
-          headConstable: "हेड कांस्टेबल",
-          si: "एसआई",
-          inspector: "इंस्पेक्टर",
-          shoSo: "एसएचओ/एसओ",
-          co: "सीओ",
-          sp: "एसपी",
-          ssp: "एसएसपी",
-          
+
           // ===== VALIDATION =====
           childCareOnlyFemale: "बाल देखभाल अवकाश केवल महिला कर्मचारियों के लिए उपलब्ध है।",
           childCareMinDays: "बाल देखभाल अवकाश कम से कम 6 महीने (180 दिन) का होना चाहिए।",
           youSelected: "आपने चुना",
-          
+
           // ===== SUBTITLES/DESCRIPTIONS =====
           manageAllPersonnel: "सभी पुलिस कर्मियों का प्रबंधन करें",
           activePersonnelDesc: "वर्तमान में सक्रिय कर्मी",
@@ -402,7 +448,7 @@ i18n
           requestsPendingApproval: "आपकी स्वीकृति के लंबित अनुरोध",
           yourLatestApplications: "आपके नवीनतम अवकाश आवेदन",
           totalleaves: "कुल अवकाश",
-          
+
           // ===== ADMIN DASHBOARD =====
           sspDashboard: "एसएसपी डैशबोर्ड",
           welcomeBack: "वापसी पर स्वागत है",
@@ -416,7 +462,7 @@ i18n
           usersOverview: "उपयोगकर्ता अवलोकन",
           activeUsers: "सक्रिय उपयोगकर्ता",
           inactiveUsers: "निष्क्रिय उपयोगकर्ता",
-          
+
           // ===== MISC =====
           noDataFound: "कोई डेटा नहीं मिला",
           loading: "लोड हो रहा है...",

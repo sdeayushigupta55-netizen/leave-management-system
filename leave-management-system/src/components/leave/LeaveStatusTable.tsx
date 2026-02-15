@@ -28,12 +28,12 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
     { header: t("leaveType"), accessor: "leaveType" as const },
     { header: t("dates"), accessor: "dates" as const },
     { header: t("numberOfDays"), accessor: "numberOfDays" as const },
-    { header: t("reason"), accessor: "reason" as const },
+
     { header: t("submittedOn"), accessor: "submittedOn" as const },
     { header: t("assignedTo"), accessor: "currentApproverName" as const },
     { header: t("status"), accessor: "status" as const },
     { header: t("Document"), accessor: "Document" as const },
-    { header: t("Reason"), accessor: "Reason" as const },
+    { header: t("Reason"), accessor: "reason" as const },
   ];
 
   const paginatedLeaves = leaves.slice(
@@ -105,6 +105,15 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
               <FileDown size={14} />
             </button>
           )}
+          {leave.status==="REJECTED" && (
+             <button
+              onClick={() => generateLeaveApprovalPDF(leave)}
+              className="p-1.5 bg-[#970d0d] hover:bg-[#7a0b0b] text-white rounded-lg transition-colors shadow-sm"
+              title={t("downloadPDF")}
+            >
+              <FileDown size={14} />
+            </button>
+  )}
           {leave.status === "DRAFT" && (
             <ActionButtons
               status={leave.status}

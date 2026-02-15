@@ -12,7 +12,11 @@ export type LeaveType =
   | "SICK"
   | "EARNED"
   | "EMERGENCY"
-  | "CHILD_CARE";
+  | "CHILD_CARE"
+  | "MEDICAL"
+  | "PATERNITY"
+  | "MATERNITY"
+  | "OPTIONAL";
 
 export interface LeaveApproval {
   approverId: string;
@@ -20,6 +24,7 @@ export interface LeaveApproval {
   action: "APPROVED" | "REJECTED" | "FORWARDED";
   timestamp: string;
   reason?: string;
+  approverName?: string;
 }
 
 export interface ForwardHistory {
@@ -30,6 +35,7 @@ export interface ForwardHistory {
 }
 
 export interface Leave {
+  type: string;
   id: string;
   applicantId: string;
   applicantRank: PoliceRank;

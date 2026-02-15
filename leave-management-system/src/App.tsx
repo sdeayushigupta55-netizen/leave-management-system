@@ -19,6 +19,7 @@ import InspectorDashboard from "./pages/Inspector/InspectorDashboard";
 import SHODashboard from "./pages/SHO/SHO-SODashboard";
 import SeniorDetails from "./components/SeniorDetails/SeniorDetails";
 import CODashboard from "./pages/co/CODashboard";
+import PDFViewer from "./ui/PDFViewer";
 
 
 function AuthProviderWithUser({ children }: { children: ReactNode }) {
@@ -207,6 +208,23 @@ function App() {
                 </RoleRoute>
               }
             />
+<Route
+  path="/assets/bns-2023"
+  element={
+    <RoleRoute allowRole={["ADMIN","POLICE"]} allowRank={["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE","SSP"]}>
+      <PDFViewer src="/assets/bns-2023.pdf" title="BNS 2023" />
+    </RoleRoute>
+  }
+/>
+            <Route
+              path="*"
+              element={
+                <div className="flex items-center justify-center h-screen">
+                  <h1 className="text-3xl font-bold">404 - Page Not Found</h1>
+                </div>
+              }
+            />
+            
           </Routes>
         </LeaveProvider>
       </AuthProviderWithUser >

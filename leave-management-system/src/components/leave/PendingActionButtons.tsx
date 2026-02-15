@@ -24,35 +24,11 @@ const PendingActionButtons = ({
   const [error, setError] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const [pendingAction, setPendingAction] = useState<null | { type: "approve" | "reject" | "submit"; reason?: string }> (null);
+  const [pendingAction, setPendingAction] = useState<null | { type: "approve" | "reject" | "submit"; reason?: string }>(null);
 
   if (status !== "PENDING" && status !== "FORWARDED") {
     return null;
   }
-
-  // If approver cannot approve (e.g., SHO/SO for > 3 days leave), show only Forward
-  if (!canApprove) {
-    return (
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => {
-            console.log('[PendingActionButtons] Forward button clicked');
-            if (onForward) onForward();
-          }}
-          className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#8d6e63] to-[#6d4c41] text-white rounded-lg text-xs font-semibold hover:shadow-md transition shadow-sm"
-        >
-          <Forward size={14} />
-          {t("forward")}
-        </button>
-      </div>
-    );
-  }
-
-  const handleApprove = () => {
-    setSuccessMessage(t("leaveApprovedSuccessfully") || "Leave approved successfully!");
-    setPendingAction({ type: "approve" });
-    setShowSuccessModal(true);
-  };
 
   const handleReject = () => {
     setShowRejectModal(true);
@@ -79,6 +55,18 @@ const PendingActionButtons = ({
     setError("");
   };
 
+  const handleApprove = () => {
+    setSuccessMessage(t("leaveApprovedSuccessfully") || "Leave approved successfully!");
+    setPendingAction({ type: "approve" });
+    setShowSuccessModal(true);
+  };
+
+  const handleForward = () => {
+    setSuccessMessage(t("leaveForwardedSuccessfully") || "Leave forwarded successfully!");
+    setPendingAction({ type: "submit" });
+    setShowSuccessModal(true);
+  };
+
   const handleSuccessConfirm = () => {
     if (pendingAction) {
       if (pendingAction.type === "approve") {
@@ -97,18 +85,37 @@ const PendingActionButtons = ({
   return (
     <>
       <div className="flex items-center gap-2">
-        <button
-          onClick={handleApprove}
-          className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#138808] to-[#1b9e10] text-white rounded-lg text-xs font-semibold hover:shadow-md transition shadow-sm"
-        >
-          <Check size={14} />
-        </button>
-        <button
-          onClick={handleReject}
-          className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#c62828] to-[#d84315] text-white rounded-lg text-xs font-semibold hover:shadow-md transition shadow-sm"
-        >
-          <X size={14} />
-        </button>
+        {canApprove ? (
+          <>
+            <button
+              onClick={handleApprove}
+              className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#138808] to-[#1b9e10] text-white rounded-lg text-xs font-semibold hover:shadow-md transition shadow-sm"
+            >
+              <Check size={14} />
+            </button>
+            <button
+              onClick={handleReject}
+              className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#c62828] to-[#d84315] text-white rounded-lg text-xs font-semibold hover:shadow-md transition shadow-sm"
+            >
+              <X size={14} />
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={handleForward}
+              className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#8d6e63] to-[#6d4c41] text-white rounded-lg text-xs font-semibold hover:shadow-md transition shadow-sm"
+            >
+              <Forward size={14} />
+            </button>
+            <button
+              onClick={handleReject}
+              className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#c62828] to-[#d84315] text-white rounded-lg text-xs font-semibold hover:shadow-md transition shadow-sm"
+            >
+              <X size={14} />
+            </button>
+          </>
+        )}
       </div>
       {showRejectModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">

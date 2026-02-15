@@ -50,7 +50,8 @@ const SeniorDetails = () => {
 
       return approvers.map((approver) => {
         const officer = users.find(
-          (u) => u.rank === approver.rank && u.isActive
+          (u) => u.rank === approver.rank && u.isActive &&
+          (approver.rank !== "SP" || u.area === user.area)
         );
 
         return {

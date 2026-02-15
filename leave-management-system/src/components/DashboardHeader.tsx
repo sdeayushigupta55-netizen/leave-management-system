@@ -2,8 +2,13 @@ import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { PanelRightOpen } from "lucide-react";
 
-const DashboardHeader = () => {
+type DashboardHeaderProps = {
+  sidebarCollapsed?: boolean;
+  setSidebarOpen?: (open: boolean) => void; // add this
+};
+const DashboardHeader = ({ setSidebarOpen }: DashboardHeaderProps) => {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -16,7 +21,24 @@ const DashboardHeader = () => {
   };
 
   return (
-    <header className="flex items-center bg-[#1a237e] px-3 sm:px-4 md:px-6 py-2 sm:py-3 border-b-2 border-[#c5a200]">
+    
+    <header
+      className="flex items-center bg-[#1a237e] px-3 sm:px-4 md:px-6 py-2 sm:py-3 border-b-2 border-[#c5a200] transition-all duration-300"
+      style={{
+        zIndex: 50,
+        position: "relative",
+      }}
+    >
+          {/* Mobile sidebar open button */}
+      {typeof setSidebarOpen === "function" && (
+        <button
+          className="md:hidden mr-2 bg-[#1a237e] text-white rounded shadow p-2"
+          onClick={() => setSidebarOpen(true)}
+          aria-label={t("openSidebar")}
+        >
+          <PanelRightOpen size={24} />
+        </button>
+      )}
       <div className="hidden sm:block">
         <h1 className="text-base sm:text-lg font-semibold text-white ml-8 md:ml-0">
           {t("dashboard")}

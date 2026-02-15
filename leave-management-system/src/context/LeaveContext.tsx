@@ -241,6 +241,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
           )
         : { id: undefined, name: undefined, rank: undefined };
     const newLeave: Leave = {
+      type:payload.leaveType,
       id: crypto.randomUUID(),
       applicantId: user.id,
       applicantRank: applicantRank,
@@ -322,11 +323,21 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
         {
           approverId: approverId,
           approverRank: leave.currentApproverRank ?? "",
+          approverName: leave.currentApproverName ?? "",
           action: "APPROVED" as const,
           timestamp: new Date().toISOString(),
           reason: remarks,
         },
+        {
+    approverId: approverId,
+    approverRank: leave.currentApproverRank ?? "",
+    approverName: leave.currentApproverName ?? "",
+    action: "REJECTED" as const,
+    timestamp: new Date().toISOString(),
+    reason: remarks,
+  },
       ].filter(isValidLeaveApproval);
+     
       return {
         ...leave,
         status: "APPROVED" as LeaveStatus,
@@ -339,31 +350,32 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
     }));
   };
 
-  const rejectLeave = (id: string, approverId: string, reason?: string) => {
-    setLeaves((prev) => prev.map((leave) => {
-      if (leave.id !== id || (leave.status !== "PENDING" && leave.status !== "FORWARDED")) return { ...leave };
-      const approvals = [
-        ...leave.approvals,
-        {
-          approverId: approverId,
-          approverRank: leave.currentApproverRank ?? "",
-          action: "REJECTED" as const,
-          timestamp: new Date().toISOString(),
-          reason: reason,
-        },
-      ].filter(isValidLeaveApproval);
-      return {
-        ...leave,
-        status: "REJECTED" as LeaveStatus,
-        currentApproverId: undefined,
-        currentApproverName: undefined,
-        currentApproverRank: undefined,
-        approvals,
-        Reason: reason,
-        lastUpdatedOn: new Date().toISOString(),
-      };
-    }));
-  };
+ const rejectLeave = (id: string, approverId: string, reason?: string) => {
+  setLeaves((prev) => prev.map((leave) => {
+    if (leave.id !== id || (leave.status !== "PENDING" && leave.status !== "FORWARDED")) return { ...leave };
+    const approvals = [
+      ...leave.approvals,
+      {
+        approverId: approverId,
+        approverRank: leave.currentApproverRank ?? "",
+        approverName: user?.name ?? leave.currentApproverName ?? "",
+        action: "REJECTED" as const,
+        timestamp: new Date().toISOString(),
+        reason: reason,
+      },
+    ].filter(isValidLeaveApproval);
+    return {
+      ...leave,
+      status: "REJECTED" as LeaveStatus,
+      currentApproverId: undefined,
+      currentApproverName: undefined,
+      currentApproverRank: undefined,
+      approvals,
+      Reason: reason,
+      lastUpdatedOn: new Date().toISOString(),
+    };
+  }));
+};
 
   const forwardLeave = (id: string, reason?: string) => {
     setLeaves((prev) => prev.map((leave) => {
@@ -380,6 +392,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
         {
           approverId: user?.id ?? "",
           approverRank: user?.rank ?? "",
+          approverName: user?.name ?? "",
           action: "FORWARDED" as const,
           timestamp: new Date().toISOString(),
           reason: reason || "Forwarded to next authority",
