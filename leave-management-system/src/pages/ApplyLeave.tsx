@@ -49,7 +49,7 @@ const ApplyLeave = () => {
 
   useEffect(() => {
     if (form.leaveType === "CHILD_CARE") {
-      if (user?.gender !== "FEMALE") {
+      if (user?.gender !== "Female") {
         setValidationError(`❌ ${t("childCareOnlyFemale")}`);
       } else if (numberOfDays > 0 && numberOfDays < 180) {
         setValidationError(
@@ -95,7 +95,7 @@ const ApplyLeave = () => {
     }
 
     if (form.leaveType === "CHILD_CARE") {
-      if (user?.gender !== "FEMALE") {
+      if (user?.gender !== "Female") {
         alert(`❌ ${t("childCareOnlyFemale")}`);
         return;
       }

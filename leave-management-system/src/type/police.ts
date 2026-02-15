@@ -16,7 +16,7 @@ export type Rank =
 
 export type SPType = "CITY" | "RURAL";
 
-export type Gender = "MALE" | "FEMALE";
+export type Gender = "Male" | "Female";
 
 export type OfficeType =
   | "SSP_OFFICE"
@@ -34,7 +34,7 @@ export interface BaseUser {
   pno: string; // Unique Police Number
   name: string;
   contact: string;
-  email: string;
+  // email: string;
   role: Role;
   rank: Rank;
   gender?: Gender;
@@ -196,24 +196,8 @@ export interface ApiResponse<T> {
    USER CREATE / UPDATE PAYLOADS
 ================================ */
 
-export interface CreatePoliceUserPayload {
-  pno: string;
-  name: string;
-  email: string;
-  contact: string;
-  rank: Rank;
-  spType?: SPType;
-  policeStation?: string;
-  gender?: Gender;
-  password: string;
-}
 
-export interface CreateAdminUserPayload {
-  name: string;
-  email: string;
-  contact: string;
-  password: string;
-}
+
 
 export interface UpdateUserPayload {
   name?: string;

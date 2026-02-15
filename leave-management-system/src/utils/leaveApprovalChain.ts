@@ -25,7 +25,7 @@ export const getApprovalChain = (
   gender?: string
 ): string[] => {
   // Child Care Leave: direct to SSP (for female employees only, 6 months minimum)
-  if (leaveType === "CHILD_CARE" && gender === "FEMALE" && numberOfDays >= CHILD_CARE_LEAVE_MIN_DAYS) {
+  if (leaveType === "CHILD_CARE" && gender === "Female" && numberOfDays >= CHILD_CARE_LEAVE_MIN_DAYS) {
     return ["SSP"];
   }
 
@@ -77,7 +77,7 @@ export const getApproverRankByDays = (
   gender?: string
 ): ApproverRank | undefined => {
   // Child Care Leave goes directly to SSP
-  if (leaveType === "CHILD_CARE" && gender === "FEMALE" && numberOfDays >= CHILD_CARE_LEAVE_MIN_DAYS) {
+  if (leaveType === "CHILD_CARE" && gender === "Female" && numberOfDays >= CHILD_CARE_LEAVE_MIN_DAYS) {
     return "SSP";
   }
 

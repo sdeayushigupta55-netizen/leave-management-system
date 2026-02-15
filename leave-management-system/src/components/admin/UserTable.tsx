@@ -32,10 +32,15 @@ const UsersTable = ({ users, onEdit }: UserTableProps) => {
 
   const columns: Column<User>[] = [
     { header: t("name"), accessor: "name" },
-    { header: t("role"), accessor: (u) => translateRole(u.role) },
+
     { header: t("rank"), accessor: (u) => translateRank(u.rank) },
     { header: t("pno"), accessor: "pno" },
-    {header: t("contact"), accessor: "contact" },
+    { header: t("role"), accessor: (u) => translateRole(u.role) },
+    { header: t("area"), accessor: (u) => u.area || "-" },
+    { header: t("policeStation"), accessor: (u) => u.policeStation || "-" },
+    { header: t("circleOffice"), accessor: (u) => u.circleOffice || "-" },
+    { header: t("contact"), accessor: (u) => u.contact || "-" },
+    { header: t("gender"), accessor: (u) => u.gender || "-" },
     {
       header: t("status"),
       accessor: (u) => (
@@ -54,7 +59,7 @@ const UsersTable = ({ users, onEdit }: UserTableProps) => {
             size={16}
             onClick={() => onEdit(u)}
           />
-          <ToggleUserButton checked={u.isActive} onChange={() => toggleUser(u.id)} />
+          <ToggleUserButton checked={u.isActive} onChange={() => toggleUser(u._id ?? "")} />
         </div>
       ),
     },

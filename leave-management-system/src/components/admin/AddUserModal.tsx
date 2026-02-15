@@ -26,6 +26,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
     circleOffice?: string;
     policeStation?: string;
     profilPic?: string;
+    gender?: "Male" | "Female" | "OTHER";
     
   }>({
     name: "",
@@ -37,6 +38,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
     circleOffice: undefined,
     policeStation: undefined,
     profilPic: undefined,
+    gender: undefined,
  
   });
 
@@ -52,6 +54,7 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
         circleOffice: user.circleOffice,
         policeStation: user.policeStation,
         profilPic: user.profilPic,
+        gender: user.gender,
       
       });
     }
@@ -85,30 +88,32 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
     }
   }, [form.role, form.area, form.circleOffice, user]);
 
-  const submit = () => {
-    if (!form.role) return;
+const submit = () => {
+  if (!form.role) return;
 
-    const payload = {
-      name: form.name,
-      pno: form.pno,
-      contact: form.contact,
-      role: form.role,
-      rank: form.role === "POLICE" ? form.rank : undefined,
-      area: form.area,
-      circleOffice: form.circleOffice,
-      policeStation: form.policeStation,
-      profilPic: form.profilPic,
-
-    };
-
-    if (user) {
-      updateUser(user.id, payload);
-    } else {
-      addUser(payload as any);
-    }
-
-    onClose();
+  const payload = {
+   name: form.name,
+    pno: form.pno,
+    contact: form.contact,
+    role: form.role,
+    rank: form.role === "ADMIN" ? "SSP" : form.rank, // Always send a rank
+    area: form.area,
+    circleOffice: form.circleOffice,
+    policeStation: form.policeStation,
+    profilPic: form.profilPic,
+    gender: form.gender,
   };
+
+  if (user && user._id) {
+    updateUser(user._id, payload); 
+  } else {
+    // Generate a unique id for new users
+    const newUser = { ...payload, id: `user-${Date.now()}` };
+    addUser(newUser as any);
+  }
+
+  onClose();
+};
 
   const isDisabled =
     !form.name ||
@@ -177,19 +182,42 @@ const AddUserModal = ({ onClose, user }: AddUserModalProps) => {
             pattern="\d{10}"
           />
           <Select
-            label="User Role"
+          label="Gender"
             required
-            value={form.role ?? ""}
+            value={form.gender ?? ""}
             onChange={e =>
               setForm({
                 ...form,
-                role: e.target.value as UserRole,
-                rank: undefined,
+                gender: e.target.value === "Male"
+                  ? "Male"
+                  : e.target.value === "Female"
+                  ? "Female"
+                  : e.target.value === "Other"
+                  ? "OTHER"
+                  : undefined,
+              })
+            }
+          >
+            <option value="" disabled>Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </Select>
+          <Select
+            label="User Role"
+            required
+            value={form.role ?? ""}
+            onChange={e => {
+              const newRole = e.target.value as UserRole;
+              setForm({
+                ...form,
+                role: newRole,
+                rank: newRole === "ADMIN" ? "SSP" : undefined,
                 area: undefined,
                 circleOffice: undefined,
                 policeStation: undefined,
               })
-            }
+            }}
           >
             <option value="" disabled>Select Role</option>
             {USER_ROLES.map(role => (

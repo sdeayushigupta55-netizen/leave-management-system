@@ -28,7 +28,8 @@ const hasRank = allowRank ? (user.rank !== undefined && allowRank.includes(user.
   if (hasRole && hasRank) {
     return <>{children}</>;
   }
-
+ console.log("RoleRoute user:", user);
+console.log("hasRole:", hasRole, "hasRank:", hasRank);
   return <Navigate to="/login" replace />;
 };
 

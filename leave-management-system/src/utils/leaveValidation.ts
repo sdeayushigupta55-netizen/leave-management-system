@@ -27,7 +27,7 @@ export const validateChildCareLeave = (
     return { valid: true };
   }
 
-  if (gender !== "FEMALE") {
+  if (gender !== "Female") {
     return {
       valid: false,
       error: "Child Care Leave is only available for female employees.",

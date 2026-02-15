@@ -16,7 +16,7 @@ i18n
           uploadApplication: "Upload Application Document",
           selectedFile: "Selected File",
           // ===== GENERAL =====
-          police: "Uttar Pradesh Police",
+          police: "Police",
           policeLeaveSystem: "Police Leave System",
           govtOfUp: "Government of Uttar Pradesh",
           downloadPDF: "Download Approval Certificate",
@@ -213,7 +213,7 @@ i18n
           yourLatestApplications: "Your latest leave applications",
 
           // ===== ADMIN DASHBOARD =====
-          sspDashboard: "SSP Dashboard",
+          sspDashboard: "Admin Dashboard",
           welcomeBack: "Welcome back",
           leaveOverview: "Leave Overview",
           systemLeaveStats: "System-wide leave statistics",

@@ -1,237 +1,101 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
-import type { User} from "../type/user";
+import type { User } from "../type/user";
 
 interface UserContextType {
-    users: User[];
-    loginWithPno: (pno: string, contact: string) => User;
-    updateUser: (id: string, updated: Partial<User>) => void;
-    addUser: (payload: any) => void; // You can replace 'any' with a more specific type if needed
-    toggleUser: (id: string) => void;
-    resetUsers: () => void;
+  users: User[];
+  loginWithPno: (pno: string, contact: string) => User;
+  updateUser: (id: string, updated: Partial<User>) => void;
+  addUser: (payload: any) => void;
+  toggleUser: (id: string) => void;
+  resetUsers: () => void;
 }
 
-const   UserContext = createContext<UserContextType | null>(null);
+const UserContext = createContext<UserContextType | null>(null);
 
 export const useUsers = () => {
-    const ctx = useContext(UserContext);
-    if (!ctx) throw new Error("useUsers must be used inside UserProvider");
-    return ctx;
-};
-
-const defaultUsers: User[] = [
-   {
-    id: "1",
-    pno: "PNO6001",
-    name: "Neha Singh",
-    contact: "9876500008",
-    role: "POLICE",
-    rank: "CONSTABLE",
-    circleOffice: "City Circle",
-    policeStation: "Ramgarh",
-    area: "SP-CITY",
-    gender: "FEMALE",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-     profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
-  },
-  {
-    id: "2",
-    pno: "PNO5001",
-    name: "Rahul Verma",
-    contact: "9876500007",
-    role: "POLICE",
-    rank: "HEADCONSTABLE",
-    circleOffice: "City Circle",
-    policeStation: "Ramgarh",
-    area: "SP-CITY",
-    gender: "MALE",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-     profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
-  },
-  {
-    id: "3",
-    pno: "PNO3001",
-    name: "Sunil Kumar",
-    contact: "9876500005",
-    role: "POLICE",
-    rank: "SI",
-    circleOffice: "City Circle",
-    policeStation: "Ramgarh",
-    area: "SP-CITY",
-    gender: "MALE",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
-  },
-
-//   🔼 Upper hierarchy (needed later)
-  {
-    id: "10",
-    pno: "PNO2001",
-    name: "Rakesh Mishra",
-    contact: "9876500004",
-    role: "POLICE",
-    rank: "SHO/SO",
-    policeStation: "Ramgarh",
-    circleOffice: "City Circle",
-    area: "SP-CITY",
-    gender: "MALE",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-     profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
-  },
-  {
-    id: "9",
-    pno: "PNO4001",
-    name: "Vikram Singh",
-    contact: "9876500006",
-    role: "POLICE",
-    rank: "INSPECTOR",
-    policeStation: "Ramgarh",
-    circleOffice: "City Circle",
-    area: "SP-CITY",
-    gender: "MALE",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-     profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
-  },
-  {
-    id: "11",
-    pno: "PNO0001",
-    name: "Amit Sharma",
-    contact: "9876500002",
-    role: "POLICE",
-    rank: "CO",
-    circleOffice: "City Circle",
-    area: "SP-CITY",
-    gender: "MALE",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-     profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
-  },
-  {
-    id: "12",
-    pno: "PNO1001",
-    name: "Anil Kumar",
-    contact: "9876500003",
-    role: "POLICE",
-    rank: "SP",
-    area: "SP-CITY",
-    gender: "MALE",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
-  },
-  {
-    id: "13",
-    pno: "PNO9001",
-    name: "Mohan Verma",
-    contact: "9876500001",
-    role: "POLICE",
-    rank: "SSP",
-    gender: "MALE",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    profilPic: "https://randomuser.me/api/portraits/men/75.jpg",
-  }
-];
-
-// Safe localStorage helper for mobile compatibility
-const safeLocalStorage = {
-  getItem: (key: string): string | null => {
-    try {
-      return localStorage.getItem(key);
-    } catch {
-      return null;
-    }
-  },
-  setItem: (key: string, value: string): void => {
-    try {
-      localStorage.setItem(key, value);
-    } catch {
-      console.warn("localStorage not available");
-    }
-  }
-};
-
-const getInitialUsers = (): User[] => {
-  if (typeof window === 'undefined') return defaultUsers;
-  const stored = safeLocalStorage.getItem("app_users");
-  if (stored) {
-    try {
-      return JSON.parse(stored);
-    } catch {
-      return defaultUsers;
-    }
-  }
-  return defaultUsers;
+  const ctx = useContext(UserContext);
+  if (!ctx) throw new Error("useUsers must be used inside UserProvider");
+  return ctx;
 };
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-    const [users, setUsers] = useState<User[]>(getInitialUsers);
+  const [users, setUsers] = useState<User[]>([]);
 
-    // Persist users to localStorage whenever they change
-    useEffect(() => {
-      safeLocalStorage.setItem("app_users", JSON.stringify(users));
-    }, [users]);
-  const addUser = (
-    payload: any // You can replace 'any' with CreateAdminUserPayload | CreatePoliceUserPayload
-  ) => {
-    const { password, ...safePayload } = payload;
-    setUsers(prev => [
-      {
-        id: crypto.randomUUID(),
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        ...safePayload,
-      },
-      ...prev,
-    ]);
+  // Fetch users from backend on mount
+  useEffect(() => {
+    fetch("/api/users")
+      .then((res) => res.json())
+      .then((data) => setUsers(Array.isArray(data) ? data : []))
+      .catch(() => setUsers([]));
+  }, []);
+
+ const addUser = (payload: any) => {
+  const { password, ...safePayload } = payload;
+  const newUser = {
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    ...safePayload,
   };
-   
-    const updateUser=(id:string,updated:Partial<User>)=> {
-        setUsers(prev=>
-            prev.map(u=>
-                u.id===id ? {...u,...updated} : u
-            )
-        );
-    }
-
-    const toggleUser = (id: string) => {
-        setUsers(prev =>
-            prev.map(u =>
-                u.id === id ? { ...u, isActive: !u.isActive } : u
-            )
-        );
-    };
-
-    // const resetPassword = (userId: string, newPassword: string) => {
-    //     console.log("Password reset for", userId, newPassword);
-    //     // backend later
-    // };
-const loginWithPno = (pno: string, contact: string) => {
-  const user = users.find(
-    u => u.pno === pno && u.contact === contact && u.isActive
-  );
-  // Debug log for troubleshooting
-  console.log("Login attempt:", { pno, contact, users });
-  if (!user) {
-    console.warn("Login failed: No matching user", { pno, contact });
-    throw new Error("Invalid PNO or contact number");
-  }
-  return user;
+  fetch("/api/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(newUser),
+  })
+    .then((res) => res.json())
+    .then((savedUser) => setUsers((prev) => [savedUser, ...prev]));
 };
 
-    // Add a reset function for troubleshooting
-    const resetUsers = () => {
-      setUsers(defaultUsers);
-      safeLocalStorage.setItem("app_users", JSON.stringify(defaultUsers));
-    };
-    return (
-      <UserContext.Provider value={{ users, loginWithPno ,updateUser, toggleUser, addUser, resetUsers }}>
-        {children}
-      </UserContext.Provider>
+ const updateUser = (id: string, updated: Partial<User>) => {
+  fetch(`/api/users/${id}`, { // id should be _id from MongoDB
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updated),
+  })
+    .then((res) => {
+      if (!res.ok) {
+        return res.json().then(err => { throw new Error(err.error || "Update failed"); });
+      }
+      return res.json();
+    })
+    .then((updatedUser) =>
+      setUsers((prev) => prev.map((u) => (u._id === id ? updatedUser : u))) // compare with _id
+    )
+    .catch((err) => {
+      console.error("Failed to update user:", err);
+    });
+};
+
+  const toggleUser = (id: string) => {
+  const user = users.find((u) => u._id === id);
+  if (!user) return;
+  updateUser(id, { isActive: !user.isActive });
+};
+
+  const loginWithPno = (pno: string, contact: string) => {
+    console.log("Trying login with:", pno, contact);
+console.log("Users loaded:", users);
+    const user = users.find(
+      (u) => u.pno === pno && u.contact === contact && u.isActive
+      
     );
+    console.log("Matched user:", user);
+    if (!user) {
+      throw new Error("Invalid PNO or contact number");
+    }
+    return user;
+  };
+
+  const resetUsers = () => {
+    // Optionally, you can implement a backend endpoint to reset users
+    setUsers([]);
+  };
+
+  return (
+    <UserContext.Provider
+      value={{ users, loginWithPno, updateUser, toggleUser, addUser, resetUsers }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
 };

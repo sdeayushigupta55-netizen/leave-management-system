@@ -34,10 +34,11 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
         roles: ["POLICE"],
         icon: <FaHome />,
       },
+     
       {
         labelKey: "applyLeave",
         path: "/police/apply-leave",
-        roles: ["POLICE"],
+        roles: ["POLICE","ADMIN"],
         ranks: ["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE"],
         icon: <FaCalendarPlus />,
       },
@@ -55,27 +56,43 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
         ranks: ["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE"],
         icon: <FaUserShield />,
       },
+      
+      
+      
       {
+    labelKey: "Dashboard",
+    path: "/admin",
+    roles: ["ADMIN"],
+    ranks: ["SSP"],
+    icon: <FaHome />,
+  },
+  {
+    labelKey: "allUsers",
+    path: "/admin/all-users",
+    roles: ["ADMIN"],
+    ranks: ["SSP"],
+    icon: <FaUsers />,
+  },
+  {
+  labelKey: "Bns 2023",
+  path: "/bns-2023",
+  roles: ["POLICE"],
+  ranks: ["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE", "SSP"],
+  icon: <FaListAlt />,
+},
+{
         labelKey: "pendingApprovals",
         path: "/police/pending-leave",
-        roles: ["POLICE"],
+        roles: ["POLICE","ADMIN"],
         ranks: ["SHO/SO", "CO", "SP", "SSP"],
         icon: <FaListAlt />,
       },
-      {
-        labelKey: "allUsers",
-        path: "/ssp/all-users",
-        roles: ["POLICE"],
-        ranks: ["SSP"],
-        icon: <FaUsers />,
-      },
-      {
-        labelKey:"Bns 2023",
-        path: "/assets/bns-2023",
-        roles: ["POLICE"],
-        ranks: ["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE","SSP"],
-        icon: <FaListAlt />,
-      }
+{
+  labelKey: "Bns 2023",
+  path: "/bns-2023",
+  roles: ["ADMIN"],
+  icon: <FaListAlt />,
+},
     ];
 
   const filteredMenu = menuItems.filter(
@@ -142,7 +159,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             <NavLink
               key={item.path}
               to={item.path}
-              end={item.path === "/police"} 
+              end={item.path === "/admin" || item.path === "/police"} 
               onClick={() => setMobileOpen(false)}
               className={({ isActive }) =>
                 `flex items-center gap-3 py-3 rounded-lg transition text-base font-medium

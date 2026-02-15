@@ -13,11 +13,7 @@ export const POLICE_RANKS: PoliceRank[] = [
 ];
 
 export const SENIOR_RANKS: PoliceRank[] = [
-  "CONSTABLE",
-  "HEADCONSTABLE",
-  "SI",
   
-  "INSPECTOR",
   "SHO/SO",
   "CO",
   "SP",

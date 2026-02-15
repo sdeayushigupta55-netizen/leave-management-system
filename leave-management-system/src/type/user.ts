@@ -23,7 +23,7 @@ export interface AuthUser {
   rank?: PoliceRank;
   circleOffice?: string;
   area?: "SP-CITY" | "SP-RURAL";
-  gender?: "MALE" | "FEMALE";
+  gender?: "Male" | "Female" | "OTHER";
   policeStation?: string; 
   profilPic?: string; // New field for profile picture URL
   createdAt: string;
@@ -33,7 +33,7 @@ export interface AuthUser {
 // ================= PAYLOADS ========================
 export interface CreatePoliceUserPayload {
   name: string;
-  email: string;
+ 
   contact: string; 
   role: "POLICE";
   rank: PoliceRank;
@@ -44,21 +44,17 @@ export interface CreatePoliceUserPayload {
 
 export interface CreateAdminUserPayload {
   name: string;
-  email: string;
+ 
   role: "ADMIN";
   contact: string; 
   policeStation: string;
   password: string;
 }
 
-export interface LoginPayload {
-  email: string;
-  password: string;
- 
-}
+
 export interface UpdateUserPayload {
   name?: string;
-  email?: string;
+
   contact: string; 
   role?: UserRole;
   rank?: PoliceRank;
@@ -70,6 +66,7 @@ export interface UpdateUserPayload {
 
 
 export interface User {
+  _id?: string;
   id: string;
   pno: string;               // ✅ NEW
   name: string;
@@ -80,7 +77,7 @@ export interface User {
   circleOffice?: string;
   policeStation?: string;
   area?: "SP-CITY" | "SP-RURAL";
-  gender?: "MALE" | "FEMALE";
+  gender?: "Male" | "Female" | "OTHER";
   isActive: boolean;
   createdAt: string;
   password?: string; // demo only

@@ -18,10 +18,10 @@ export const statusToKey: Record<string, string> = {
 
 export const rankToKey: Record<string, string> = {
   CONSTABLE: "constable",
-  HEADCONSTABLE: "headConstable",
+  HEADCONSTABLE: "headconstable", // all lowercase to match translation file
   SI: "si",
   INSPECTOR: "inspector",
-  "SHO/SO": "shoSo",
+  "SHO/SO": "sho/so", // match translation key if your translation file uses "sho/so"
   CO: "co",
   SP: "sp",
   SSP: "ssp",

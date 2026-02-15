@@ -6,7 +6,7 @@ import AddUserModal from "../../components/admin/AddUserModal";
 import Button from "../../ui/Button";
 import UserCard from "../../components/admin/UserCard";
 import { useUsers } from "../../context/UserContext";
-import type { User} from "../../type/user";
+import type { User } from "../../type/user";
 import { Users } from "lucide-react";
 
 
@@ -29,10 +29,10 @@ const AllUsers = () => {
   const uniquePoliceStations = Array.from(new Set(users.map(u => u.policeStation).filter(Boolean)));
   const uniqueCircleOffices = Array.from(new Set(users.map(u => u.circleOffice).filter(Boolean)));
   const uniqueAreas = Array.from(new Set(users.map(u => u.area).filter(Boolean)));
-  const ranks = ["CONSTABLE", "HEADCONSTABLE", "SI", "INSPECTOR", "SHO/SO", "CO", "SP"];  
+  const ranks = ["CONSTABLE", "HEADCONSTABLE", "SI", "INSPECTOR", "SHO/SO", "CO", "SP"];
   // Exclude SSP from the list since SSP is the admin
   const filteredUsers = users.filter((user) => {
-    if (user.rank === "SSP") return false; // SSP is admin, not shown in table
+    // if (user.rank === "SSP") return false; // SSP is admin, not shown in table
     const roleMatch = roleFilter === "ALL" || user.role === roleFilter;
     const rankMatch = rankFilter === "ALL" || user.rank === rankFilter;
     const areaMatch = areaFilter === "ALL" || user.area === areaFilter;
@@ -130,8 +130,8 @@ const AllUsers = () => {
                 className="border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-[#1a237e] focus:outline-none transition-colors"
               >
                 <option value="ALL">{t("allGenders") || "All Genders"}</option>
-                <option value="MALE">{t("male") || "Male"}</option>
-                <option value="FEMALE">{t("female") || "Female"}</option>
+                <option value="Male">{t("male") || "Male"}</option>
+                <option value="Female">{t("female") || "Female"}</option>
               </select>
               {/* Active/Inactive Filter */}
               <select
@@ -160,14 +160,18 @@ const AllUsers = () => {
 
         {/* Mobile Cards */}
         <div className="md:hidden space-y-4">
-          {filteredUsers.map((user) => (
-            <UserCard
-              key={user.id}
-              user={user}
-              onToggle={toggleUser}
-              onEdit={(u) => setEditUser(u)}
-            />
-          ))}
+          {filteredUsers.map((user) => {
+            const key = user._id || user.id || user.pno;
+           
+            return (
+              <UserCard
+                key={key}
+                user={user}
+                onToggle={toggleUser}
+                onEdit={(u) => setEditUser(u)}
+              />
+            );
+          })}
         </div>
       </div>
 

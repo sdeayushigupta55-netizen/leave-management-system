@@ -1,9 +1,8 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import type { ReactNode } from "react";
 import type { AuthUser } from "../type/user";
 import { useUsers } from "./UserContext";
 
-// Safe localStorage helper for mobile compatibility
 const safeLocalStorage = {
   getItem: (key: string): string | null => {
     try {
@@ -34,7 +33,6 @@ interface AuthContextType {
   login: (user: AuthUser) => void;
   logout: () => void;
   updateProfile: (updated: Partial<AuthUser>) => void;
-
   changePassword: (currentPassword: string, newPassword: string) => boolean;
 }
 interface AuthProviderProps {
@@ -46,7 +44,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
   const { users } = useUsers();
   const [user, setUser] = useState<AuthUser | null>(() => {
-    // Initialize from localStorage immediately to prevent flash
     const stored = safeLocalStorage.getItem("auth_user");
     if (stored) {
       try {
@@ -59,15 +56,12 @@ export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
   });
   const [isLoading, setIsLoading] = useState(true);
 
-
   useEffect(() => {
-    // Double-check localStorage on mount
     const stored = safeLocalStorage.getItem("auth_user");
     if (stored) {
       try {
         setUser(JSON.parse(stored));
       } catch {
-        // Invalid JSON, clear it
         safeLocalStorage.removeItem("auth_user");
       }
     }
@@ -76,13 +70,10 @@ export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
 
   // Enhanced login: always use the full user object from users context (with profilPic)
   const login = (userData: AuthUser) => {
-    // Find the full user object by id or pno
     let fullUser = users.find(u => u.id === userData.id || u.pno === userData.pno);
     if (!fullUser) {
-      // fallback to passed userData if not found
       fullUser = userData;
     }
-    // Ensure password is always a string
     const authUser: AuthUser = {
       ...fullUser,
       password: fullUser.password ?? ""
@@ -98,19 +89,36 @@ export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
 
   const updateProfile = (updated: Partial<AuthUser>) => {
     if (!user) return;
-    const newUser = { ...user, ...updated };
-    safeLocalStorage.setItem("auth_user", JSON.stringify(newUser));
-    setUser(newUser);
+    // Update backend
+    fetch(`/api/users/${user.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updated),
+    })
+      .then((res) => res.json())
+      .then((savedUser) => {
+        safeLocalStorage.setItem("auth_user", JSON.stringify(savedUser));
+        setUser(savedUser);
+      });
   };
-
 
   const changePassword = (currentPassword: string, newPassword: string): boolean => {
     if (!user) return false;
     if (user.password !== currentPassword) return false;
 
-    const updatedUser = { ...user, password: newPassword };
-    safeLocalStorage.setItem("auth_user", JSON.stringify(updatedUser));
-    setUser(updatedUser);
+    // Update backend
+    fetch(`/api/users/${user.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: newPassword }),
+    })
+      .then((res) => res.json())
+      .then((savedUser) => {
+        safeLocalStorage.setItem("auth_user", JSON.stringify(savedUser));
+        setUser(savedUser);
+      });
+
+    // Also update in UserContext
     updateUser(user.id, { password: newPassword });
     return true;
   };
@@ -121,7 +129,6 @@ export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
     </AuthContext.Provider>
   );
 };
-import { useContext } from "react";
 
 export const useAuth = () => {
   const ctx = useContext(AuthContext);

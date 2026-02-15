@@ -73,7 +73,7 @@ const Login = () => {
       circleOffice: matchedUser.circleOffice,
       policeStation: matchedUser.policeStation,
       area: matchedUser.area,
-      gender: matchedUser.gender,
+      gender: matchedUser.gender === "Male" || matchedUser.gender === "Female" ? matchedUser.gender : undefined,
       password: matchedUser.password || "",
       profilPic: matchedUser.profilPic,
       createdAt: matchedUser.createdAt,
@@ -82,19 +82,15 @@ const Login = () => {
     // Use setTimeout to ensure state is saved before navigation (mobile fix)
     // Increased delay for mobile browsers
     setTimeout(() => {
-      // All POLICE users (including SSP) go to /police
-      // DashboardRouter will render the correct dashboard based on rank
-      window.location.href = "/police";
-    }, 150);
+  if (matchedUser.role === "ADMIN") {
+    window.location.href = "/admin";
+  } else {
+    window.location.href = "/police";
+  }
+}, 150);
   };
 
-  // Handler to clear storage and reload
-  const handleClearStorage = () => {
-    localStorage.clear();
-    sessionStorage.clear();
-    // For cookies, you can add code if needed
-    window.location.reload();
-  };
+ 
 
   return (
     <div className="min-h-screen flex flex-col bg-surface">
@@ -105,7 +101,7 @@ const Login = () => {
       <div className="flex-1 flex items-center justify-center px-4 pt-20 pb-16">
         <div className="bg-white w-full max-w-sm sm:max-w-md rounded-lg shadow-md border border-gray-200">
           <div className="px-4 sm:px-6 py-4 text-center">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{t("police")}</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{t("policeLeaveSystem")}</h1>
           </div>
 
           <div className="px-4 sm:px-6 space-y-4 pb-6">
@@ -170,27 +166,11 @@ const Login = () => {
               </>
             )}
           </div>
-          {/* Clear Storage Button */}
-          <div className="px-4 sm:px-6 pb-2">
-            <button
-              type="button"
-              onClick={handleClearStorage}
-              className="w-full bg-red-500 text-white py-2 rounded-md text-xs font-medium mt-2 hover:bg-red-600 transition"
-            >
-              {t("clearStorage") || "Clear Storage (Reset App)"}
-            </button>
-          </div>
+          
            <div className="p-4 border-t border-gray-200">
-            <span className="text-xs text-gray-500 block mb-1">{t("demoCredentials")}</span>
-            <span className="text-xs text-gray-500">PNO: PNO6001, Contact: 9876500008 (CONSTABLE)</span><br />
-            <span className="text-xs text-gray-500">PNO: PNO5001, Contact: 9876500007 (HEAD CONSTABLE)</span><br />
-            <span className="text-xs text-gray-500">PNO: PNO4001, Contact: 9876500006 (INSPECTOR)</span><br />
-            <span className="text-xs text-gray-500">PNO: PNO3001, Contact: 9876500005 (SI)</span><br />
-            <span className="text-xs text-gray-500">PNO: PNO2001, Contact: 9876500004 (SHO/SO)</span><br />
-           
-            <span className="text-xs text-gray-500">PNO: PNO0001, Contact: 9876500002 (CO)</span><br />
-             <span className="text-xs text-gray-500">PNO: PNO1001, Contact: 9876500003 (SP)</span><br />
-            <span className="text-xs text-gray-500">PNO: PNO9001, Contact: 9876500001 (ADMIN)(SSP)</span>
+            
+            <span className="text-xs text-gray-500">PNO: 123456789 Contact: 1234567899(ADMIN)(SSP)</span>
+            
           </div>
         </div>
       </div>

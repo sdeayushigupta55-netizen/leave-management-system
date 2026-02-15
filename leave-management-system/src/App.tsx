@@ -19,7 +19,7 @@ import InspectorDashboard from "./pages/Inspector/InspectorDashboard";
 import SHODashboard from "./pages/SHO/SHO-SODashboard";
 import SeniorDetails from "./components/SeniorDetails/SeniorDetails";
 import CODashboard from "./pages/co/CODashboard";
-import PDFViewer from "./ui/PDFViewer";
+import Pdfviewer from "./components/Pdfviewer";
 
 
 function AuthProviderWithUser({ children }: { children: ReactNode }) {
@@ -85,7 +85,7 @@ function App() {
               <Route
                 path="pending-leave"
                 element={
-                  <RoleRoute allowRole={["POLICE"]} allowRank={SENIOR_RANKS}>
+                  <RoleRoute allowRole={["POLICE","ADMIN"]} allowRank={SENIOR_RANKS}>
                     <PendingLeave />
                   </RoleRoute>
                 }
@@ -173,23 +173,8 @@ function App() {
               }
             />
 
-            {/* SSP */}
-            <Route
-              path="/ssp"
-              element={
-                <RoleRoute allowRole={["POLICE"]} allowRank={["SSP"]}>
-                  <AdminDashboard />
-                </RoleRoute>
-              }
-            />
-            <Route
-              path="/ssp/all-users"
-              element={
-                <RoleRoute allowRole={["POLICE"]} allowRank={["SSP"]}>
-                  <AllUser />
-                </RoleRoute>
-              }
-            />
+          
+           
 
             {/* ADMIN */}
             <Route
@@ -208,14 +193,15 @@ function App() {
                 </RoleRoute>
               }
             />
-<Route
-  path="/assets/bns-2023"
+          <Route
+  path="/bns-2023"
   element={
-    <RoleRoute allowRole={["ADMIN","POLICE"]} allowRank={["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE","SSP"]}>
-      <PDFViewer src="/assets/bns-2023.pdf" title="BNS 2023" />
+    <RoleRoute allowRole={["ADMIN", "POLICE"]}>
+      <Pdfviewer />
     </RoleRoute>
   }
 />
+ 
             <Route
               path="*"
               element={
@@ -239,24 +225,5 @@ export default App;
 
 
 
-// {
-//    office":"SP-CITY"
-//   circle-OFFICE":"CITY",
- 
-//   policesttaion:"NORTH CITY",
-//   rank:"CONSTABLE","computer operator","HEADCONSTABLE","SI","INSPECTOR","SHO-SO"
-  
-  
-//   pno:"123456",
-//   name:"John Doe",
-  
-//   cobtactnumber:"9876543210",
 
-// }
- 
-
-// {
-//   office":"SP-CITY" 
-//   RANK :"INSPECTOR" ,"SI","HEADCONSTABLE","CONSTABLE","computer operator"
-// }
 

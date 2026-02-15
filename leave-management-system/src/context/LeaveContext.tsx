@@ -20,7 +20,6 @@ import {
   calculateNumberOfDays,
 } from "../utils/leaveValidation";
 
-
 // Helper to check if an object is a valid LeaveApproval
 function isValidLeaveApproval(obj: any): obj is import("../type/leave").LeaveApproval {
   return obj && typeof obj === "object" &&
@@ -42,30 +41,17 @@ export const useLeaves = () => {
 export { getApprovalChain, canApproverApprove, validateChildCareLeave };
 
 export const LeaveProvider = ({ children }: { children: ReactNode }) => {
-
-  const [leaves, setLeaves] = useState<Leave[]>(() => {
-    const stored = localStorage.getItem("leaves");
-    if (!stored) return [];
-    try {
-      const parsed = JSON.parse(stored);
-      // Sanitize approvals array for each leave
-      return parsed.map((leave: any) => ({
-        ...leave,
-        approvals: Array.isArray(leave.approvals)
-          ? leave.approvals.filter(isValidLeaveApproval)
-          : [],
-      }));
-    } catch {
-      return [];
-    }
-  });
-
+  const [leaves, setLeaves] = useState<Leave[]>([]);
   const { user } = useAuth();
   const { users } = useUsers();
 
+  // Fetch leaves from backend on mount
   useEffect(() => {
-    localStorage.setItem("leaves", JSON.stringify(leaves));
-  }, [leaves]);
+    fetch("/api/leaves")
+      .then((res) => res.json())
+      .then((data) => setLeaves(Array.isArray(data) ? data : []))
+      .catch(() => setLeaves([]));
+  }, []);
 
   const getApproverByRank = useCallback(
     (rank: string, policeStation?: string, circleOffice?: string) => {
@@ -150,6 +136,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
     [getApproverByRank]
   );
 
+  // Auto-forward logic (unchanged)
   useEffect(() => {
     const checkAndForwardLeaves = () => {
       const now = Date.now();
@@ -168,6 +155,37 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
               leave.circleOffice
             );
             if (nextApprover.id) {
+              // Update on backend
+              fetch(`/api/leaves/${leave.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  status: "FORWARDED",
+                  currentApproverId: nextApprover.id,
+                  currentApproverName: nextApprover.name,
+                  currentApproverRank: nextApprover.rank,
+                  lastForwardedAt: new Date().toISOString(),
+                  approvals: [
+                    ...leave.approvals,
+                    {
+                      approverId: leave.currentApproverId ?? "",
+                      approverRank: leave.currentApproverRank ?? "",
+                      action: "FORWARDED",
+                      timestamp: new Date().toISOString(),
+                      reason: "Not approved within 24 hours - Auto forwarded",
+                    },
+                  ],
+                  forwardHistory: [
+                    ...(leave.forwardHistory || []),
+                    {
+                      fromRank: leave.currentApproverRank,
+                      toRank: nextApprover.rank!,
+                      forwardedAt: new Date().toISOString(),
+                      reason: "Not approved within 24 hours - Auto forwarded",
+                    },
+                  ],
+                }),
+              });
               return {
                 ...leave,
                 status: "FORWARDED" as LeaveStatus,
@@ -206,6 +224,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
     return () => clearInterval(interval);
   }, [getNextApprover]);
 
+  // API-integrated addLeave
   const addLeave = (
     payload: ApplyLeavePayload,
     status: LeaveStatus = "PENDING"
@@ -241,7 +260,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
           )
         : { id: undefined, name: undefined, rank: undefined };
     const newLeave: Leave = {
-      type:payload.leaveType,
+      type: payload.leaveType,
       id: crypto.randomUUID(),
       applicantId: user.id,
       applicantRank: applicantRank,
@@ -264,159 +283,187 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
       forwardHistory: [],
       attachment: payload.attachment ?? undefined,
     };
-    setLeaves((prev) => [newLeave, ...prev]);
+    fetch("/api/leaves", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newLeave),
+    })
+      .then((res) => res.json())
+      .then((savedLeave) => setLeaves((prev) => [savedLeave, ...prev]));
   };
 
+  // API-integrated editLeave
   const editLeave = (id: string, updated: Partial<Leave>) => {
+    fetch(`/api/leaves/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updated),
+    })
+      .then((res) => res.json())
+      .then((updatedLeave) =>
+        setLeaves((prev) =>
+          prev.map((l) => (l.id === id ? updatedLeave : l))
+        )
+      );
+  };
+
+  // API-integrated approveLeave
+  const approveLeave = (id: string, approverId: string, remarks?: string) => {
     setLeaves((prev) =>
-      prev.map((l) => {
-        if (l.id !== id) return l;
-        let numberOfDays = l.numberOfDays;
-        if (updated.from || updated.to) {
-          numberOfDays = calculateNumberOfDays(
-            updated.from ?? l.from,
-            updated.to ?? l.to
-          );
-        }
-        const leaveType = updated.leaveType ?? l.leaveType;
-        const approvalChain = getApprovalChain(
-          l.applicantRank,
-          numberOfDays,
-          leaveType,
-          l.gender
-        );
-        let approver = {
-          id: l.currentApproverId,
-          name: l.currentApproverName,
-          rank: l.currentApproverRank,
-        };
-        if (updated.status === "PENDING") {
-          approver = getInitialApprover(
-            l.applicantRank,
-            numberOfDays,
-            leaveType,
-            l.policeStation,
-            l.circleOffice,
-            l.gender
-          );
-        }
+      prev.map((leave) => {
+        if (leave.id !== id || (leave.status !== "PENDING" && leave.status !== "FORWARDED")) return { ...leave };
+        const approvals = [
+          ...leave.approvals,
+          {
+            approverId: approverId,
+            approverRank: leave.currentApproverRank ?? "",
+            approverName: leave.currentApproverName ?? "",
+            action: "APPROVED" as const,
+            timestamp: new Date().toISOString(),
+            reason: remarks,
+          },
+        ].filter(isValidLeaveApproval);
+
+        // Update backend
+        fetch(`/api/leaves/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            status: "APPROVED",
+            currentApproverId: undefined,
+            currentApproverName: undefined,
+            currentApproverRank: undefined,
+            approvals,
+            lastUpdatedOn: new Date().toISOString(),
+          }),
+        });
+
         return {
-          ...l,
-          ...updated,
-          numberOfDays,
-          approvalChain,
-          currentApproverId: approver.id,
-          currentApproverName: approver.name,
-          currentApproverRank: approver.rank,
-          attachment: updated.attachment ?? l.attachment,
+          ...leave,
+          status: "APPROVED" as LeaveStatus,
+          currentApproverId: undefined,
+          currentApproverName: undefined,
+          currentApproverRank: undefined,
+          approvals,
+          lastUpdatedOn: new Date().toISOString(),
         };
       })
     );
   };
 
+  // API-integrated rejectLeave
+  const rejectLeave = (id: string, approverId: string, reason?: string) => {
+    setLeaves((prev) =>
+      prev.map((leave) => {
+        if (leave.id !== id || (leave.status !== "PENDING" && leave.status !== "FORWARDED")) return { ...leave };
+        const approvals = [
+          ...leave.approvals,
+          {
+            approverId: approverId,
+            approverRank: leave.currentApproverRank ?? "",
+            approverName: user?.name ?? leave.currentApproverName ?? "",
+            action: "REJECTED" as const,
+            timestamp: new Date().toISOString(),
+            reason: reason,
+          },
+        ].filter(isValidLeaveApproval);
 
-  const approveLeave = (id: string, approverId: string, remarks?: string) => {
-    setLeaves((prev) => prev.map((leave) => {
-      if (leave.id !== id || (leave.status !== "PENDING" && leave.status !== "FORWARDED")) return { ...leave };
-      const approvals = [
-        ...leave.approvals,
-        {
-          approverId: approverId,
-          approverRank: leave.currentApproverRank ?? "",
-          approverName: leave.currentApproverName ?? "",
-          action: "APPROVED" as const,
-          timestamp: new Date().toISOString(),
-          reason: remarks,
-        },
-        {
-    approverId: approverId,
-    approverRank: leave.currentApproverRank ?? "",
-    approverName: leave.currentApproverName ?? "",
-    action: "REJECTED" as const,
-    timestamp: new Date().toISOString(),
-    reason: remarks,
-  },
-      ].filter(isValidLeaveApproval);
-     
-      return {
-        ...leave,
-        status: "APPROVED" as LeaveStatus,
-        currentApproverId: undefined,
-        currentApproverName: undefined,
-        currentApproverRank: undefined,
-        approvals,
-        lastUpdatedOn: new Date().toISOString(),
-      };
-    }));
+        // Update backend
+        fetch(`/api/leaves/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            status: "REJECTED",
+            currentApproverId: undefined,
+            currentApproverName: undefined,
+            currentApproverRank: undefined,
+            approvals,
+            Reason: reason,
+            lastUpdatedOn: new Date().toISOString(),
+          }),
+        });
+
+        return {
+          ...leave,
+          status: "REJECTED" as LeaveStatus,
+          currentApproverId: undefined,
+          currentApproverName: undefined,
+          currentApproverRank: undefined,
+          approvals,
+          Reason: reason,
+          lastUpdatedOn: new Date().toISOString(),
+        };
+      })
+    );
   };
 
- const rejectLeave = (id: string, approverId: string, reason?: string) => {
-  setLeaves((prev) => prev.map((leave) => {
-    if (leave.id !== id || (leave.status !== "PENDING" && leave.status !== "FORWARDED")) return { ...leave };
-    const approvals = [
-      ...leave.approvals,
-      {
-        approverId: approverId,
-        approverRank: leave.currentApproverRank ?? "",
-        approverName: user?.name ?? leave.currentApproverName ?? "",
-        action: "REJECTED" as const,
-        timestamp: new Date().toISOString(),
-        reason: reason,
-      },
-    ].filter(isValidLeaveApproval);
-    return {
-      ...leave,
-      status: "REJECTED" as LeaveStatus,
-      currentApproverId: undefined,
-      currentApproverName: undefined,
-      currentApproverRank: undefined,
-      approvals,
-      Reason: reason,
-      lastUpdatedOn: new Date().toISOString(),
-    };
-  }));
-};
-
+  // API-integrated forwardLeave
   const forwardLeave = (id: string, reason?: string) => {
-    setLeaves((prev) => prev.map((leave) => {
-      if (leave.id !== id || !leave.currentApproverRank) return leave;
-      const nextApprover = getNextApprover(
-        leave.currentApproverRank,
-        leave.approvalChain,
-        leave.policeStation,
-        leave.circleOffice
-      );
-      if (!nextApprover.id) return leave;
-      const approvals = [
-        ...leave.approvals,
-        {
-          approverId: user?.id ?? "",
-          approverRank: user?.rank ?? "",
-          approverName: user?.name ?? "",
-          action: "FORWARDED" as const,
-          timestamp: new Date().toISOString(),
-          reason: reason || "Forwarded to next authority",
-        },
-      ].filter(isValidLeaveApproval);
-      return {
-        ...leave,
-        status: "FORWARDED" as LeaveStatus,
-        currentApproverId: nextApprover.id,
-        currentApproverName: nextApprover.name,
-        currentApproverRank: nextApprover.rank,
-        lastForwardedAt: new Date().toISOString(),
-        approvals,
-        forwardHistory: [
-          ...(leave.forwardHistory || []),
+    setLeaves((prev) =>
+      prev.map((leave) => {
+        if (leave.id !== id || !leave.currentApproverRank) return leave;
+        const nextApprover = getNextApprover(
+          leave.currentApproverRank,
+          leave.approvalChain,
+          leave.policeStation,
+          leave.circleOffice
+        );
+        if (!nextApprover.id) return leave;
+        const approvals = [
+          ...leave.approvals,
           {
-            fromRank: leave.currentApproverRank,
-            toRank: nextApprover.rank!,
-            forwardedAt: new Date().toISOString(),
+            approverId: user?.id ?? "",
+            approverRank: user?.rank ?? "",
+            approverName: user?.name ?? "",
+            action: "FORWARDED" as const,
+            timestamp: new Date().toISOString(),
             reason: reason || "Forwarded to next authority",
           },
-        ],
-      };
-    }));
+        ].filter(isValidLeaveApproval);
+
+        // Update backend
+        fetch(`/api/leaves/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            status: "FORWARDED",
+            currentApproverId: nextApprover.id,
+            currentApproverName: nextApprover.name,
+            currentApproverRank: nextApprover.rank,
+            lastForwardedAt: new Date().toISOString(),
+            approvals,
+            forwardHistory: [
+              ...(leave.forwardHistory || []),
+              {
+                fromRank: leave.currentApproverRank,
+                toRank: nextApprover.rank!,
+                forwardedAt: new Date().toISOString(),
+                reason: reason || "Forwarded to next authority",
+              },
+            ],
+          }),
+        });
+
+        return {
+          ...leave,
+          status: "FORWARDED" as LeaveStatus,
+          currentApproverId: nextApprover.id,
+          currentApproverName: nextApprover.name,
+          currentApproverRank: nextApprover.rank,
+          lastForwardedAt: new Date().toISOString(),
+          approvals,
+          forwardHistory: [
+            ...(leave.forwardHistory || []),
+            {
+              fromRank: leave.currentApproverRank,
+              toRank: nextApprover.rank!,
+              forwardedAt: new Date().toISOString(),
+              reason: reason || "Forwarded to next authority",
+            },
+          ],
+        };
+      })
+    );
   };
 
   return (
