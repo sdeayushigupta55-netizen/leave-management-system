@@ -19,7 +19,7 @@ import {
   validateChildCareLeave,
   calculateNumberOfDays,
 } from "../utils/leaveValidation";
-
+import { API_BASE_URL } from "../config";
 // Helper to check if an object is a valid LeaveApproval
 function isValidLeaveApproval(obj: any): obj is import("../type/leave").LeaveApproval {
   return obj && typeof obj === "object" &&
@@ -47,7 +47,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
 
   // Fetch leaves from backend on mount
   useEffect(() => {
-    fetch("/api/leaves")
+    fetch(`${API_BASE_URL}/leaves`)
       .then((res) => res.json())
       .then((data) => setLeaves(Array.isArray(data) ? data : []))
       .catch(() => setLeaves([]));
@@ -156,7 +156,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
             );
             if (nextApprover.id) {
               // Update on backend
-              fetch(`/api/leaves/${leave.id}`, {
+              fetch(`${API_BASE_URL}/leaves/${leave.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -294,7 +294,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
 
   // API-integrated editLeave
   const editLeave = (id: string, updated: Partial<Leave>) => {
-    fetch(`/api/leaves/${id}`, {
+    fetch(`${API_BASE_URL}/leaves/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updated),
@@ -325,7 +325,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
         ].filter(isValidLeaveApproval);
 
         // Update backend
-        fetch(`/api/leaves/${id}`, {
+        fetch(`${API_BASE_URL}/leaves/${id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -369,7 +369,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
         ].filter(isValidLeaveApproval);
 
         // Update backend
-        fetch(`/api/leaves/${id}`, {
+        fetch(`${API_BASE_URL}/leaves/${id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -422,7 +422,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
         ].filter(isValidLeaveApproval);
 
         // Update backend
-        fetch(`/api/leaves/${id}`, {
+        fetch(`${API_BASE_URL}/leaves/${id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

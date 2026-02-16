@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import type { User } from "../type/user";
+import { API_BASE_URL } from "../config";
 
 interface UserContextType {
   users: User[];
@@ -47,7 +48,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 };
 
  const updateUser = (id: string, updated: Partial<User>) => {
-  fetch(`/api/users/${id}`, { // id should be _id from MongoDB
+  fetch(`${API_BASE_URL}/users/${id}`, { // id should be _id from MongoDB
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updated),

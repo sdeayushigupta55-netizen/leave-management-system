@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, useContext } from "react";
 import type { ReactNode } from "react";
 import type { AuthUser } from "../type/user";
 import { useUsers } from "./UserContext";
-
+import { API_BASE_URL } from "../config";
 const safeLocalStorage = {
   getItem: (key: string): string | null => {
     try {
@@ -90,7 +90,7 @@ export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
   const updateProfile = (updated: Partial<AuthUser>) => {
     if (!user) return;
     // Update backend
-    fetch(`/api/users/${user.id}`, {
+    fetch(`${API_BASE_URL}/users/${user.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updated),
@@ -107,7 +107,7 @@ export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
     if (user.password !== currentPassword) return false;
 
     // Update backend
-    fetch(`/api/users/${user.id}`, {
+    fetch(`${API_BASE_URL}/users/${user.id}/password`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password: newPassword }),
