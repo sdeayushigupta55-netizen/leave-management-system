@@ -25,7 +25,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   // Fetch users from backend on mount
   useEffect(() => {
-    fetch("/api/users")
+    fetch(`${API_BASE_URL}/users`)
       .then((res) => res.json())
       .then((data) => setUsers(Array.isArray(data) ? data : []))
       .catch(() => setUsers([]));
@@ -38,7 +38,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     createdAt: new Date().toISOString(),
     ...safePayload,
   };
-  fetch("/api/users", {
+  fetch(`${API_BASE_URL}/users`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(newUser),
