@@ -283,7 +283,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
       forwardHistory: [],
       attachment: payload.attachment ?? undefined,
     };
-    fetch("/api/leaves", {
+    fetch(`${API_BASE_URL}/leaves`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newLeave),
