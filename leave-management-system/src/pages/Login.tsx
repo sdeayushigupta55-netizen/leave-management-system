@@ -169,7 +169,7 @@ const Login = () => {
           
            <div className="p-4 border-t border-gray-200">
             
-            <span className="text-xs text-gray-500">PNO: 123456789 Contact: 1234567899(ADMIN)(SSP)</span>
+            {/* <span className="text-xs text-gray-500">PNO: 123456789 Contact: 1234567899(ADMIN)(SSP)</span> */}
             
           </div>
         </div>
