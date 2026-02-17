@@ -18,7 +18,7 @@ type LeaveStatusTableProps = {
   onEdit: (leave: Leave) => void;
 };
 
-const ROWS_PER_PAGE = 10;
+const pageSize = 8; 
 
 const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
   const { t } = useTranslation();
@@ -30,10 +30,10 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
   const [leaveToCancel, setLeaveToCancel] = useState<Leave | null>(null);
 
   const columns = [
+    // { header: "#", accessor: "serial" as const },
     { header: t("leaveType"), accessor: "leaveType" as const },
     { header: t("dates"), accessor: "dates" as const },
     { header: t("numberOfDays"), accessor: "numberOfDays" as const },
-
     { header: t("submittedOn"), accessor: "submittedOn" as const },
     { header: t("assignedTo"), accessor: "currentApproverName" as const },
     { header: t("status"), accessor: "status" as const },
@@ -42,10 +42,7 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
     { header: t("Reason"), accessor: "reason" as const },
   ];
 
-  const paginatedLeaves = leaves.slice(
-    (page - 1) * ROWS_PER_PAGE,
-    page * ROWS_PER_PAGE
-  );
+ 
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -78,7 +75,9 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
     setLeaveToCancel(null);
   };
 
-  const data = paginatedLeaves.map((leave) => {
+  // Sort leaves by submittedOn (latest first)
+  const sortedLeaves = [...leaves].sort((a, b) => new Date(b.submittedOn).getTime() - new Date(a.submittedOn).getTime());
+  const data = sortedLeaves.map((leave, idx) => {
     // Find the last approval (APPROVED or REJECTED)
     let lastApproverName = "-";
     if (leave.status === "APPROVED" || leave.status === "REJECTED") {
@@ -89,6 +88,7 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
       }
     }
     return {
+     
       Document:
         typeof leave.attachment === 'string' && leave.attachment ? (
           <a
@@ -163,11 +163,17 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
     };
   });
 
-  const totalPages = Math.ceil(leaves.length / ROWS_PER_PAGE);
+
 
   return (
     <div className="w-full overflow-x-auto">
-      <Table columns={[...columns]} data={data} />
+      <Table
+        columns={[...columns]}
+        data={data}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        page={page}
+      />
       {/* Confirmation Modal */}
       {showCancelModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
@@ -187,31 +193,6 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
                 {t("yes") || "Yes"}
               </button>
             </div>
-          </div>
-        </div>
-      )}
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex justify-between items-center mt-4 text-sm bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-          <span className="text-gray-600">
-            {t("showingResults")} {(page - 1) * ROWS_PER_PAGE + 1}-
-            {Math.min(page * ROWS_PER_PAGE, leaves.length)} {t("of")} {leaves.length}
-          </span>
-          <div className="space-x-2">
-            <button
-              disabled={page === 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="px-4 py-2 border-2 border-gray-200 rounded-lg disabled:opacity-40 hover:border-[#1a237e] hover:text-[#1a237e] transition font-medium"
-            >
-              {t("prev")}
-            </button>
-            <button
-              disabled={page === totalPages}
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              className="px-4 py-2 border-2 border-gray-200 rounded-lg disabled:opacity-40 hover:border-[#1a237e] hover:text-[#1a237e] transition font-medium"
-            >
-              {t("next")}
-            </button>
           </div>
         </div>
       )}

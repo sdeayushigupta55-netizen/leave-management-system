@@ -42,6 +42,12 @@ export { getApprovalChain, canApproverApprove, validateChildCareLeave };
 
 export const LeaveProvider = ({ children }: { children: ReactNode }) => {
   const [leaves, setLeaves] = useState<Leave[]>([]);
+
+  // Debug: Log leaves whenever they change
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    // console.log("[DEBUG] Leaves state updated:", leaves);
+  }, [leaves]);
   const { user } = useAuth();
   const { users } = useUsers();
 
@@ -49,7 +55,11 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     fetch(`${API_BASE_URL}/leaves`)
       .then((res) => res.json())
-      .then((data) => setLeaves(Array.isArray(data) ? data : []))
+      .then((data) => {
+        // eslint-disable-next-line no-console
+        // console.log("[DEBUG] Leaves fetched from backend:", data);
+        setLeaves(Array.isArray(data) ? data : []);
+      })
       .catch(() => setLeaves([]));
   }, []);
 
@@ -336,7 +346,14 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
             approvals,
             lastUpdatedOn: new Date().toISOString(),
           }),
-        });
+        })
+          .then(() => {
+            // Re-fetch leaves after approval to ensure UI is up-to-date
+            fetch(`${API_BASE_URL}/leaves`)
+              .then((res) => res.json())
+              .then((data) => setLeaves(Array.isArray(data) ? data : []))
+              .catch(() => {});
+          });
 
         return {
           ...leave,
@@ -381,7 +398,14 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
             Reason: reason,
             lastUpdatedOn: new Date().toISOString(),
           }),
-        });
+        })
+          .then(() => {
+            // Re-fetch leaves after rejection to ensure UI is up-to-date
+            fetch(`${API_BASE_URL}/leaves`)
+              .then((res) => res.json())
+              .then((data) => setLeaves(Array.isArray(data) ? data : []))
+              .catch(() => {});
+          });
 
         return {
           ...leave,

@@ -21,15 +21,38 @@ function Table<T>({
   data,
   rowClassName,
   page = 1,
-  pageSize = 10,
+  pageSize = 8,
   onPageChange,
 }: TableProps<T>) {
   const totalPages = Math.ceil(data.length / pageSize);
   const pagedData = data.slice((page - 1) * pageSize, page * pageSize);
 
+  /** Create page numbers with ellipsis */
+  const getVisiblePages = () => {
+    const pages: (number | string)[] = [];
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (
+        i === 1 ||
+        i === totalPages ||
+        Math.abs(i - page) <= 1
+      ) {
+        pages.push(i);
+      } else if (
+        pages[pages.length - 1] !== "..."
+      ) {
+        pages.push("...");
+      }
+    }
+
+    return pages;
+  };
+
   return (
-    <div className="overflow-x-auto w-full rounded-xl shadow-sm border border-gray-100">
-      <table className="w-full text-xs sm:text-sm bg-white border-collapse min-w-[600px]">
+    <div className="overflow-x-auto w-full rounded-xl shadow-sm border border-gray-100 bg-white">
+
+      {/* TABLE */}
+      <table className="w-full text-xs sm:text-sm border-collapse min-w-[600px]">
         <thead className="bg-gradient-to-r from-[#1a237e] to-[#303f9f] text-white">
           <tr>
             {columns.map((col, i) => (
@@ -45,12 +68,13 @@ function Table<T>({
             ))}
           </tr>
         </thead>
+
         <tbody>
           {pagedData.length === 0 ? (
             <tr>
               <td
                 colSpan={columns.length}
-                className="p-6 sm:p-8 text-center text-gray-400"
+                className="p-8 text-center text-gray-400"
               >
                 <div className="flex flex-col items-center gap-2">
                   <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,26 +108,85 @@ function Table<T>({
           )}
         </tbody>
       </table>
-      {/* Pagination Controls */}
+
+      {/* PAGINATION */}
       {totalPages > 1 && (
-        <div className="flex gap-2 items-center justify-center p-4">
-          <button
-            className="px-2 py-1 rounded border bg-gray-50 text-lg font-medium"
-            disabled={page === 1}
-            onClick={() => onPageChange && onPageChange(page - 1)}
-          >
-            Prev
-          </button>
-          <span className="text-lg font-medium">
-            Page {page} of {totalPages}
-          </span>
-          <button
-            className="px-2 py-1 rounded border bg-gray-50 text-lg font-medium"
-            disabled={page === totalPages}
-            onClick={() => onPageChange && onPageChange(page + 1)}
-          >
-            Next
-          </button>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t bg-gray-50">
+
+          {/* RANGE INFO */}
+          <p className="text-xs sm:text-sm text-gray-600">
+            Showing{" "}
+            <span className="font-semibold">
+              {(page - 1) * pageSize + 1}
+            </span>{" "}
+            –{" "}
+            <span className="font-semibold">
+              {Math.min(page * pageSize, data.length)}
+            </span>{" "}
+            of <span className="font-semibold">{data.length}</span>
+          </p>
+
+          {/* CONTROLS */}
+          <div className="flex items-center gap-1">
+
+            {/* FIRST */}
+            <button
+              onClick={() => onPageChange?.(1)}
+              disabled={page === 1}
+              className="px-2 py-1.5 rounded-lg text-sm border bg-white hover:bg-gray-100 disabled:opacity-40"
+            >
+              «
+            </button>
+
+            {/* PREV */}
+            <button
+              onClick={() => onPageChange?.(page - 1)}
+              disabled={page === 1}
+              className="px-2 py-1.5 rounded-lg text-sm border bg-white hover:bg-gray-100 disabled:opacity-40"
+            >
+              ‹
+            </button>
+
+            {/* PAGE NUMBERS */}
+            {getVisiblePages().map((p, i) =>
+              p === "..." ? (
+                <span key={i} className="px-2 text-gray-400">
+                  ...
+                </span>
+              ) : (
+                <button
+                  key={i}
+                  onClick={() => onPageChange?.(p as number)}
+                  className={clsx(
+                    "px-3 py-1.5 rounded-lg text-sm font-medium transition",
+                    page === p
+                      ? "bg-[#1a237e] text-white shadow"
+                      : "bg-white border hover:bg-[#e8eaf6] text-[#1a237e]"
+                  )}
+                >
+                  {p}
+                </button>
+              )
+            )}
+
+            {/* NEXT */}
+            <button
+              onClick={() => onPageChange?.(page + 1)}
+              disabled={page === totalPages}
+              className="px-2 py-1.5 rounded-lg text-sm border bg-white hover:bg-gray-100 disabled:opacity-40"
+            >
+              ›
+            </button>
+
+            {/* LAST */}
+            <button
+              onClick={() => onPageChange?.(totalPages)}
+              disabled={page === totalPages}
+              className="px-2 py-1.5 rounded-lg text-sm border bg-white hover:bg-gray-100 disabled:opacity-40"
+            >
+              »
+            </button>
+          </div>
         </div>
       )}
     </div>

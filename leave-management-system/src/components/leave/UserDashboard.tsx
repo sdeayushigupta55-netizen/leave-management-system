@@ -9,11 +9,19 @@ import {
   BarChart3,
   Clock,
   CheckCircle,
-  
+
   FileText,
 } from "lucide-react";
 
 const UserDashboard = () => {
+  // 🔹 Define Leave Limits (You can move this to config later)
+  const leaveLimits = {
+    CASUAL: 30,
+
+  };
+
+  // Dynamically get leave types from leaveLimits keys
+  const leaveTypes = Object.keys(leaveLimits) as Array<keyof typeof leaveLimits>;
   const { t } = useTranslation();
   const { user } = useAuth();
   const { leaves } = useLeaves();
@@ -51,28 +59,24 @@ const UserDashboard = () => {
     ).length,
   };
 
-  const recentLeaves = myLeaves.slice(0, 5);
+  const recentLeaves = [...myLeaves]
+    .sort((a, b) => new Date(b.submittedOn).getTime() - new Date(a.submittedOn).getTime())
+    .slice(0, 5);
 
   const isSenior =
     ["SHO/SO", "CO", "SP", "SSP"].includes(user.rank ?? "CONSTABLE");
 
-const myRecentApprovedLeaves = leaves
-  .filter(
-    (l) =>
-      l.approvals.some(
-        (a) => a.approverId === user.id && a.action === "APPROVED"
-      )
-  )
-  .sort((a, b) => new Date(b.submittedOn).getTime() - new Date(a.submittedOn).getTime())
-  .slice(0, 5);
+  const myRecentApprovedLeaves = leaves
+    .filter(
+      (l) =>
+        l.approvals.some(
+          (a) => a.approverId === user.id && a.action === "APPROVED"
+        )
+    )
+    .sort((a, b) => new Date(b.submittedOn).getTime() - new Date(a.submittedOn).getTime())
+    .slice(0, 5);
 
   // ================= LEAVE BALANCE CALCULATION =================
-
-  // 🔹 Define Leave Limits (You can move this to config later)
-  const leaveLimits = {
-    CASUAL: 30,
-    EARNED: 116,
-  };
 
   // Only count APPROVED leaves as used
   const approvedLeaves = myLeaves.filter(
@@ -81,8 +85,7 @@ const myRecentApprovedLeaves = leaves
 
   const leaveUsage = {
     CASUAL: approvedLeaves.filter((l) => l.type === "CASUAL").length,
-    EARNED: approvedLeaves.filter((l) => l.type === "EARNED").length,
-  };
+   };
 
   return (
     <div className="space-y-6">
@@ -92,30 +95,30 @@ const myRecentApprovedLeaves = leaves
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
           <div className="space-y-2">
-           <h1 className="text-2xl font-bold text-[#1a237e] flex items-center gap-2">
-  {t("welcome")}
-  <span className="px-4 py-1 rounded-full bg-gradient-to-r from-[#1a237e] to-[#303f9f] text-white text-sm font-semibold">
-    {user.rank}
-  </span>
-  <span className="text-2xl font-bold text-[#f57c00]">
-    {user.name
-      .split(' ')
-      .map(
-        (part) =>
-          part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
-      )
-      .join(' ')}
-  </span>
-</h1>
-             
+            <h1 className="text-2xl font-bold text-[#1a237e] flex items-center gap-2">
+              {t("welcome")}
+              <span className="px-4 py-1 rounded-full bg-gradient-to-r from-[#1a237e] to-[#303f9f] text-white text-sm font-semibold">
+                {user.rank}
+              </span>
+              <span className="text-2xl font-bold text-[#f57c00]">
+                {user.name
+                  .split(' ')
+                  .map(
+                    (part) =>
+                      part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+                  )
+                  .join(' ')}
+              </span>
+            </h1>
+
 
             <div className="flex flex-wrap gap-3 text-sm text-gray-600">
               <span className="flex items-center gap-1 bg-gray-50 px-3 py-1 rounded-lg">
-               <span className="font-bold">PNO:</span> {user.pno}
+                <span className="font-bold">PNO:</span> {user.pno}
               </span>
               {user.area && (
                 <span className="flex items-center gap-1 bg-gray-50 px-3 py-1 rounded-lg">
-                 <span className="font-bold">Area:</span> {user.area}
+                  <span className="font-bold">Area:</span> {user.area}
                 </span>
               )}
 
@@ -127,19 +130,19 @@ const myRecentApprovedLeaves = leaves
 
               {user.policeStation && (
                 <span className="flex items-center gap-1 bg-gray-50 px-3 py-1 rounded-lg">
-                 <span className="font-bold">Police Station:</span> {user.policeStation}
+                  <span className="font-bold">Police Station:</span> {user.policeStation}
                 </span>
               )}
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-          
+
 
             <span
               className={`px-4 py-1 rounded-full text-sm font-semibold ${user.isActive
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
                 }`}
             >
               {user.isActive ? t("active") : t("inactive")}
@@ -152,62 +155,33 @@ const myRecentApprovedLeaves = leaves
         <h2 className="text-xl font-bold text-[#1a237e] mb-5">
           Leave Balance
         </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {leaveTypes.map((type) => {
+            const total = leaveLimits[type];
+            const used = leaveUsage[type] || 0;
+            const remaining = total - used;
+            const percent = total > 0 ? (used / total) * 100 : 0;
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            return (
+              <div key={type} className="bg-white rounded-xl border border-gray-200 p-3 shadow-sm hover:shadow-md transition">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="font-semibold text-[#1a237e] text-sm">{type.replace("_", " ")}</h3>
+                  <span className="text-xs font-semibold px-2 py-1 rounded-full bg-blue-50 text-blue-700">
+                    {remaining} left
+                  </span>
+                </div>
 
-          {/* Casual Leave */}
-          <div className="bg-gray-50 rounded-xl p-4 border">
-            <h3 className="font-semibold text-[#1a237e] mb-2">
-              Casual Leave
-            </h3>
-            <p className="text-sm text-gray-600">
-              Total:{" "}
-              <span className="font-bold">
-                {leaveLimits.CASUAL}
-              </span>
-            </p>
-            <p className="text-sm text-gray-600">
-              Used:{" "}
-              <span className="font-bold text-red-600">
-                {leaveUsage.CASUAL}
-              </span>
-            </p>
-            <p className="text-sm text-gray-600">
-              Remaining:{" "}
-              <span className="font-bold text-green-600">
-                {leaveLimits.CASUAL - leaveUsage.CASUAL}
-              </span>
-            </p>
+                <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
+                  <div className="h-full bg-[#1a237e]" style={{ width: `${percent}%` }} />
+                </div>
 
-          </div>
-
-          {/* Earned Leave */}
-          <div className="bg-gray-50 rounded-xl p-4 border">
-            <h3 className="font-semibold text-[#1a237e] mb-2">
-              Earned Leave
-            </h3>
-
-            <p className="text-sm text-gray-600">
-              Total:{" "}
-              <span className="font-bold">
-                {leaveLimits.EARNED}
-              </span>
-            </p>
-            <p className="text-sm text-gray-600">
-              Used:{" "}
-              <span className="font-bold text-red-600">
-                {leaveUsage.EARNED}
-              </span>
-            </p>
-            <p className="text-sm text-gray-600">
-              Remaining:{" "}
-              <span className="font-bold text-green-600">
-                {leaveLimits.EARNED - leaveUsage.EARNED}
-              </span>
-            </p>
-
-          </div>
-
+                <div className="flex justify-between text-xs text-gray-600">
+                  <span>Used <b className="text-red-500">{used}</b></span>
+                  <span>Total <b>{total}</b></span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -227,7 +201,7 @@ const myRecentApprovedLeaves = leaves
           <StatCard title={t("draft")} value={stats.draft} color="draft" />
         </div>
       </section>
-        {/* ================= QUICK ACTIONS ================= */}
+      {/* ================= QUICK ACTIONS ================= */}
       <section className="flex flex-col sm:flex-row gap-3">
         <Button
           variant="primary"
@@ -290,34 +264,34 @@ const myRecentApprovedLeaves = leaves
         </section>
       )}
 
-    
+
       {/* ================= RECENT LEAVE APPROVALS ================= */}
       {isSenior && (
-  <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-    <div className="flex items-center gap-3 mb-5">
-      <Clock className="text-[#1a237e]" />
-      <h3 className="text-xl font-bold text-[#1a237e]">
-        {t("recentLeaveApprovals")}
-      </h3>
-    </div>
+        <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3 mb-5">
+            <Clock className="text-[#1a237e]" />
+            <h3 className="text-xl font-bold text-[#1a237e]">
+              {t("recentLeaveApprovals")}
+            </h3>
+          </div>
 
-    {myRecentApprovedLeaves.length === 0 ? (
-      <div className="flex flex-col items-center justify-center py-10 text-gray-400">
-        <FileText size={50} />
-        <p className="mt-2 text-sm">{t("noLeaveRecords")}</p>
-      </div>
-    ) : (
-      <div className="hidden md:block">
-        <LeaveStatusTable
-          leaves={myRecentApprovedLeaves}
-          onEdit={(id) =>
-            navigate("/police/apply-leave", { state: { leaveId: id } })
-          }
-        />
-      </div>
-    )}
-  </section>
-)}
+          {myRecentApprovedLeaves.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-10 text-gray-400">
+              <FileText size={50} />
+              <p className="mt-2 text-sm">{t("noLeaveRecords")}</p>
+            </div>
+          ) : (
+            <div className="hidden md:block">
+              <LeaveStatusTable
+                leaves={[...myRecentApprovedLeaves].sort((a, b) => new Date(b.submittedOn).getTime() - new Date(a.submittedOn).getTime()).slice(0, 5)}
+                onEdit={(id) =>
+                  navigate("/police/apply-leave", { state: { leaveId: id } })
+                }
+              />
+            </div>
+          )}
+        </section>
+      )}
 
     </div>
   );
