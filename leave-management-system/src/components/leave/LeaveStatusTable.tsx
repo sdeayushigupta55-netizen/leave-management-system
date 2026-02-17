@@ -77,7 +77,7 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
 
   // Sort leaves by submittedOn (latest first)
   const sortedLeaves = [...leaves].sort((a, b) => new Date(b.submittedOn).getTime() - new Date(a.submittedOn).getTime());
-  const data = sortedLeaves.map((leave, idx) => {
+  const data = sortedLeaves.map((leave) => {
     // Find the last approval (APPROVED or REJECTED)
     let lastApproverName = "-";
     if (leave.status === "APPROVED" || leave.status === "REJECTED") {
