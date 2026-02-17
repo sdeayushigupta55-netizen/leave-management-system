@@ -9,10 +9,7 @@ import {
   BarChart3,
   Clock,
   CheckCircle,
-  MapPin,
-  Landmark,
-  Building2,
-  LucideIdCard,
+  
   FileText,
 } from "lucide-react";
 
@@ -95,39 +92,49 @@ const myRecentApprovedLeaves = leaves
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
           <div className="space-y-2">
-            <h1 className="text-2xl font-bold text-[#1a237e]">
-              {t("welcome")}, {user.name}
-            </h1>
+           <h1 className="text-2xl font-bold text-[#1a237e] flex items-center gap-2">
+  {t("welcome")}
+  <span className="px-4 py-1 rounded-full bg-gradient-to-r from-[#1a237e] to-[#303f9f] text-white text-sm font-semibold">
+    {user.rank}
+  </span>
+  <span className="text-2xl font-bold text-[#f57c00]">
+    {user.name
+      .split(' ')
+      .map(
+        (part) =>
+          part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+      )
+      .join(' ')}
+  </span>
+</h1>
+             
 
             <div className="flex flex-wrap gap-3 text-sm text-gray-600">
               <span className="flex items-center gap-1 bg-gray-50 px-3 py-1 rounded-lg">
-                <LucideIdCard size={14} /> {user.pno}
+               <span className="font-bold">PNO:</span> {user.pno}
               </span>
-
               {user.area && (
                 <span className="flex items-center gap-1 bg-gray-50 px-3 py-1 rounded-lg">
-                  <MapPin size={14} /> {user.area}
+                 <span className="font-bold">Area:</span> {user.area}
                 </span>
               )}
 
               {user.circleOffice && (
                 <span className="flex items-center gap-1 bg-gray-50 px-3 py-1 rounded-lg">
-                  <Building2 size={14} /> {user.circleOffice}
+                  <span className="font-bold">Circle Office:</span> {user.circleOffice}
                 </span>
               )}
 
               {user.policeStation && (
                 <span className="flex items-center gap-1 bg-gray-50 px-3 py-1 rounded-lg">
-                  <Landmark size={14} /> {user.policeStation}
+                 <span className="font-bold">Police Station:</span> {user.policeStation}
                 </span>
               )}
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="px-4 py-1 rounded-full bg-gradient-to-r from-[#1a237e] to-[#303f9f] text-white text-sm font-semibold">
-              {user.rank}
-            </span>
+          
 
             <span
               className={`px-4 py-1 rounded-full text-sm font-semibold ${user.isActive

@@ -123,7 +123,9 @@ export const generateLeaveApprovalPDF = (leave: Leave): void => {
     doc.text(label, margin, yPos);
     doc.text(":", margin + 55, yPos);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(...COLORS.red);
+      doc.setTextColor(
+    ...(leave.status === "APPROVED" ? COLORS.green : COLORS.red)
+  );
     doc.text(value, margin + 60, yPos);
     yPos += 7;
   }
@@ -157,7 +159,10 @@ export const generateLeaveApprovalPDF = (leave: Leave): void => {
   doc.text("Reason", margin, yPos);
   doc.text(":", margin + 55, yPos);
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(...COLORS.red);
+    doc.setTextColor(
+    ...(leave.status === "APPROVED" ? COLORS.green : COLORS.red)
+  );
+  
   const reasonLines = doc.splitTextToSize(leave.reason, pageWidth - margin - 65);
   doc.text(reasonLines, margin + 60, yPos);
   yPos += Math.max(7, reasonLines.length * 5);
@@ -167,7 +172,7 @@ export const generateLeaveApprovalPDF = (leave: Leave): void => {
   // ========================
   yPos += 5;
   doc.setFillColor(
-    ...(leave.status === "APPROVED" ? COLORS.green : COLORS.navyBlue)
+    ...(leave.status === "APPROVED" ? COLORS.navyBlue : COLORS.navyBlue)
   );
   doc.rect(margin, yPos, pageWidth - margin * 2, 8, "F");
   doc.setFont("helvetica", "bold");
@@ -184,7 +189,7 @@ export const generateLeaveApprovalPDF = (leave: Leave): void => {
   if (leave.status === "APPROVED") {
     const approvalAction = leave.approvals.find((a) => a.action === "APPROVED");
     if (approvalAction) {
-      addDetailRow("Approved By", approvalAction.approverRank);
+      addDetailRow("Approved By", `${approvalAction.approverRank} (${approvalAction.approverName})`);
       addDetailRow("Approval Date", formatDate(approvalAction.timestamp));
     }
     yPos += 5;

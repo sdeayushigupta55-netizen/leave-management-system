@@ -7,6 +7,7 @@ import StatusBadge from "../../ui/StatusBadge";
 import ToggleUserButton from "../../ui/Toggle";
 import { Edit } from "lucide-react";
 import { rankToKey, roleToKey } from "../../utils/translationHelper";
+import { useState } from "react";
 
 interface UserTableProps {
   users: User[];
@@ -16,7 +17,8 @@ interface UserTableProps {
 const UsersTable = ({ users, onEdit }: UserTableProps) => {
   const { t } = useTranslation();
   const { toggleUser } = useUsers();
-
+ const [page, setPage] = useState(1);
+  const pageSize = 10; 
   // Translate rank
   const translateRank = (rank: string | undefined) => {
     if (!rank) return "-";
@@ -65,7 +67,9 @@ const UsersTable = ({ users, onEdit }: UserTableProps) => {
     },
   ];
 
-  return <Table columns={columns} data={users} />;
+  return <Table columns={columns} data={users}  page={page}
+      pageSize={pageSize}
+      onPageChange={setPage}/>;
 };
 
 export default UsersTable;

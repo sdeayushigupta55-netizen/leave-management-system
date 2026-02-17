@@ -16,7 +16,7 @@ const AllUsers = () => {
   const [open, setOpen] = useState(false);
   const { users, toggleUser } = useUsers();
   const [editUser, setEditUser] = useState<User | null>(null);
-
+  const [search, setSearch] = useState("");
   const [roleFilter] = useState("ALL");
   const [rankFilter, setRankFilter] = useState("ALL");
   const [areaFilter, setAreaFilter] = useState("ALL");
@@ -40,6 +40,11 @@ const AllUsers = () => {
     const circleOfficeMatch = circleOfficeFilter === "ALL" || user.circleOffice === circleOfficeFilter;
     const genderMatch = genderFilter === "ALL" || user.gender === genderFilter;
     const activeMatch = activeFilter === "ALL" || (activeFilter === "ACTIVE" ? user.isActive : !user.isActive);
+    const searchMatch =
+      !search ||
+      (user.contact && user.contact.toString().includes(search)) ||
+      (user.pno && user.pno.toString().includes(search));
+
     return (
       roleMatch &&
       rankMatch &&
@@ -47,7 +52,8 @@ const AllUsers = () => {
       policeStationMatch &&
       circleOfficeMatch &&
       genderMatch &&
-      activeMatch
+      activeMatch &&
+      searchMatch
     );
   });
 
@@ -62,6 +68,14 @@ const AllUsers = () => {
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-[#1a237e]">{t("users")}</h2>
             <p className="text-sm text-gray-500">{t("manageAllPersonnel")}</p>
+          </div>
+          <div className="flex-1 flex justify-end">
+            <Button
+              onClick={() => setOpen(true)}
+              variant="primary"
+            >
+              + {t("addUser")}
+            </Button>
           </div>
         </div>
 
@@ -80,6 +94,7 @@ const AllUsers = () => {
                 <option value="ADMIN">{t("admin")}</option>
               </select> */}
               {/* Rank Filter */}
+
               <select
                 value={rankFilter}
                 onChange={(e) => setRankFilter(e.target.value)}
@@ -143,13 +158,15 @@ const AllUsers = () => {
                 <option value="ACTIVE">{t("active") || "Active"}</option>
                 <option value="INACTIVE">{t("inactive") || "Inactive"}</option>
               </select>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search by Contact Number or PNO"
+                className="border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-[#1a237e] focus:outline-none transition-colors"
+              />
             </div>
-            <Button
-              onClick={() => setOpen(true)}
-              variant="primary"
-            >
-              + {t("addUser")}
-            </Button>
+
           </div>
         </div>
 
@@ -162,7 +179,7 @@ const AllUsers = () => {
         <div className="md:hidden space-y-4">
           {filteredUsers.map((user) => {
             const key = user._id || user.id || user.pno;
-           
+
             return (
               <UserCard
                 key={key}

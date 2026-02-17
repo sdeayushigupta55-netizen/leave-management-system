@@ -5,7 +5,8 @@ export type LeaveStatus =
   | "PENDING"
   | "FORWARDED"
   | "APPROVED"
-  | "REJECTED";
+  | "REJECTED"
+  |"CANCELLED";
 
 export type LeaveType =
   | "CASUAL"

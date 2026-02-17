@@ -141,7 +141,9 @@ export type LeaveStatus =
   | "PENDING"
   | "APPROVED"
   | "REJECTED"
-  | "AUTO_FORWARDED";
+  | "AUTO_FORWARDED"
+  | "CANCELLED";
+
 
 /* ===============================
    LEAVE APPROVAL FLOW TYPES

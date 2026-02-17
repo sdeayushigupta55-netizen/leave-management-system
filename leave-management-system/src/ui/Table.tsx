@@ -11,19 +11,32 @@ type TableProps<T> = {
   columns: Column<T>[];
   data: T[];
   rowClassName?: string;
+  page?: number;
+  pageSize?: number;
+  onPageChange?: (page: number) => void;
 };
 
-function Table<T>({ columns, data, rowClassName }: TableProps<T>) {
+function Table<T>({
+  columns,
+  data,
+  rowClassName,
+  page = 1,
+  pageSize = 10,
+  onPageChange,
+}: TableProps<T>) {
+  const totalPages = Math.ceil(data.length / pageSize);
+  const pagedData = data.slice((page - 1) * pageSize, page * pageSize);
+
   return (
     <div className="overflow-x-auto w-full rounded-xl shadow-sm border border-gray-100">
       <table className="w-full text-xs sm:text-sm bg-white border-collapse min-w-[600px]">
         <thead className="bg-gradient-to-r from-[#1a237e] to-[#303f9f] text-white">
           <tr>
             {columns.map((col, i) => (
-              <th 
-                key={i} 
+              <th
+                key={i}
                 className={clsx(
-                  "p-3 sm:p-4 text-left font-semibold whitespace-nowrap", 
+                  "p-3 sm:p-4 text-left font-semibold whitespace-nowrap",
                   col.className
                 )}
               >
@@ -33,10 +46,10 @@ function Table<T>({ columns, data, rowClassName }: TableProps<T>) {
           </tr>
         </thead>
         <tbody>
-          {data.length === 0 ? (
+          {pagedData.length === 0 ? (
             <tr>
-              <td 
-                colSpan={columns.length} 
+              <td
+                colSpan={columns.length}
                 className="p-6 sm:p-8 text-center text-gray-400"
               >
                 <div className="flex flex-col items-center gap-2">
@@ -48,17 +61,17 @@ function Table<T>({ columns, data, rowClassName }: TableProps<T>) {
               </td>
             </tr>
           ) : (
-            data.map((row, ri) => (
-              <tr 
-                key={ri} 
+            pagedData.map((row, ri) => (
+              <tr
+                key={ri}
                 className={clsx(
-                  "border-t border-gray-100 hover:bg-[#e8eaf6] transition-colors", 
+                  "border-t border-gray-100 hover:bg-[#e8eaf6] transition-colors",
                   rowClassName
                 )}
               >
                 {columns.map((col, ci) => (
-                  <td 
-                    key={ci} 
+                  <td
+                    key={ci}
                     className={clsx("p-3 sm:p-4", col.className)}
                   >
                     {typeof col.accessor === "function"
@@ -71,6 +84,28 @@ function Table<T>({ columns, data, rowClassName }: TableProps<T>) {
           )}
         </tbody>
       </table>
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex gap-2 items-center justify-center p-4">
+          <button
+            className="px-2 py-1 rounded border bg-gray-50 text-lg font-medium"
+            disabled={page === 1}
+            onClick={() => onPageChange && onPageChange(page - 1)}
+          >
+            Prev
+          </button>
+          <span className="text-lg font-medium">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            className="px-2 py-1 rounded border bg-gray-50 text-lg font-medium"
+            disabled={page === totalPages}
+            onClick={() => onPageChange && onPageChange(page + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

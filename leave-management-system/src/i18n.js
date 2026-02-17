@@ -27,6 +27,7 @@ i18n
           allCircleOffices: "All Circle Offices",
           allGenders: "All Genders",
           allStatus: "All Status",
+          action: "Action",
 
           // ===== AREAS =====
           spCity: "SP-CITY",
@@ -102,6 +103,7 @@ i18n
           totalLeaves: "Total Leaves",
           usedLeaves: "Used Leaves",
           pendingRequests: "Pending Requests",
+          cancelled: "Cancelled",
 
           // ===== APPLY LEAVE =====
           editLeave: "Edit Leave",
@@ -127,6 +129,7 @@ i18n
           paternity: "Paternity",
           maternity: "Maternity",
           optional: "Optional",
+          confirmCancelLeave: "Are you sure you want to cancel this leave application?",
 
           // ===== LEAVE STATUS =====
           leaveStatus: "Leave Status",
@@ -195,6 +198,7 @@ i18n
           allRanks: "All Ranks",
           email: "Email",
           edit: "Edit",
+          
 
           // ===== VALIDATION =====
           childCareOnlyFemale: "Child Care Leave is only available for female employees.",
@@ -263,6 +267,7 @@ i18n
           allCircleOffices: "सभी सर्कल कार्यालय",
           allGenders: "सभी लिंग",
           allStatus: "सभी स्थिति",
+          action: "कार्य",
 
           // ===== AREAS =====
           spCity: "एसपी-सिटी",

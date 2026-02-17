@@ -9,6 +9,7 @@ export const statusColorMap: Record<LeaveStatus, string> = {
   PENDING: "bg-[#fff3e0] border-[#FF9933] text-[#e65100]",
   FORWARDED: "bg-[#efebe9] border-[#8d6e63] text-[#6d4c41]",
   DRAFT: "bg-[#e8eaf6] border-[#1a237e] text-[#1a237e]",
+  CANCELLED: "bg-[#ffebee] border-[#c62828] text-[#c62828]",
 };
 
 export const userStatusColorMap: Record<UserStatus, string> = {

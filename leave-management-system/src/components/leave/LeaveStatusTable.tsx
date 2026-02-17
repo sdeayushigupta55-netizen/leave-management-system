@@ -4,6 +4,8 @@ import ActionButtons from "./ActionButtons";
 import type { Leave } from "../../type/leave";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { XCircle } from "lucide-react";
+import { useLeaves } from "../../context/LeaveContext";
 import { useUsers } from "../../context/UserContext";
 import { useTranslation } from "react-i18next";
 import { statusColorMap } from "../../utils/statusConfig";
@@ -23,6 +25,9 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const { users } = useUsers();
+  const { editLeave } = useLeaves();
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [leaveToCancel, setLeaveToCancel] = useState<Leave | null>(null);
 
   const columns = [
     { header: t("leaveType"), accessor: "leaveType" as const },
@@ -32,6 +37,7 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
     { header: t("submittedOn"), accessor: "submittedOn" as const },
     { header: t("assignedTo"), accessor: "currentApproverName" as const },
     { header: t("status"), accessor: "status" as const },
+    { header: t("action"), accessor: "actions" as const },
     { header: t("Document"), accessor: "Document" as const },
     { header: t("Reason"), accessor: "reason" as const },
   ];
@@ -52,6 +58,24 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
   const translateLeaveType = (type: string) => {
     const key = leaveTypeToKey[type];
     return key ? t(key) : type;
+  };
+
+  const handleCancel = (leave: Leave) => {
+    setLeaveToCancel(leave);
+    setShowCancelModal(true);
+  };
+
+  const confirmCancel = () => {
+    if (leaveToCancel) {
+      editLeave(leaveToCancel.id, { status: "CANCELLED", Reason: t("confirmCancelLeave") || "Leave cancelled by user" });
+    }
+    setShowCancelModal(false);
+    setLeaveToCancel(null);
+  };
+
+  const closeModal = () => {
+    setShowCancelModal(false);
+    setLeaveToCancel(null);
   };
 
   const data = paginatedLeaves.map((leave) => {
@@ -105,15 +129,15 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
               <FileDown size={14} />
             </button>
           )}
-          {leave.status==="REJECTED" && (
-             <button
+          {leave.status === "REJECTED" && (
+            <button
               onClick={() => generateLeaveApprovalPDF(leave)}
               className="p-1.5 bg-[#970d0d] hover:bg-[#7a0b0b] text-white rounded-lg transition-colors shadow-sm"
               title={t("downloadPDF")}
             >
               <FileDown size={14} />
             </button>
-  )}
+          )}
           {leave.status === "DRAFT" && (
             <ActionButtons
               status={leave.status}
@@ -122,6 +146,16 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
           )}
         </div>
       ),
+      actions:
+        (leave.status === "PENDING") ? (
+          <button
+            onClick={() => handleCancel(leave)}
+            className="p-1.5 bg-[#b91c1c] hover:bg-[#7f1d1d] text-white rounded-lg transition-colors shadow-sm"
+            title={t("cancelLeave")}
+          >
+            <XCircle size={18} />
+          </button>
+        ) : <span className="text-gray-400">-</span>,
       Reason:
         leave.status === "REJECTED"
           ? leave.Reason || t("reasonNotProvided")
@@ -134,6 +168,28 @@ const LeaveStatusTable = ({ leaves }: LeaveStatusTableProps) => {
   return (
     <div className="w-full overflow-x-auto">
       <Table columns={[...columns]} data={data} />
+      {/* Confirmation Modal */}
+      {showCancelModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
+            <h2 className="text-lg font-semibold mb-4">{t("confirmCancelLeave") || "Are you sure you want to cancel this leave?"}</h2>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={closeModal}
+                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium"
+              >
+                {t("no") || "No"}
+              </button>
+              <button
+                onClick={confirmCancel}
+                className="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white font-medium"
+              >
+                {t("yes") || "Yes"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-between items-center mt-4 text-sm bg-white rounded-xl p-4 shadow-sm border border-gray-100">

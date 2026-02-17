@@ -79,7 +79,7 @@ const AdminDashboard = () => {
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">{t("sspDashboard")}</h1>
               <p className="text-blue-100 mt-1">
-                {t("welcomeBack")}, <span className="font-semibold text-[#ffd54f]">{user?.name}</span>
+                {t("welcome")}, <span className="font-semibold text-[#ffd54f]">{user?.name}</span>
               </p>
             </div>
           </div>
