@@ -28,6 +28,8 @@ const leaveTypeLabels: Record<string, string> = {
   MATERNITY: "Maternity Leave",
   OPTIONAL: "Optional Leave",
 };
+// const logoBase64 =
+// "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAADlabXuAAAACXBIWXMAAAsSAAALEgHS3X78AAAGkElEQVR4nO3dS2hUVRzH8c9m0m4aKxkUo6WQqC0oQqkFhK4sJY0sI0t0C0iLkqCqK4sWqC7W0s7C0t0C2sLC0sLQv0E0pS0s0C0Qq0SgqS0iQqRz3vOe+9z5z7r3z7nPve+6c+7n3vP+f+e+7z3nPOfc+5z7n3nPOc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOfc85xzznHPOc8/wGQ7qQ1m0m+gAAAABJRU5ErkJggg==";
 
 /**
  * Format date for PDF
@@ -68,6 +70,9 @@ export const generateLeaveApprovalPDF = (leave: Leave): void => {
   doc.rect(14, 14, pageWidth - 28, pageHeight - 28);
 
   yPos = 25;
+  //   doc.addImage(logoBase64, "PNG", margin, 18, 20, 20);
+  // // Right Logo
+  // doc.addImage(logoBase64, "PNG", pageWidth - margin - 20, 18, 20, 20);
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(14);
@@ -99,14 +104,14 @@ export const generateLeaveApprovalPDF = (leave: Leave): void => {
     { align: "center" }
   );
 
-  yPos += 15;
+  yPos += 10;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   doc.setTextColor(...COLORS.gray);
   doc.text(`Reference No: LAC/${leave.id.slice(0, 8).toUpperCase()}`, margin, yPos);
   doc.text(`Date: ${formatDate(new Date().toISOString())}`, pageWidth - margin, yPos, { align: "right" });
 
-  yPos += 15;
+  yPos += 10;
   doc.setFillColor(...COLORS.navyBlue);
   doc.rect(margin, yPos, pageWidth - margin * 2, 8, "F");
   doc.setFont("helvetica", "bold");
@@ -192,7 +197,7 @@ export const generateLeaveApprovalPDF = (leave: Leave): void => {
       addDetailRow("Approved By", `${approvalAction.approverRank} (${approvalAction.approverName})`);
       addDetailRow("Approval Date", formatDate(approvalAction.timestamp));
     }
-    yPos += 5;
+    // Draw APPROVED button at current yPos, do not increment yPos before or after
     doc.setFillColor(...COLORS.green);
     doc.roundedRect(pageWidth / 2 - 25, yPos, 50, 10, 2, 2, "F");
     doc.setFont("helvetica", "bold");
@@ -200,14 +205,13 @@ export const generateLeaveApprovalPDF = (leave: Leave): void => {
     doc.setTextColor(255, 255, 255);
     doc.text("APPROVED", pageWidth / 2, yPos + 7, { align: "center" });
   } else if (leave.status === "REJECTED") {
-
     const rejectionAction = [...leave.approvals].reverse().find((a) => a.action === "REJECTED");
     if (rejectionAction) {
       addDetailRow("Rejected By", `${rejectionAction.approverRank} (${rejectionAction.approverName})`);
       addDetailRow("Rejection Date", formatDate(rejectionAction.timestamp));
       addDetailRow("Rejection Reason", rejectionAction.reason || "N/A");
     }
-    yPos += 5;
+    // Draw REJECTED button at current yPos, do not increment yPos before or after
     doc.setFillColor(...COLORS.red);
     doc.roundedRect(pageWidth / 2 - 25, yPos, 50, 10, 2, 2, "F");
     doc.setFont("helvetica", "bold");
@@ -220,7 +224,8 @@ export const generateLeaveApprovalPDF = (leave: Leave): void => {
   // Forward History (if any)
   // ========================
   if (leave.forwardHistory && leave.forwardHistory.length > 0) {
-    yPos += 20;
+    // Add minimal space before Approval Chain if present
+    yPos += 12;
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
     doc.setTextColor(...COLORS.navyBlue);
@@ -236,21 +241,6 @@ export const generateLeaveApprovalPDF = (leave: Leave): void => {
     });
   }
 
-  // ========================
-  // Footer
-  // ========================
-  const footerY = pageHeight - 30;
-  doc.setDrawColor(...COLORS.red);
-  doc.setLineWidth(0.3);
-  doc.line(pageWidth - margin - 60, footerY, pageWidth - margin, footerY);
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(9);
-  doc.setTextColor(...COLORS.gray);
-  doc.text("Authorized Signature", pageWidth - margin - 30, footerY + 5, { align: "center" });
-
-  doc.setFontSize(8);
-  doc.setTextColor(...COLORS.gray);
-  doc.text("This is a computer-generated document.", pageWidth / 2, pageHeight - 18, { align: "center" });
 
   // ========================
   // Save PDF
