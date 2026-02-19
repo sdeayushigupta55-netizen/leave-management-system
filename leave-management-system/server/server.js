@@ -24,9 +24,13 @@ mongoose
 // Routes
 const userRoutes = require("./routes/users");
 const leaveRoutes = require("./routes/leaves");
+const beatBookRoutes = require("./routes/beatBookRoutes");
+const populationDetailsRoutes = require("./routes/populationDetails");
 
 app.use("/api/users", userRoutes);
 app.use("/api/leaves", leaveRoutes);
+app.use("/api/beat-books", beatBookRoutes);
+app.use("/api/population-details", populationDetailsRoutes);
 
 app.get("/", (req, res) => res.send("API running"));
 

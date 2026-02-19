@@ -76,7 +76,9 @@ export const AuthProvider = ({ children, updateUser }: AuthProviderProps) => {
     }
     const authUser: AuthUser = {
       ...fullUser,
-      password: fullUser.password ?? ""
+      _id: fullUser._id ?? fullUser.id ?? "",
+      password: fullUser.password ?? "",
+      beatId: fullUser.beatId ?? "",
     };
     safeLocalStorage.setItem("auth_user", JSON.stringify(authUser));
     setUser(authUser);

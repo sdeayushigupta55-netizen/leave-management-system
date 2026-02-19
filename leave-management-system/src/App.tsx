@@ -20,6 +20,9 @@ import SHODashboard from "./pages/SHO/SHO-SODashboard";
 import SeniorDetails from "./components/SeniorDetails/SeniorDetails";
 import CODashboard from "./pages/co/CODashboard";
 import Pdfviewer from "./components/Pdfviewer";
+import { BeatBook } from "./beatbook/BeatBook";
+import GeneralDetails from "./beatbook/GeneralDetails";
+import PopulationDetails from "./beatbook/PopulationDetails";
 
 
 function AuthProviderWithUser({ children }: { children: ReactNode }) {
@@ -201,7 +204,30 @@ function App() {
     </RoleRoute>
   }
 />
- 
+ <Route
+ path="/beat-book"
+ element={
+   <RoleRoute allowRole={["POLICE"]}>
+     <BeatBook />
+   </RoleRoute>
+ }
+/>
+    <Route
+    path="/beat-book/general-details"
+    element={
+      <RoleRoute allowRole={["POLICE"]}>
+        <GeneralDetails />
+      </RoleRoute>
+    }
+    />
+    <Route
+      path="/beat-book/population-details"
+      element={
+        <RoleRoute allowRole={["POLICE"]}>
+          <PopulationDetails />
+        </RoleRoute>
+      }
+    />
             <Route
               path="*"
               element={

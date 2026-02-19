@@ -13,6 +13,8 @@ export type UserRole = "POLICE" | "ADMIN";
 
 // ================= AUTH USER ======================
 export interface AuthUser {
+  beatId: string;
+  _id: any;
   password: string;
   id: string;
   name: string;
@@ -66,6 +68,7 @@ export interface UpdateUserPayload {
 
 
 export interface User {
+  beatId: string;
   _id?: string;
   id: string;
   pno: string;               // ✅ NEW

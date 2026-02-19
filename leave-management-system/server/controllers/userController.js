@@ -1,5 +1,5 @@
 const User = require('../models/User');
-
+const BeatBook = require('../models/BeatBook');
 // Get all users
 exports.getAllUsers = async (req, res) => {
   try {
@@ -12,12 +12,17 @@ exports.getAllUsers = async (req, res) => {
 
 // Create a new user
 exports.createUser = async (req, res) => {
+
   try {
     const user = new User(req.body);
+    if (["CONSTABLE", "HEADCONSTABLE"].includes(user.rank)) {
+      const beatBook = await BeatBook.create({ userId: user._id });
+      user.beatId = beatBook._id;
+    }
     await user.save();
     res.status(201).json(user);
   } catch (err) {
-    console.error("Error in createUser:", err); // <-- Add this line
+    console.error("Error in createUser:", err);
     res.status(500).json({ error: err.message });
   }
 };

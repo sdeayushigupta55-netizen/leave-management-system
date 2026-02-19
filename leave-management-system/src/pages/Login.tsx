@@ -63,6 +63,7 @@ const Login = () => {
     }
 
     login({
+      beatId: matchedUser.beatId || "",
       id: matchedUser.id,
       name: matchedUser.name,
       pno: matchedUser.pno,
@@ -77,6 +78,7 @@ const Login = () => {
       password: matchedUser.password || "",
       profilPic: matchedUser.profilPic,
       createdAt: matchedUser.createdAt,
+      _id: undefined
     });
 
     // Use setTimeout to ensure state is saved before navigation (mobile fix)
