@@ -3,8 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { useBeatBook } from "../context/BeatBookContext";
 import { FaUserShield } from "react-icons/fa";
 import Button from "../ui/Button";
-import PopulationDetailsPage from "../pages/beatbook/PopulationDetailsPage";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { API_BASE_URL } from "../config";
 import type { PopulationDetailsVillage } from "../type/beatbook";
 
@@ -217,7 +216,7 @@ export function BeatBook() {
             )}
           </div>
 
-        
+
         </div>
         {/* =================== PRINT AREA END =================== */}
       </div>

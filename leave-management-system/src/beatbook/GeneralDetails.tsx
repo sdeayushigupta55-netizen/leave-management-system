@@ -166,12 +166,12 @@ const GeneralDetails: React.FC = () => {
         <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
           {/* Header */}
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#1a237e] via-[#283593] to-[#303f9f] rounded-xl md:rounded-2xl p-4 md:p-6 text-white shadow-lg border-b-4 border-[#c5a200]"/>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#1a237e] via-[#283593] to-[#303f9f] rounded-xl md:rounded-2xl p-4 md:p-6 text-white shadow-lg border-b-4 border-[#c5a200]" />
             <div className="relative p-5 sm:p-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-3">
-                 <div className="p-2 md:p-3 bg-[#c5a200]/30 rounded-lg md:rounded-xl backdrop-blur-sm border border-[#c5a200]/50">
-                             <FileText size={24} className="text-[#ffd54f] md:w-8 md:h-8" />
-                           </div>
+                <div className="p-2 md:p-3 bg-[#c5a200]/30 rounded-lg md:rounded-xl backdrop-blur-sm border border-[#c5a200]/50">
+                  <FileText size={24} className="text-[#ffd54f] md:w-8 md:h-8" />
+                </div>
 
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -222,7 +222,7 @@ const GeneralDetails: React.FC = () => {
                   type="button"
                   variant="gold"
                   disabled={loading || isDisabled}
-                  onClick={(e: any) => {
+                  onClick={() => {
                     // keep logic: trigger submit by clicking actual submit button below if needed
                     // (no logic change; this is just a visual action button)
                     const formEl = document.getElementById(
