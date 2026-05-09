@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { PanelLeftOpen, PanelRightOpen } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,6 @@ type DashboardSidebarProps = {
   setMobileOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-
 const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
   collapsed,
   setCollapsed,
@@ -23,6 +22,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 }) => {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const location = useLocation();
 
   // State for submenu open/close
   const [openSubmenus, setOpenSubmenus] = React.useState<{ [key: string]: boolean }>({});
@@ -39,91 +39,91 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
     icon?: React.ReactNode;
     submenu?: { labelKey: string; path: string }[];
   }[] = [
-      {
-        labelKey: "dashboard",
-        path: "/police",
-        roles: ["POLICE"],
-        icon: <FaHome />,
-      },
-
-      {
-        labelKey: "applyLeave",
-        path: "/police/apply-leave",
-        roles: ["POLICE", "ADMIN"],
-        ranks: ["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE"],
-        icon: <FaCalendarPlus />,
-      },
-      {
-        labelKey: "myLeaveStatus",
-        path: "/police/leave-status",
-        roles: ["POLICE"],
-        ranks: ["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE"],
-        icon: <FaListAlt />,
-      },
-      {
-        labelKey: "seniorDetails",
-        path: "/police/senior-details",
-        roles: ["POLICE"],
-        ranks: ["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE"],
-        icon: <FaUserShield />,
-      },
-
-
-
-      {
-        labelKey: "Dashboard",
-        path: "/admin",
-        roles: ["ADMIN"],
-        ranks: ["SSP"],
-        icon: <FaHome />,
-      },
-      {
-        labelKey: "allUsers",
-        path: "/admin/all-users",
-        roles: ["ADMIN"],
-        ranks: ["SSP"],
-        icon: <FaUsers />,
-      },
-      {
-        labelKey: "Bns 2023",
-        path: "/bns-2023",
-        roles: ["POLICE"],
-        ranks: ["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE", "SSP"],
-        icon: <FaListAlt />,
-      },
-      {
-        labelKey: "pendingApprovals",
-        path: "/police/pending-leave",
-        roles: ["POLICE", "ADMIN"],
-        ranks: ["SHO/SO", "CO", "SP", "SSP"],
-        icon: <FaListAlt />,
-      },
-      {
-        labelKey: "Beat book",
-        path: "/beat-book",
-        roles: ["POLICE"],
-        ranks: ["CONSTABLE", "HEADCONSTABLE"],
-        icon: <FaListAlt />,
-        submenu: [
-          { labelKey: "General Details", path: "/beat-book/general-details" },
-          { labelKey: "Population Details", path: "/beat-book/population-details" },
-          { labelKey: "Important Persons", path: "/beat-book/important-persons" },
-          { labelKey: "History Sheeters / Criminals", path: "/beat-book/history-sheeters" },
-          { labelKey: "Licensed Arms Holders", path: "/beat-book/licensed-arms-holders" },
-          { labelKey: "Sensitive Places", path: "/beat-book/sensitive-places" },
-          { labelKey: "Daily Patrolling Register", path: "/beat-book/daily-patrolling-register" },
-          { labelKey: "Dispute / Tension Register", path: "/beat-book/dispute-tension-register" },
-          { labelKey: "Festivals / Special Events", path: "/beat-book/festivals-special-events" },
-          { labelKey: "Special Notes", path: "/beat-book/special-notes" },
-        ],
-      },
-    ];
+    {
+      labelKey: "dashboard",
+      path: "/police",
+      roles: ["POLICE"],
+      icon: <FaHome />,
+    },
+    {
+      labelKey: "applyLeave",
+      path: "/police/apply-leave",
+      roles: ["POLICE", "ADMIN"],
+      ranks: ["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE"],
+      icon: <FaCalendarPlus />,
+    },
+    {
+      labelKey: "myLeaveStatus",
+      path: "/police/leave-status",
+      roles: ["POLICE"],
+      ranks: ["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE"],
+      icon: <FaListAlt />,
+    },
+    {
+      labelKey: "seniorDetails",
+      path: "/police/senior-details",
+      roles: ["POLICE"],
+      ranks: ["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE"],
+      icon: <FaUserShield />,
+    },
+    {
+      labelKey: "Dashboard",
+      path: "/admin",
+      roles: ["ADMIN"],
+      ranks: ["SSP"],
+      icon: <FaHome />,
+    },
+    {
+      labelKey: "allUsers",
+      path: "/admin/all-users",
+      roles: ["ADMIN"],
+      ranks: ["SSP"],
+      icon: <FaUsers />,
+    },
+    {
+      labelKey: "Bns 2023",
+      path: "/bns-2023",
+      roles: ["POLICE"],
+      ranks: ["SHO/SO", "CO", "SP", "INSPECTOR", "SI", "HEADCONSTABLE", "CONSTABLE", "SSP"],
+      icon: <FaListAlt />,
+    },
+    {
+      labelKey: "pendingApprovals",
+      path: "/police/pending-leave",
+      roles: ["POLICE", "ADMIN"],
+      ranks: ["SHO/SO", "CO", "SP", "SSP"],
+      icon: <FaListAlt />,
+    },
+    {
+      labelKey: "Beat book",
+      path: "/beat-book",
+      roles: ["POLICE"],
+      ranks: ["CONSTABLE", "HEADCONSTABLE"],
+      icon: <FaListAlt />,
+      submenu: [
+        { labelKey: "General Details", path: "/beat-book/general-details" },
+        { labelKey: "Population Details", path: "/beat-book/population-details" },
+        { labelKey: "Important Persons", path: "/beat-book/important-persons" },
+        { labelKey: "History Sheeters / Criminals", path: "/beat-book/history-sheeters" },
+        { labelKey: "Licensed Arms Holders", path: "/beat-book/licensed-arms-holders" },
+        { labelKey: "Sensitive Places", path: "/beat-book/sensitive-places" },
+        { labelKey: "Daily Patrolling Register", path: "/beat-book/daily-patrolling-register" },
+        { labelKey: "Dispute / Tension Register", path: "/beat-book/dispute-tension-register" },
+        { labelKey: "Festivals / Special Events", path: "/beat-book/festivals-special-events" },
+        { labelKey: "Special Notes", path: "/beat-book/special-notes" },
+      ],
+    },
+  ];
 
   const filteredMenu = menuItems.filter(
     (item) =>
       item.roles.includes(user?.role as UserRole) &&
       (!item.ranks || item.ranks.includes(user?.rank ?? "CONSTABLE"))
   );
+
+  // Helper to check if any submenu is active
+  const isSubmenuActive = (item: typeof menuItems[0]) =>
+    item.submenu?.some(sub => location.pathname.startsWith(sub.path));
 
   return (
     <>
@@ -139,7 +139,6 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
         className={`
           fixed md:static
           top-0 left-0
-          
           bg-[#0d1b2a]
           text-white
           z-50
@@ -174,7 +173,6 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
               className="h-50 w-50"
             />}
           </div>
-
         </div>
 
         {/* Menu */}
@@ -187,8 +185,8 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                 onClick={() => setMobileOpen(false)}
                 className={({ isActive }) =>
                   `flex items-center gap-3 py-3 rounded-lg transition text-base font-medium
-    ${collapsed ? "justify-center px-0" : "px-4"}
-    ${isActive
+                  ${collapsed ? "justify-center px-0" : "px-4"}
+                  ${isActive
                     ? "bg-[#c5a200] text-[#0d1b2a] font-semibold shadow"
                     : "text-gray-200"}`
                 }
@@ -215,8 +213,8 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                   </span>
                 )}
               </NavLink>
-              {/* Render submenu if present and open */}
-              {!collapsed && item.submenu && openSubmenus[item.path] && (
+              {/* Render submenu if present and open or active */}
+              {!collapsed && item.submenu && (openSubmenus[item.path] || isSubmenuActive(item)) && (
                 <div className="ml-8 flex flex-col gap-1 pt-2">
                   {item.submenu.map((sub) => (
                     <NavLink

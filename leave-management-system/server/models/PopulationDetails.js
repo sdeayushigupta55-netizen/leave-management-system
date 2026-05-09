@@ -1,13 +1,22 @@
 const mongoose = require("mongoose");
 
-const populationSchema = new mongoose.Schema({
-  beatId: { type: mongoose.Schema.Types.ObjectId, ref: "BeatBook", required: true },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // Add this line
-  villageName: String,
-  totalPopulation: Number,
-  male: Number,
-  female: Number,
-  category: { type: String, enum: ["Sensitive", "Normal"] },
-}, { timestamps: true });
+const PopulationDetailsSchema = new mongoose.Schema({
+  beatId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "BeatBook" },
+  villageName: { type: String, required: true },
+  totalPopulation: { type: Number, required: true },
+  religions: [
+    {
+      religionId: { type: mongoose.Schema.Types.ObjectId, ref: "Religion", required: true },
+      religionName: { type: String },
+      subCastes: [
+        {
+          subCasteId: { type: mongoose.Schema.Types.ObjectId, ref: "SubCaste", required: true },
+          subCasteName: { type: String },
+          population: { type: Number, required: true }
+        }
+      ]
+    }
+  ]
+});
 
-module.exports = mongoose.model("PopulationDetails", populationSchema);
+module.exports = mongoose.model("PopulationDetails", PopulationDetailsSchema);

@@ -93,93 +93,164 @@ const Login = () => {
   };
 
  
-
   return (
-    <div className="min-h-screen flex flex-col bg-surface">
-      <div className="fixed top-0 left-0 w-full z-50">
+    <div className="min-h-screen relative flex flex-col overflow-hidden">
+  
+      {/* ===== Background ===== */}
+      <div className="absolute inset-0">
+        <img
+          src="/policebg.png"
+          alt="bg"
+          className="w-full h-full object-cover"
+        />
+  
+        <div className="absolute inset-0  backdrop-blur-sm"></div>
+      </div>
+  
+      {/* Header */}
+      <div className="fixed top-0 w-full z-50">
         <Header />
       </div>
-
-      <div className="flex-1 flex items-center justify-center px-4 pt-20 pb-16">
-        <div className="bg-white w-full max-w-sm sm:max-w-md rounded-lg shadow-md border border-gray-200">
-          <div className="px-4 sm:px-6 py-4 text-center">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{t("policeLeaveSystem")}</h1>
+  
+      {/* ===== Center Card ===== */}
+      <div className="flex-1 flex justify-center items-center px-4 pt-24 relative z-10">
+  
+        <div className="w-full max-w-md rounded-2xl shadow-2xl overflow-hidden bg-white/90 backdrop-blur-xl">
+  
+          {/* Top Badge */}
+          <div className="bg-blue-950 text-center py-8 relative badge-wrapper">
+  
+            <img
+              src="/police-badge.png"
+              alt="badge"
+              className="police-badge"
+            />
+  
           </div>
-
-          <div className="px-4 sm:px-6 space-y-4 pb-6">
+          
+  
+          {/* Content */}
+          <div className="px-8 pt-14 pb-8">
+  
+            <h1 className="text-2xl font-bold text-center text-blue-900">
+              POLICE LEAVE SYSTEM
+            </h1>
+  
+            <p className="text-center text-gray-600 mb-6">
+              Secure Login Portal
+            </p>
+  
             {!showOtp ? (
               <>
-                <input
-                  type="text"
-                  placeholder={t("enterPno")}
-                  value={pno}
-                  onChange={(e) => setPno(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2.5 sm:py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-                <input
-                  type="text"
-                  placeholder={t("enterContact")}
-                  value={contact}
-                  onChange={(e) => setContact(e.target.value.replace(/\D/g, ""))}
-                  maxLength={10}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2.5 sm:py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                />
+                {/* PNO */}
+                <div className="relative mb-4">
+                  <span className="absolute left-4 top-3 text-gray-400">
+                    👤
+                  </span>
+  
+                  <input
+                    type="text"
+                    placeholder={t("enterPno")}
+                    value={pno}
+                    onChange={(e) => setPno(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                  />
+                </div>
+  
+                {/* Contact */}
+                <div className="relative mb-6">
+                  <span className="absolute left-4 top-3 text-gray-400">
+                    📱
+                  </span>
+  
+                  <input
+                    type="text"
+                    placeholder={t("enterContact")}
+                    value={contact}
+                    onChange={(e) =>
+                      setContact(e.target.value.replace(/\D/g, ""))
+                    }
+                    maxLength={10}
+                    className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                  />
+                </div>
+  
+                {/* Login Button */}
                 <button
-                  type="button"
                   disabled={!isFormValid}
-                  className={`w-full bg-primary text-white py-3 rounded-md text-sm font-medium transition ${
-                    isFormValid ? "hover:opacity-90 active:scale-[0.98]" : "opacity-60 cursor-not-allowed"
-                  }`}
                   onClick={handleRequestOtp}
+                  className={`w-full py-3 rounded-lg font-semibold transition shadow-lg
+                  ${
+                    isFormValid
+                      ? "bg-blue-900 hover:bg-blue-800 text-white"
+                      : "bg-gray-400 text-white cursor-not-allowed"
+                  }`}
                 >
-                  {t("loginWithOtp")}
+                  🚀 {t("loginWithOtp")}
                 </button>
               </>
             ) : (
               <>
-                <p className="text-sm text-gray-600 text-center">
+                <p className="text-center text-gray-600 mb-3">
                   {t("otpSentTo")} {contact}
                 </p>
+  
                 <input
                   type="text"
                   placeholder={t("enterOtp")}
                   value={otpInput}
-                  onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, ""))}
+                  onChange={(e) =>
+                    setOtpInput(e.target.value.replace(/\D/g, ""))
+                  }
                   maxLength={6}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2.5 sm:py-2 text-sm text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full text-center tracking-widest py-3 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none mb-4"
                 />
+  
                 <button
-                  type="button"
                   disabled={!isOtpValid}
-                  className={`w-full bg-primary text-white py-3 rounded-md text-sm font-medium transition ${
-                    isOtpValid ? "hover:opacity-90 active:scale-[0.98]" : "opacity-60 cursor-not-allowed"
-                  }`}
                   onClick={handleVerifyOtp}
+                  className={`w-full py-3 rounded-lg font-semibold
+                  ${
+                    isOtpValid
+                      ? "bg-green-600 hover:bg-green-700 text-white"
+                      : "bg-gray-400 text-white cursor-not-allowed"
+                  }`}
                 >
-                  {t("verifyOtp")}
+                  ✅ {t("verifyOtp")}
                 </button>
+  
                 <button
-                  type="button"
                   onClick={() => setShowOtp(false)}
-                  className="w-full text-sm text-gray-500 hover:text-gray-700"
+                  className="w-full mt-3 text-sm text-gray-600 hover:text-blue-700"
                 >
                   ← {t("backToLogin")}
                 </button>
               </>
             )}
+  
+            {/* Divider */}
+            <div className="flex items-center my-6">
+              <div className="flex-1 h-[1px] bg-gray-300"></div>
+              <span className="px-3 text-gray-400 text-sm">OR</span>
+              <div className="flex-1 h-[1px] bg-gray-300"></div>
+            </div>
+  
+            <p className="text-center text-sm text-gray-600">
+              🔒 Secure • Reliable • Trusted
+            </p>
+  
           </div>
-          
-           <div className="p-4 border-t border-gray-200">
-            
-            {/* <span className="text-xs text-gray-500">PNO: 123456789 Contact: 1234567899(ADMIN)(SSP)</span> */}
-            
+  
+          {/* Bottom */}
+          <div className="bg-blue-950 text-white text-center text-sm py-3">
+            🔐 Your security is our priority
           </div>
+  
         </div>
       </div>
-
+  
       <Footer />
     </div>
-  );
-};
+  )};
 
 export default Login;

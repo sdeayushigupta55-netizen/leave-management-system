@@ -24,7 +24,6 @@ import { BeatBook } from "./beatbook/BeatBook";
 import GeneralDetails from "./beatbook/GeneralDetails";
 import PopulationDetails from "./beatbook/PopulationDetails";
 
-
 function AuthProviderWithUser({ children }: { children: ReactNode }) {
   const { updateUser } = useUsers();
   return <AuthProvider updateUser={updateUser}>{children}</AuthProvider>;
@@ -79,7 +78,7 @@ function App() {
                 path="senior-details"
                 element={
                   <RoleRoute allowRole={["POLICE"]} allowRank={POLICE_RANKS}>
-                    <SeniorDetails/> 
+                    <SeniorDetails />
                   </RoleRoute>
                 }
               />
@@ -88,7 +87,7 @@ function App() {
               <Route
                 path="pending-leave"
                 element={
-                  <RoleRoute allowRole={["POLICE","ADMIN"]} allowRank={SENIOR_RANKS}>
+                  <RoleRoute allowRole={["POLICE", "ADMIN"]} allowRank={SENIOR_RANKS}>
                     <PendingLeave />
                   </RoleRoute>
                 }
@@ -176,8 +175,8 @@ function App() {
               }
             />
 
-          
-           
+
+
 
             {/* ADMIN */}
             <Route
@@ -196,38 +195,38 @@ function App() {
                 </RoleRoute>
               }
             />
-          <Route
-  path="/bns-2023"
-  element={
-    <RoleRoute allowRole={["ADMIN", "POLICE"]}>
-      <Pdfviewer />
-    </RoleRoute>
-  }
-/>
- <Route
- path="/beat-book"
- element={
-   <RoleRoute allowRole={["POLICE"]}>
-     <BeatBook />
-   </RoleRoute>
- }
-/>
-    <Route
-    path="/beat-book/general-details"
-    element={
-      <RoleRoute allowRole={["POLICE"]}>
-        <GeneralDetails />
-      </RoleRoute>
-    }
-    />
-    <Route
-      path="/beat-book/population-details"
-      element={
-        <RoleRoute allowRole={["POLICE"]}>
-          <PopulationDetails />
-        </RoleRoute>
-      }
-    />
+            <Route
+              path="/bns-2023"
+              element={
+                <RoleRoute allowRole={["ADMIN", "POLICE"]}>
+                  <Pdfviewer />
+                </RoleRoute>
+              }
+            />
+            <Route
+              path="/beat-book"
+              element={
+                <RoleRoute allowRole={["POLICE"]}>
+                  <BeatBook />
+                </RoleRoute>
+              }
+            />
+            <Route
+              path="/beat-book/general-details"
+              element={
+                <RoleRoute allowRole={["POLICE"]}>
+                  <GeneralDetails />
+                </RoleRoute>
+              }
+            />
+            <Route
+              path="/beat-book/population-details"
+              element={
+                <RoleRoute allowRole={["POLICE"]}>
+                  <PopulationDetails />
+                </RoleRoute>
+              }
+            />
             <Route
               path="*"
               element={
@@ -236,7 +235,7 @@ function App() {
                 </div>
               }
             />
-            
+
           </Routes>
         </LeaveProvider>
       </AuthProviderWithUser >
@@ -245,7 +244,6 @@ function App() {
 
   );
 }
-
 
 export default App;
 

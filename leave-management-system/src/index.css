@@ -176,3 +176,16 @@ html {
   outline: 2px solid #c5a200;
   outline-offset: 2px;
 }
+.badge-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.police-badge {
+  width: 9rem;
+  margin-bottom: -4.5rem; /* overlap card */
+  position: relative;
+  z-index: 10;
+  display: block;
+}
